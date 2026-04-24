@@ -638,6 +638,10 @@ footer .copy{margin-top:40px;font-size:11px;font-family:var(--font-hd);letter-sp
 }
 
 /* ---------- RESPONSIVE ---------- */
+/* 全域:所有圖片不超過容器、避免水平捲動 */
+img{max-width:100%;height:auto}
+
+/* 平板 */
 @media (max-width: 900px){
   .section{padding:72px 24px}
   .hero-grid{grid-template-columns:1fr;gap:48px;padding:48px 24px 80px}
@@ -656,6 +660,99 @@ footer .copy{margin-top:40px;font-size:11px;font-family:var(--font-hd);letter-sp
   .bank-row .bk{min-width:0}
   .price-summary{flex-direction:column;align-items:stretch;text-align:center}
   .nav-right a:not(.nav-cta){display:none}
+}
+
+/* 手機 */
+@media (max-width: 640px){
+  /* NAV */
+  .nav-inner{padding:10px 16px;gap:10px}
+  .brand-mark img{height:40px}
+  .nav-cta{padding:8px 14px;font-size:11.5px}
+
+  /* 通用 section padding */
+  .section{padding:56px 16px}
+
+  /* HERO */
+  .hero-grid{padding:32px 16px 56px;gap:32px}
+  .hero-title{font-size:38px;line-height:1.1;margin:20px 0 16px}
+  .hero-subtitle{font-size:11px;letter-spacing:.18em}
+  .hero-right{min-height:auto}
+  .hero-photo{aspect-ratio:3/4;max-height:440px}
+  .hero-photo-quote{font-size:26px;left:20px;right:20px;bottom:20px}
+  .hero-meta{padding-top:20px;margin-top:32px}
+  .hero-info-list{gap:16px}
+  .hero-info-list .info-row{grid-template-columns:1fr;gap:8px;padding-bottom:16px}
+  .hero-info-list .info-row-split{grid-template-columns:1fr;gap:16px}
+  .hero-info-list .info-value .city{flex-direction:column;align-items:flex-start;gap:4px}
+  .hero-info-list .info-value .city-name{border-right:none;padding-right:0}
+  .hero-info-list .info-value .city-days{margin-left:0}
+  .hero-cta-row{gap:10px;margin-top:28px}
+  .hero-cta-row .btn{flex:1;min-width:0;justify-content:center;padding:14px 18px;font-size:13px}
+
+  /* CLASS TABS — 手機改直向堆疊 */
+  .class-tabs-wrap{padding:14px 16px;border-radius:10px}
+  .class-tabs{flex-direction:column;gap:6px}
+  .class-tab{width:100%;justify-content:center;padding:12px 14px}
+
+  /* GOAL */
+  .goal-left .kicker{font-size:34px}
+  .goal-right .third-way{padding:20px;grid-template-columns:1fr;gap:10px}
+  .goal-right .third-way .num{font-size:32px}
+
+  /* STAGES */
+  .stages-head{margin-bottom:40px}
+  .stage{padding:28px 22px 32px}
+  .stage .num{font-size:54px}
+  .timeline{padding:18px 20px;margin-top:32px;gap:12px}
+
+  /* COACHES */
+  .coach .portrait{aspect-ratio:4/3}
+  .coach .body{padding:24px 22px 28px}
+  .coach .name{font-size:24px}
+  .tagline-band{padding:28px 20px;margin-top:40px}
+  .tagline-band p{font-size:17px}
+
+  /* GALLERY */
+  .sec-gallery{padding:40px 16px}
+  .gallery-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:110px;gap:10px}
+  .gallery-grid .cell.wide,.gallery-grid .cell.tall,.gallery-grid .cell.sqL,.gallery-grid .cell.sqM,.gallery-grid .cell.sqS{grid-column:span 2;grid-row:span 2}
+
+  /* FORM */
+  .sec-form{padding-top:60px;padding-bottom:60px}
+  .form-head h2{font-size:36px}
+  .form-card{padding:28px 18px;border-radius:14px}
+  .form-section{margin-bottom:36px}
+  .form-section-head{flex-wrap:wrap;gap:10px}
+  .form-section-head .hint{margin-left:0;font-size:11.5px;width:100%}
+  .form-section-head h3{font-size:18px}
+  .choice{padding:12px 14px}
+  .choice .choice-body .title{font-size:13px}
+  .bank-info{padding:18px 20px}
+  .bank-row .bv-mono{font-size:15px}
+
+  /* 匯款提醒條 */
+  #paymentReminder{padding:12px 14px;gap:8px}
+  #paymentReminder > span:first-child{font-size:9px}
+  #paymentReminder #reminderAmt{margin-left:0;width:100%;font-size:16px}
+
+  /* POLICY */
+  .policy{padding:18px 20px}
+  .policy-head{font-size:10.5px}
+
+  /* FAQ */
+  .sec-faq{padding:48px 16px 32px}
+  .faq-item summary{padding:16px 18px;font-size:14px;gap:12px}
+  .faq-item .a{padding:0 18px 18px 18px;font-size:13.5px}
+
+  /* PRICE SUMMARY */
+  .price-summary{padding:22px}
+  .price-summary .amt{font-size:28px}
+  .price-summary .submit-btn{width:100%;justify-content:center}
+
+  /* FOOTER */
+  footer{padding:40px 16px 24px}
+  footer img{height:52px!important}
+  footer .links{flex-wrap:wrap;gap:16px;font-size:12.5px}
 }
 </style>
 </head>
