@@ -699,11 +699,17 @@ img{max-width:100%;height:auto}
   .goal-right .third-way{padding:20px;grid-template-columns:1fr;gap:10px}
   .goal-right .third-way .num{font-size:32px}
 
+  /* GOAL — HOW WE MEASURE 小字換行 */
+  .validation{flex-direction:column;align-items:flex-start;gap:6px;padding:16px 0}
+  .validation .text{font-size:13.5px;line-height:1.7}
+
   /* STAGES */
   .stages-head{margin-bottom:40px}
   .stage{padding:28px 22px 32px}
   .stage .num{font-size:54px}
-  .timeline{padding:18px 20px;margin-top:32px;gap:12px}
+  .timeline{padding:16px;margin-top:32px;gap:10px;border-radius:12px;flex-wrap:nowrap}
+  .timeline .tl-lbl{font-size:9px}
+  .timeline .tl-track{min-width:0}
 
   /* COACHES */
   .coach .portrait{aspect-ratio:4/3}
@@ -851,7 +857,7 @@ img{max-width:100%;height:auto}
 
       <div class="hero-cta-row">
         <a class="btn btn-primary" href="#signup">開始報名 <span class="arr">→</span></a>
-        <a class="btn btn-ghost" href="#goal">先了解課程</a>
+        <a class="btn btn-ghost" href="#schedule">先看上課日期</a>
       </div>
     </div>
 
@@ -947,7 +953,7 @@ img{max-width:100%;height:auto}
       <h2>這期課<br>我們<span class="script-underline">不追配速</span></h2>
     </div>
     <div class="goal-right">
-      <p>非賽季高溫、目標缺失。</p>
+      <p><b>非賽季:</b>賽後疲勞、受傷、高溫、目標缺失。</p>
       <div class="problem">
         多數跑者只剩兩個選擇:<br>
         <b>01 · 勉強跑</b>(代償累積)或 <b>02 · 完全休息</b>(素質衰退)。
@@ -1036,7 +1042,7 @@ img{max-width:100%;height:auto}
   <div class="coaches-head">
     <div>
       <div class="eyebrow">Part 03 · The Coaches</div>
-      <h2>這堂課<br>有兩個教練</h2>
+      <h2>課程設計<br>來自兩位教練</h2>
     </div>
     <div class="sum">
       <em>一個負責設計身體該怎麼被啟動,</em><br>
@@ -1100,7 +1106,6 @@ img{max-width:100%;height:auto}
   <div class="gallery-grid">
     <div class="cell wide"><img src="assets/team-taipei.jpg" alt=""><span class="cap">GROUP · TAIPEI</span></div>
     <div class="cell tall"><img src="assets/running-night.jpg" alt=""><span class="cap">NIGHT RUN</span></div>
-    <div class="cell sqL"><img src="assets/drill-ladder.jpg" alt=""><span class="cap">LADDER DRILL</span></div>
     <div class="cell sqM"><img src="assets/drill-track.jpg" alt=""><span class="cap">TRACK DAY</span></div>
     <div class="cell sqS"><img src="assets/team-flag.jpg" alt=""><span class="cap">THE FLAG</span></div>
   </div>
@@ -1284,7 +1289,13 @@ img{max-width:100%;height:auto}
           <span class="hint">填寫完成後三日內完成繳費才算報名完成</span>
         </div>
 
-        <div id="paymentReminder" style="background:#e8b968;color:#1f3a2d;border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:14px">
+        <div class="bank-info">
+          <div class="bank-row"><span class="bk">匯入銀行</span><span class="bv">台新銀行 <em>(代號 812)</em></span></div>
+          <div class="bank-row"><span class="bk">匯款帳號</span><span class="bv bv-mono">2888-1010-471385</span></div>
+          <div class="bank-row"><span class="bk">備註欄</span><span class="bv">請備註「<span class="bank-note-class">週二跑步班</span>」</span></div>
+        </div>
+
+        <div id="paymentReminder" style="background:#e8b968;color:#1f3a2d;border-radius:10px;padding:14px 20px;margin-top:24px;margin-bottom:12px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:14px">
           <span style="font-family:var(--font-hd);font-size:10px;letter-spacing:.22em;font-weight:700;padding:4px 10px;background:rgba(31,58,45,.12);border-radius:4px">你的選擇</span>
           <span id="reminderClass">—</span>
           <span style="color:rgba(31,58,45,.4)">|</span>
@@ -1292,13 +1303,7 @@ img{max-width:100%;height:auto}
           <span style="margin-left:auto;font-weight:700" id="reminderAmt"></span>
         </div>
 
-        <div class="bank-info">
-          <div class="bank-row"><span class="bk">匯入銀行</span><span class="bv">台新銀行 <em>(代號 812)</em></span></div>
-          <div class="bank-row"><span class="bk">匯款帳號</span><span class="bv bv-mono">2888-1010-471385</span></div>
-          <div class="bank-row"><span class="bk">備註欄</span><span class="bv">請備註「<span class="bank-note-class">週二跑步班</span>」</span></div>
-        </div>
-
-        <div class="field-grid" style="margin-top:24px">
+        <div class="field-grid">
           <div class="field">
             <label>匯款金額<span class="req">*</span></label>
             <input type="text" name="amount" placeholder="請自行加總(NT$)" required>
