@@ -1120,8 +1120,7 @@ img{max-width:100%;height:auto}
         <h2>準備好了<br>就一起練。</h2>
       </div>
       <div class="intro">
-        填寫下方資訊後,我們會在 2 個工作天內與您聯繫,同步付款確認、交通方式、下雨備案與上課地點等入班細節。<br><br>
-        <strong style="color:var(--linen)">報名前請先閱讀下方「補課方式與退費機制」。</strong>
+        填寫下方資訊後,我們將於 1 個工作天內與您聯繫。
       </div>
     </div>
 
@@ -1522,7 +1521,7 @@ function handleSubmit(){
   .then(r => r.json())
   .then(res => {
     if (res.ok) {
-      btn.innerHTML = '✓ 已送出 · ' + className + ' · 兩個工作天內聯絡你';
+      btn.innerHTML = '✓ 已送出 · ' + className + ' · 1 個工作天內聯絡你';
       btn.style.background = '#1f3a2d';
       btn.style.color = '#f1ede2';
       form.reset();
