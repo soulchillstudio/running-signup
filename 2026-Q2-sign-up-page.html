@@ -1363,18 +1363,58 @@ document.querySelectorAll('input[name="plan"]').forEach(el=>{
   });
 });
 
-// ===== Form demo submit =====
+// ===== Form submit to Google Apps Script =====
+const API_URL = 'https://script.google.com/macros/s/AKfycbzkZABMZKdXO9RoNvAf_-183zhFbwJ_QurjTSBCHNjEhtVeBEDeCr2EGawQ3BZ0VjfouQ/exec';
+
 function handleSubmit(){
   const btn = document.querySelector('.submit-btn');
+  const form = document.getElementById('signup-form');
   const classKey = document.getElementById('form-class-input').value;
   const className = (CLASS_MAP[classKey] || {}).name || '';
+
+  // 收集欄位
+  const fd = new FormData(form);
+  const payload = {
+    class:   classKey,
+    name:    fd.get('name') || '',
+    line:    fd.get('line') || '',
+    email:   fd.get('email') || '',
+    running: fd.get('running') || '',
+    plan:    fd.get('plan') || '',
+    amount:  fd.get('amount') || '',
+    last5:   fd.get('last5') || '',
+    notes:   fd.get('notes') || '',
+    agree:   !!fd.get('agree')
+  };
+
   btn.innerHTML = '送出中…';
   btn.style.opacity = '.7';
-  setTimeout(()=>{
-    btn.innerHTML = '✓ 已送出 · ' + className + ' · 兩個工作天內聯絡你';
-    btn.style.background = '#1f3a2d';
-    btn.style.color = '#f1ede2';
-  }, 900);
+  btn.disabled = true;
+
+  fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' } // 避開 CORS preflight
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.ok) {
+      btn.innerHTML = '✓ 已送出 · ' + className + ' · 兩個工作天內聯絡你';
+      btn.style.background = '#1f3a2d';
+      btn.style.color = '#f1ede2';
+      form.reset();
+      try { localStorage.removeItem('soulchill_class'); } catch(e){}
+    } else {
+      throw new Error(res.error || '未知錯誤');
+    }
+  })
+  .catch(err => {
+    btn.innerHTML = '✗ 送出失敗,請再試一次';
+    btn.style.background = '#b8542a';
+    btn.style.color = '#fff';
+    btn.disabled = false;
+    console.error('Submit error:', err);
+  });
 }
 </script>
 
