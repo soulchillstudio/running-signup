@@ -124,7 +124,7 @@ function studentEmail(d, cls, planLabel) {
   </table>
   <h3 style="margin-top:24px">下一步</h3>
   <ol>
-    <li>我們會在 <b>1 個工作天內</b> 聯繫你,確認匯款、入班與 LINE 群組邀請。</li>
+    <li>我們會在 <b>2 個工作天內</b> 聯繫你,確認匯款、入班與 LINE 群組邀請。</li>
     <li>入群後會同步交通方式、雨天備案、上課地點等細節。</li>
     <li>如匯款尚未完成,請盡快於 3 日內處理,以確保報名有效。</li>
   </ol>
