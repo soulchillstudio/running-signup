@@ -1187,6 +1187,14 @@ footer .copy{margin-top:40px;font-size:11px;font-family:var(--font-hd);letter-sp
           <span class="hint">填寫完成後三日內完成繳費才算報名完成</span>
         </div>
 
+        <div id="paymentReminder" style="background:#e8b968;color:#1f3a2d;border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:14px">
+          <span style="font-family:var(--font-hd);font-size:10px;letter-spacing:.22em;font-weight:700;padding:4px 10px;background:rgba(31,58,45,.12);border-radius:4px">你的選擇</span>
+          <span id="reminderClass">—</span>
+          <span style="color:rgba(31,58,45,.4)">|</span>
+          <span id="reminderPlan">請先於上方選擇方案</span>
+          <span style="margin-left:auto;font-weight:700" id="reminderAmt"></span>
+        </div>
+
         <div class="bank-info">
           <div class="bank-row"><span class="bk">匯入銀行</span><span class="bv">台新銀行 <em>(代號 812)</em></span></div>
           <div class="bank-row"><span class="bk">匯款帳號</span><span class="bv bv-mono">2888-1010-471385</span></div>
@@ -1263,16 +1271,13 @@ footer .copy{margin-top:40px;font-size:11px;font-family:var(--font-hd);letter-sp
     </details>
     <details class="faq-item">
       <summary><span class="q-num">Q4</span>請假無法當週補課怎麼辦?</summary>
-      <div class="a"><b>請假堂數在當期內都可以補,不限當週</b>,你可以挑順路或有空的那一天補上——甚至帶一位親友,一起來用你的堂數上課也 OK。不過補課僅限當期內,跨期不保留,讓大家維持穩定節奏。<br><br>補課班別規則:台中週二 ↔ 週四班可互補;台北週三班為單班制,無對應互補班級。</div>
+      <div class="a"><b>請假堂數在當期內都可以補,不限當週</b>,你可以挑有空的那一天補。也可以帶一位親友,一起來用你的堂數上課。不過補課僅限當期內,跨期不保留,讓大家維持穩定節奏。<br><br>補課班別規則:台中週二 ↔ 週四班可互補;台北週三班為單班制,無對應互補班級。</div>
     </details>
     <details class="faq-item">
       <summary><span class="q-num">Q5</span>需要自備什麼裝備?</summary>
       <div class="a">
-        <ol style="padding-left:20px;margin:4px 0">
-          <li><b>基本裝備</b>:一雙平常在跑的跑鞋、運動服、水瓶、毛巾。</li>
-          <li><b>課程中常用器材</b>:彈力帶、按摩球、滾筒等。</li>
-        </ol>
-        其他需要準備的小物,會在入班後的 LINE 群組 SOP 流程中一併告知。
+        <b>基本裝備</b>:一雙平常在跑的跑鞋、運動服、水瓶、毛巾。<br><br>
+        課程中會用到的常用器材(彈力帶、按摩球、滾筒等)與其他準備事項,會在你入班後,由教練在 LINE 群組提供詳細清單與購買建議。
       </div>
     </details>
   </div>
@@ -1360,7 +1365,23 @@ document.querySelectorAll('input[name="plan"]').forEach(el=>{
     const p = PLAN_MAP[el.value]; if(!p) return;
     document.getElementById('summaryAmt').innerHTML = p.amt + ' <small id="summaryLabel">' + p.label + '</small>';
     document.getElementById('summaryNote').textContent = p.note;
+    // 同步匯款提醒
+    document.getElementById('reminderPlan').textContent = (document.querySelector('input[name="plan"]:checked').closest('.choice').querySelector('.title').textContent) || '';
+    document.getElementById('reminderAmt').textContent = p.amt;
   });
+});
+
+// 班別切換時同步「你的選擇」提醒
+function updateReminderClass(){
+  const key = document.getElementById('form-class-input').value;
+  const name = (CLASS_MAP[key] || {}).name || '—';
+  const el = document.getElementById('reminderClass');
+  if (el) el.textContent = name;
+}
+// 初始化 + 掛到 tab 切換
+updateReminderClass();
+document.querySelectorAll('.class-tab').forEach(t=>{
+  t.addEventListener('click', ()=> setTimeout(updateReminderClass, 0));
 });
 
 // ===== Form submit to Google Apps Script =====
