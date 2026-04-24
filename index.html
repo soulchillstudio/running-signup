@@ -1226,9 +1226,9 @@ img{max-width:100%;height:auto}
           <label class="choice">
             <input type="radio" name="plan" value="G">
             <div class="choice-body">
-              <div class="title">(G) 個人課表 / 4 週</div>
+              <div class="title">(G) 個人課表 / 12 週</div>
               <div class="meta">請私訊預約免費諮詢</div>
-              <div class="price">NT$ 3,000 · 每 4 週</div>
+              <div class="price">NT$ 9,000 · 12 週</div>
             </div>
           </label>
         </div>
@@ -1461,7 +1461,7 @@ const PLAN_MAP = {
   D: { amt: '依剩餘堂數',  label: '· 插班報名',        note: '請私訊確認剩餘堂數與實際費用後匯款。',            autoAmount: '',      bankNote: '插班' },
   E: { amt: 'NT$ 10,260', label: '/ 兩人合計',        note: '新生限定,兩人合報 95 折 · 自動帶入兩人合計金額',  autoAmount: '10260', bankNote: '兩人同行' },
   F: { amt: 'NT$ 14,580', label: '/ 三人合計',        note: '新生限定,三人合報 9 折 · 自動帶入三人合計金額',   autoAmount: '14580', bankNote: '三人同行' },
-  G: { amt: 'NT$ 3,000',  label: '/ 個人課表 4 週',   note: '請先私訊預約免費諮詢。',                         autoAmount: '3000',  bankNote: '個人課表' }
+  G: { amt: 'NT$ 9,000',  label: '/ 個人課表 12 週',  note: '請先私訊預約免費諮詢。',                         autoAmount: '9000',  bankNote: '個人課表' }
 };
 document.querySelectorAll('input[name="plan"]').forEach(el=>{
   el.addEventListener('change', ()=>{
