@@ -1474,14 +1474,20 @@ const PLAN_MAP = {
   G: { amt: 'NT$ 9,000',  label: '/ 個人課表 12 週',  note: '請先私訊預約免費諮詢。',                         autoAmount: '9000',  bankNote: '個人課表' }
 };
 function applyPlanRequiredRules(planValue){
-  // 舊生方案 (B):LINE + 跑步能力 改為非必填;其他方案:必填
+  // 舊生方案 (B):LINE + 跑步能力 整個欄位隱藏;其他方案:顯示且必填
   const isAlumni = planValue === 'B';
+  const lineField = document.getElementById('lineField');
+  const runningField = document.getElementById('runningField');
   const lineInput = document.getElementById('lineInput');
   const runningInput = document.getElementById('runningInput');
+  if (lineField)    lineField.style.display    = isAlumni ? 'none' : '';
+  if (runningField) runningField.style.display = isAlumni ? 'none' : '';
   if (lineInput)    lineInput.required    = !isAlumni;
   if (runningInput) runningInput.required = !isAlumni;
-  document.querySelectorAll('.lineReq, .runningReq').forEach(n => n.style.display = isAlumni ? 'none' : '');
-  document.querySelectorAll('.lineOpt, .runningOpt').forEach(n => n.style.display = isAlumni ? '' : 'none');
+  if (isAlumni) {
+    if (lineInput)    lineInput.value    = '';
+    if (runningInput) runningInput.value = '';
+  }
 }
 
 document.querySelectorAll('input[name="plan"]').forEach(el=>{
