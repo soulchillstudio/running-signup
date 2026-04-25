@@ -1146,40 +1146,10 @@ img{max-width:100%;height:auto}
       </div>
       <input type="hidden" name="class" id="form-class-input" value="taichung-tue">
 
-      <!-- Section 01 — Basic -->
+      <!-- Section 01 — Plans -->
       <div class="form-section">
         <div class="form-section-head">
           <span class="idx">01</span>
-          <h3>基本資料</h3>
-          <span class="hint">* 為必填</span>
-        </div>
-        <div class="field-grid">
-          <div class="field full">
-            <label>姓名(真實姓名 / 綽號)<span class="req">*</span></label>
-            <input type="text" name="name" placeholder="填寫範例:吳佳俞 / FISH" required>
-            <div class="help">真實姓名供保險登錄,括號後可填課堂上習慣被叫的名字。</div>
-          </div>
-          <div class="field full">
-            <label>簡述跑步能力<span class="opt">舊生免填</span></label>
-            <textarea name="running" placeholder="日常練習距離 / 頻率 & 各距離賽事成績"></textarea>
-          </div>
-          <div class="field">
-            <label>LINE 名稱 / LINE ID<span class="req">*</span></label>
-            <input type="text" name="line" placeholder="填寫你的 LINE 名稱或 ID" required>
-            <div class="help">會邀請加入跑班專屬 LINE 群,請確認是否有拒絕陌生好友。</div>
-          </div>
-          <div class="field">
-            <label>電子郵件<span class="req">*</span></label>
-            <input type="email" name="email" placeholder="name@example.com" required>
-            <div class="help">報名確認信將寄到這個信箱,請填寫常用的。</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 02 — Plans -->
-      <div class="form-section">
-        <div class="form-section-head">
-          <span class="idx">02</span>
           <h3>課程方案</h3>
           <span class="hint">請擇一 · 匯款金額以選項為準</span>
         </div>
@@ -1241,6 +1211,36 @@ img{max-width:100%;height:auto}
               <div class="price">NT$ 9,000 · 12 週</div>
             </div>
           </label>
+        </div>
+      </div>
+
+      <!-- Section 02 — Basic -->
+      <div class="form-section">
+        <div class="form-section-head">
+          <span class="idx">02</span>
+          <h3>基本資料</h3>
+          <span class="hint">* 為必填(舊生方案僅需姓名 + Email)</span>
+        </div>
+        <div class="field-grid">
+          <div class="field full">
+            <label>姓名(真實姓名 / 綽號)<span class="req">*</span></label>
+            <input type="text" name="name" placeholder="填寫範例:吳佳俞 / FISH" required>
+            <div class="help">真實姓名供保險登錄,括號後可填課堂上習慣被叫的名字。</div>
+          </div>
+          <div class="field">
+            <label>電子郵件<span class="req">*</span></label>
+            <input type="email" name="email" placeholder="name@example.com" required>
+            <div class="help">報名確認信將寄到這個信箱,請填寫常用的。</div>
+          </div>
+          <div class="field" id="lineField">
+            <label>LINE 名稱 / LINE ID<span class="req lineReq">*</span><span class="opt lineOpt" style="display:none">舊生免填</span></label>
+            <input type="text" name="line" id="lineInput" placeholder="填寫你的 LINE 名稱或 ID" required>
+            <div class="help">會邀請加入跑班專屬 LINE 群,請確認是否有拒絕陌生好友。</div>
+          </div>
+          <div class="field full" id="runningField">
+            <label>簡述跑步能力<span class="req runningReq">*</span><span class="opt runningOpt" style="display:none">舊生免填</span></label>
+            <textarea name="running" id="runningInput" placeholder="日常練習距離 / 頻率 & 各距離賽事成績" required></textarea>
+          </div>
         </div>
       </div>
 
@@ -1366,7 +1366,7 @@ img{max-width:100%;height:auto}
   <div class="faq-list">
     <details class="faq-item" open>
       <summary><span class="q-num">Q1</span>沒有跑步經驗也可以報名嗎?</summary>
-      <div class="a">可以。<b>現在這個時間點加入是最好的時機——因為這堂課就是在打基礎。</b>即使是課程中的跑步訓練,也會依能力分組。許多學員剛加入時,操場一圈都跑不完。<br>若你不太確定自己的程度,可以先報名 (B) 初次單堂體驗課,或私訊傑西教練預約評估。</div>
+      <div class="a">可以。<b>現在這個時間點加入是最好的時機——因為這堂課就是在打基礎。</b>即使是課程中的跑步訓練,也會依能力分組。許多學員剛加入時,操場一圈都跑不完。<br>若你不太確定自己的程度,可以先報名 (C) 初次單堂體驗課,或私訊傑西教練預約評估。</div>
     </details>
     <details class="faq-item">
       <summary><span class="q-num">Q2</span>舊生優惠怎麼定義?</summary>
@@ -1473,6 +1473,17 @@ const PLAN_MAP = {
   F: { amt: 'NT$ 14,580', label: '/ 三人合計',        note: '新生限定,三人合報 9 折 · 自動帶入三人合計金額',   autoAmount: '14580', bankNote: '三人同行' },
   G: { amt: 'NT$ 9,000',  label: '/ 個人課表 12 週',  note: '請先私訊預約免費諮詢。',                         autoAmount: '9000',  bankNote: '個人課表' }
 };
+function applyPlanRequiredRules(planValue){
+  // 舊生方案 (B):LINE + 跑步能力 改為非必填;其他方案:必填
+  const isAlumni = planValue === 'B';
+  const lineInput = document.getElementById('lineInput');
+  const runningInput = document.getElementById('runningInput');
+  if (lineInput)    lineInput.required    = !isAlumni;
+  if (runningInput) runningInput.required = !isAlumni;
+  document.querySelectorAll('.lineReq, .runningReq').forEach(n => n.style.display = isAlumni ? 'none' : '');
+  document.querySelectorAll('.lineOpt, .runningOpt').forEach(n => n.style.display = isAlumni ? '' : 'none');
+}
+
 document.querySelectorAll('input[name="plan"]').forEach(el=>{
   el.addEventListener('change', ()=>{
     const p = PLAN_MAP[el.value]; if(!p) return;
@@ -1483,6 +1494,8 @@ document.querySelectorAll('input[name="plan"]').forEach(el=>{
     if (amtInput) amtInput.value = p.autoAmount;
     // 同步匯款備註方案名稱
     document.querySelectorAll('.bank-note-plan').forEach(n => n.textContent = p.bankNote);
+    // 依方案套用必填規則
+    applyPlanRequiredRules(el.value);
   });
 });
 
