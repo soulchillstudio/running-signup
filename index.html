@@ -1196,16 +1196,16 @@ img{max-width:100%;height:auto}
             <input type="radio" name="plan" value="E">
             <div class="choice-body">
               <div class="title">(E) 兩人同行 · 新生完整 12 堂</div>
-              <div class="meta">兩人合報,享 95 折</div>
-              <div class="price">NT$ 10,260 (兩人合計)</div>
+              <div class="meta">兩人同行 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名</div>
+              <div class="price">NT$ 5,130 / 人</div>
             </div>
           </label>
           <label class="choice">
             <input type="radio" name="plan" value="F">
             <div class="choice-body">
               <div class="title">(F) 三人同行 · 新生完整 12 堂</div>
-              <div class="meta">三人合報,享 9 折</div>
-              <div class="price">NT$ 14,580 (三人合計)</div>
+              <div class="meta">三人同行 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名</div>
+              <div class="price">NT$ 4,860 / 人</div>
             </div>
           </label>
           <label class="choice">
@@ -1474,8 +1474,8 @@ const PLAN_MAP = {
   B: { amt: 'NT$ 4,860',  label: '/ 舊生 12 堂',     note: '曾上過任一期「傑西跑班」課程 · 自動帶入金額',     autoAmount: '4860',  bankNote: '舊生' },
   C: { amt: 'NT$ 450',    label: '/ 單堂體驗',        note: '請先 LINE 或 IG 告知預約日期,確認後再匯款。',     autoAmount: '450',   bankNote: '單堂' },
   D: { amt: '依剩餘堂數',  label: '· 插班報名',        note: '請私訊確認剩餘堂數與實際費用後匯款。',            autoAmount: '',      bankNote: '插班' },
-  E: { amt: 'NT$ 10,260', label: '/ 兩人合計',        note: '新生限定,兩人合報 95 折 · 自動帶入兩人合計金額',  autoAmount: '10260', bankNote: '兩人同行' },
-  F: { amt: 'NT$ 14,580', label: '/ 三人合計',        note: '新生限定,三人合報 9 折 · 自動帶入三人合計金額',   autoAmount: '14580', bankNote: '三人同行' },
+  E: { amt: 'NT$ 5,130',  label: '/ 兩人同行 每人',   note: '新生限定 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名',  autoAmount: '5130',  bankNote: '兩人同行' },
+  F: { amt: 'NT$ 4,860',  label: '/ 三人同行 每人',   note: '新生限定 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名',   autoAmount: '4860',  bankNote: '三人同行' },
   G: { amt: 'NT$ 9,000',  label: '/ 個人課表 12 週',  note: '請先私訊預約免費諮詢。',                         autoAmount: '9000',  bankNote: '個人課表' }
 };
 function applyPlanRequiredRules(planValue){
