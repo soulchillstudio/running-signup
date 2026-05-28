@@ -653,6 +653,35 @@ footer .copy{margin-top:40px;font-size:11px;font-family:var(--font-hd);letter-sp
   .gallery-grid .cell.wide,.gallery-grid .cell.tall,.gallery-grid .cell.sqL,.gallery-grid .cell.sqM,.gallery-grid .cell.sqS{grid-column:span 4;grid-row:span 2}
 }
 
+/* ---------- STUDENT VOICES ---------- */
+.sec-voices{background:var(--linen-deep)}
+.voices-head{max-width:720px;margin:0 auto 48px;text-align:center}
+.voices-head h2{font-size:clamp(30px,3.4vw,44px);color:var(--forest);font-weight:700;letter-spacing:-.01em;margin-top:10px}
+.voices-head .lead{font-size:15px;color:var(--forest-60);margin-top:14px;line-height:1.7}
+.voices-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1080px;margin:0 auto}
+.voice-card{
+  background:var(--white);border:1.5px solid var(--line);border-radius:14px;
+  padding:28px 26px 26px;display:flex;flex-direction:column;position:relative;
+}
+.voice-card::before{
+  content:"\201C";position:absolute;top:8px;right:20px;font-family:var(--font-script);
+  font-size:60px;line-height:1;color:var(--grass);opacity:.55;
+}
+.voice-card .who{
+  font-family:var(--font-hd);font-size:11px;letter-spacing:.18em;font-weight:700;
+  color:var(--forest);padding-bottom:12px;margin-bottom:14px;
+  border-bottom:1.5px solid var(--grass);align-self:flex-start;
+}
+.voice-card .text{font-size:14.5px;color:var(--forest-60);line-height:1.85}
+.voice-card .text b{color:var(--forest);font-weight:700}
+@media (max-width:900px){
+  .voices-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .voice-card{padding:22px 20px}
+}
+@media (max-width:640px){
+  .voices-grid{grid-template-columns:1fr}
+}
+
 /* ---------- RESPONSIVE ---------- */
 /* 全域:所有圖片不超過容器、避免水平捲動 */
 img{max-width:100%;height:auto}
@@ -786,6 +815,7 @@ img{max-width:100%;height:auto}
       <a href="#schedule">上課日期</a>
       <a href="#stages">三階段</a>
       <a href="#coaches">教練</a>
+      <a href="#voices">學員回饋</a>
       <a href="#faq">常見問題</a>
       <a class="nav-cta" href="#signup">立即報名 →</a>
     </div>
@@ -922,7 +952,7 @@ img{max-width:100%;height:auto}
 
     <div class="goal-measure">
       <span class="tag">HOW WE MEASURE</span>
-      <p>加法讓你累,減法讓你快——<b>同樣的配速,身體是不是更輕鬆了?</b></p>
+      <p>加法讓你累,減法讓你快——<b>同樣的配速,身體卻越跑越輕盈。</b></p>
     </div>
   </div>
 </section>
@@ -944,7 +974,7 @@ img{max-width:100%;height:auto}
         打開脊椎與關節的活動限制,建立不會在賽季垮掉的局部肌耐力基礎。
       </div>
       <div class="tag-row">
-        <span>脊椎活動度</span><span>關節鬆動</span><span>局部肌耐力</span>
+        <span>身體活動度</span><span>動作控制</span><span>局部肌耐力</span>
       </div>
       <div class="bar"></div>
     </div>
@@ -957,7 +987,7 @@ img{max-width:100%;height:auto}
         訓練全身的彈性反應與動態協調,讓力量可以被身體好好傳遞。
       </div>
       <div class="tag-row">
-        <span>彈性反應</span><span>動態協調</span><span>力量傳遞</span>
+        <span>彈性反應</span><span>身體空間</span><span>力量傳遞</span>
       </div>
       <div class="bar"></div>
     </div>
@@ -1113,7 +1143,9 @@ img{max-width:100%;height:auto}
   <div class="tagline-band">
     <p>
       一個負責設計<span class="hl">身體怎麼被啟動</span>,<br>
-      一個負責把<span class="hl">動作帶進跑動中</span>。
+      一個負責把<span class="hl">動作帶進跑動中</span>。<br><br>
+      把力量訓練和跑步訓練加起來,<br>
+      讓跑步<span class="hl">更輕、更快、更安全</span>。
     </p>
   </div>
 </section>
@@ -1125,6 +1157,41 @@ img{max-width:100%;height:auto}
     <div class="cell tall"><img src="assets/running-night.jpg" alt=""><span class="cap">NIGHT RUN</span></div>
     <div class="cell sqM"><img src="assets/drill-track.jpg" alt=""><span class="cap">TRACK DAY</span></div>
     <div class="cell sqS"><img src="assets/team-flag.jpg" alt=""><span class="cap">THE FLAG</span></div>
+  </div>
+</section>
+
+<!-- ===== STUDENT VOICES ===== -->
+<section class="section sec-voices" id="voices">
+  <div class="voices-head">
+    <div class="eyebrow">Part 03.5 · Student Voices</div>
+    <h2>學員怎麼說</h2>
+    <p class="lead">不追成績、不比快慢——這裡的人，是被「一起變好」這件事留下來的。</p>
+  </div>
+  <div class="voices-grid">
+    <div class="voice-card">
+      <div class="who">W 同學</div>
+      <p class="text">喜歡傑西的理念，喜歡這群因為傑西而相聚的人，好像<b>可以一起跑到 90 歲參加世壯運</b>。</p>
+    </div>
+    <div class="voice-card">
+      <div class="who">V 同學</div>
+      <p class="text">這是一個<b>適合想從基礎紮根</b>的跑班，不會有要求表現的壓力，只有大家開心的一起學習。</p>
+    </div>
+    <div class="voice-card">
+      <div class="who">J 同學</div>
+      <p class="text">暖心教練加上<b>超級專業跑步姿勢調整</b>，還會<b>筋膜整復</b>，療心又療身，不來嗎？</p>
+    </div>
+    <div class="voice-card">
+      <div class="who">M 同學</div>
+      <p class="text">想<b>無壓養成一個運動習慣</b>的人，可以加入我們班，沒有濃厚的肅殺氣氛，帶你一起歡樂無壓的越跑越輕鬆。</p>
+    </div>
+    <div class="voice-card">
+      <div class="who">N 同學</div>
+      <p class="text">傑西跑班是著重於<b>跑步經濟學</b>～如何<b>用最少的力量持續破自己 PB</b>～同時無傷完賽以及賽後恢復。</p>
+    </div>
+    <div class="voice-card">
+      <div class="who">J 同學</div>
+      <p class="text">有別於傳統科班訓練模式，在這裡上課不會有太多壓力，可以很單純享受跑步帶來的快樂，<b>學到酷東西同時身心都能好好被充電</b>。</p>
+    </div>
   </div>
 </section>
 
