@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>器材團購登記｜傑西跑班</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Style+Script&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --linen:      #f1ede2;
+  --linen-deep: #e7e1d1;
+  --grass:      #b9cf6f;
+  --forest:     #1f3a2d;
+  --forest-60:  #4a5d51;
+  --forest-30:  #8f9b93;
+  --forest-ink: #0f1f17;
+  --line:       #d8d1bd;
+  --white:      #faf7ee;
+  --warn:       #b8542a;
+
+  --font-hd: 'Syncopate', 'Noto Sans TC', sans-serif;
+  --font-script: 'Style Script', cursive;
+  --font-tc: 'Noto Sans TC', 'PingFang TC', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--linen);color:var(--forest-ink);font-family:var(--font-tc);-webkit-font-smoothing:antialiased;line-height:1.65}
+body{overflow-x:hidden}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(241,237,226,.88);backdrop-filter:blur(12px) saturate(120%);border-bottom:1px solid rgba(31,58,45,.08)}
+.nav-inner{max-width:760px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand-mark{display:flex;align-items:center;color:var(--forest);text-decoration:none;line-height:1}
+.brand-mark img{height:44px;width:auto;display:block}
+.nav-right{font-family:var(--font-hd);font-size:10px;letter-spacing:.24em;color:var(--forest-60)}
+
+/* HERO */
+.hero{max-width:760px;margin:0 auto;padding:56px 24px 28px;text-align:left}
+.hero .eyebrow{font-family:var(--font-hd);font-size:11px;letter-spacing:.32em;color:var(--forest-60);font-weight:700;text-transform:uppercase}
+.hero h1{font-size:clamp(32px,5vw,46px);color:var(--forest);font-weight:700;letter-spacing:-.01em;line-height:1.15;margin:14px 0 14px;display:flex;flex-wrap:wrap;align-items:baseline;gap:14px}
+.hero .display{font-family:var(--font-hd);color:var(--forest);font-size:clamp(13px,1.6vw,16px);font-weight:700;letter-spacing:.24em;text-transform:uppercase;padding:6px 12px;background:var(--grass);border-radius:4px;color:var(--forest-ink);line-height:1.2;align-self:center}
+.hero .intro{font-size:15px;color:var(--forest-60);line-height:1.8;max-width:60ch}
+.hero .intro b{color:var(--forest)}
+
+/* FORM CARD */
+.wrap{max-width:760px;margin:0 auto;padding:8px 24px 56px}
+.form-card{
+  background:var(--linen);color:var(--forest);border-radius:18px;
+  padding:40px 40px 32px;position:relative;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.18);
+  border:1px solid rgba(31,58,45,.06);
+}
+.form-card::before{
+  content:"";position:absolute;top:-12px;right:36px;width:54px;height:22px;background:var(--grass);border-radius:0 0 12px 12px
+}
+
+.form-section{margin-bottom:36px}
+.form-section:last-of-type{margin-bottom:0}
+.form-section-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:12px;border-bottom:2px solid var(--forest)}
+.form-section-head .idx{font-family:var(--font-hd);font-size:10.5px;letter-spacing:.2em;color:var(--linen);background:var(--forest);padding:6px 11px;border-radius:4px;font-weight:700}
+.form-section-head h3{font-size:18px;color:var(--forest);font-weight:700;letter-spacing:-.005em}
+.form-section-head .hint{font-size:12px;color:var(--forest-60);margin-left:auto}
+
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{font-size:13px;color:var(--forest);font-weight:500}
+.field label .req{color:#c5553d;margin-left:3px}
+.field label .opt{color:var(--forest-30);font-size:11px;margin-left:6px;font-weight:400}
+.field input[type=text],
+.field select,
+.field textarea{
+  width:100%;padding:12px 14px;background:var(--white);border:1px solid var(--line);
+  border-radius:8px;font-family:var(--font-tc);font-size:14.5px;color:var(--forest-ink);
+  transition:border-color .15s, background .15s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--forest);background:#fff}
+.field textarea{resize:vertical;min-height:80px;line-height:1.6}
+.field .help{font-size:12px;color:var(--forest-30);line-height:1.5}
+
+/* CHOICE CARDS — 班別 */
+.choices{display:grid;gap:10px;grid-template-columns:repeat(3,1fr)}
+.choice{
+  display:flex;flex-direction:column;gap:4px;align-items:flex-start;
+  padding:14px 14px;background:var(--white);border:1.5px solid var(--line);border-radius:10px;cursor:pointer;transition:all .15s;
+}
+.choice input{display:none}
+.choice .ct-day{font-family:var(--font-hd);font-size:10.5px;letter-spacing:.2em;color:var(--forest-60);font-weight:700}
+.choice .ct-name{font-size:14px;color:var(--forest);font-weight:600}
+.choice:hover{border-color:var(--forest-30)}
+.choice:has(input:checked){border-color:var(--forest);background:#fff;box-shadow:0 0 0 3px rgba(185,207,111,.28)}
+.choice:has(input:checked) .ct-day{color:var(--forest)}
+
+/* ITEMS */
+.items{display:flex;flex-direction:column;gap:10px}
+.item{
+  display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
+  padding:14px 16px;background:var(--white);border:1.5px solid var(--line);border-radius:12px;transition:all .15s;
+}
+.item.on{border-color:var(--forest);box-shadow:0 0 0 3px rgba(185,207,111,.28)}
+.item .chk{width:22px;height:22px;accent-color:var(--forest);cursor:pointer}
+.item .info .name{font-size:14.5px;color:var(--forest);font-weight:600;line-height:1.3}
+.item .info .price{font-family:var(--font-hd);font-size:11.5px;letter-spacing:.06em;color:var(--forest);font-weight:700;margin-left:6px}
+.item .info .spec{font-size:12px;color:var(--forest-60);margin-top:3px;line-height:1.5}
+.item .info .spec a{color:var(--forest);text-decoration:underline;text-decoration-color:rgba(31,58,45,.3)}
+.item .qty{display:flex;align-items:center;gap:6px}
+.item .qty button{width:30px;height:30px;border:1px solid var(--line);background:var(--linen-deep);border-radius:8px;font-size:16px;line-height:1;cursor:pointer;color:var(--forest);font-weight:700}
+.item .qty button:hover{background:var(--linen)}
+.item .qty input{width:38px;text-align:center;padding:5px 0;border:1px solid var(--line);border-radius:8px;font-size:14.5px;font-family:var(--font-tc);background:#fff;color:var(--forest)}
+
+/* BANK INFO */
+.bank-info{background:var(--forest);color:var(--linen);border-radius:12px;padding:22px 26px;display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.bank-info .bk-title{font-family:var(--font-hd);font-size:10px;letter-spacing:.26em;color:rgba(241,237,226,.65);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+.bank-row{display:flex;align-items:baseline;gap:18px;padding-bottom:12px;border-bottom:1px dashed rgba(241,237,226,.2)}
+.bank-row:last-child{border-bottom:none;padding-bottom:0}
+.bank-row .bk{font-family:var(--font-hd);font-size:10px;letter-spacing:.22em;color:rgba(241,237,226,.55);min-width:80px;flex-shrink:0;font-weight:700}
+.bank-row .bv{font-size:15px;color:var(--linen);font-weight:500}
+.bank-row .bv em{font-style:normal;color:rgba(241,237,226,.55);font-size:12px;margin-left:4px;font-family:var(--font-hd);letter-spacing:.1em}
+.bank-row .bv-mono{font-family:var(--font-hd);font-size:18px;letter-spacing:.1em;font-weight:700;color:var(--grass)}
+
+/* PRICE SUMMARY / SUBMIT */
+.price-summary{
+  margin-top:32px;padding:26px 30px;background:var(--forest);color:var(--linen);border-radius:14px;
+  display:flex;justify-content:space-between;align-items:center;gap:22px;flex-wrap:wrap;
+}
+.price-summary .lbl{font-family:var(--font-hd);font-size:10px;letter-spacing:.25em;color:rgba(241,237,226,.6);font-weight:700}
+.price-summary .amt{font-size:36px;font-weight:700;color:var(--grass);line-height:1;margin-top:4px;font-family:var(--font-tc);letter-spacing:-.01em}
+.price-summary .amt small{font-family:var(--font-hd);font-size:11px;color:rgba(241,237,226,.55);margin-left:6px;letter-spacing:.1em;font-weight:400}
+.submit-btn{
+  padding:16px 32px;background:var(--grass);color:var(--forest-ink);border:none;border-radius:999px;
+  font-family:var(--font-tc);font-size:15px;font-weight:700;letter-spacing:.04em;cursor:pointer;
+  display:inline-flex;align-items:center;gap:10px;transition:transform .2s, background .2s;
+}
+.submit-btn:hover{background:#c8dc85;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:.5;cursor:default;transform:none}
+.submit-btn .arr{transition:transform .2s}
+.submit-btn:hover .arr{transform:translateX(3px)}
+.err{display:none;color:var(--warn);font-size:13px;margin-top:14px;text-align:right}
+
+/* SUCCESS */
+.ok{display:none;text-align:center;padding:40px 8px 8px}
+.ok .check{font-size:52px}
+.ok h2{font-size:30px;color:var(--forest);font-weight:700;margin:14px 0 8px}
+.ok p.lead{font-size:14.5px;color:var(--forest-60);line-height:1.8;margin-bottom:18px}
+.ok .bank-info{text-align:left;max-width:440px;margin:18px auto 0}
+.ok .pay-amount{font-family:var(--font-tc);font-size:34px;font-weight:700;color:var(--grass);text-align:center;letter-spacing:-.01em}
+.ok .pay-amount small{display:block;font-family:var(--font-hd);font-size:10px;letter-spacing:.24em;color:rgba(241,237,226,.6);margin-top:4px;font-weight:400}
+.ok .screenshot-hint{font-size:12.5px;color:var(--forest-30);margin-top:14px;line-height:1.7}
+.ok .screenshot-hint b{color:var(--forest-60)}
+
+footer{text-align:center;font-size:11px;letter-spacing:.2em;font-family:var(--font-hd);color:var(--forest-30);padding:20px 0 32px;text-transform:uppercase}
+
+/* MOBILE */
+@media (max-width: 640px){
+  .nav-inner{padding:12px 18px}
+  .nav-right{display:none}
+  .hero{padding:36px 18px 16px}
+  .hero h1{font-size:30px}
+  .wrap{padding:8px 14px 40px}
+  .form-card{padding:28px 20px 24px;border-radius:14px}
+  .form-card::before{right:24px;width:46px}
+  .form-section-head{flex-wrap:wrap;gap:10px}
+  .form-section-head .hint{margin-left:0;font-size:11.5px;width:100%}
+  .field-grid{grid-template-columns:1fr;gap:16px}
+  .choices{grid-template-columns:1fr;gap:8px}
+  .choice{flex-direction:row;align-items:center;gap:10px;padding:12px 14px}
+  .item{padding:12px 14px;gap:10px}
+  .item .qty button{width:28px;height:28px}
+  .item .qty input{width:32px}
+  .bank-info{padding:18px 20px}
+  .bank-row{flex-direction:column;gap:4px}
+  .bank-row .bk{min-width:0}
+  .bank-row .bv-mono{font-size:15px}
+  .price-summary{padding:22px;flex-direction:column;align-items:stretch;text-align:center}
+  .price-summary .amt{font-size:30px}
+  .submit-btn{width:100%;justify-content:center}
+  .ok .pay-amount{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand-mark" href="#" aria-label="Soul Chill Running Club">
+      <img src="logo.png" alt="Soul Chill Running Club">
+    </a>
+    <span class="nav-right">EQUIPMENT · GROUP BUY</span>
+  </div>
+</nav>
+
+<section class="hero" id="formView-hero">
+  <div class="eyebrow">FOR JESSE'S RUNNING CLASS</div>
+  <h1>器材團購登記 <span class="display">GEAR UP</span></h1>
+  <p class="intro">
+    這些器材<b>第二堂課才會用到</b>，第一堂不需要帶。<br>
+    因為這期新朋友比較多，<b>傑西可以統一幫大家代購</b>，第二堂課直接帶給你。<br>
+    想請傑西代購的，勾選品項、填寫資訊送出後，依合計金額匯款即可。<br>
+    也可以自己買，下方有商品連結；<b>若你已經有類似的產品，就不用再買了。</b>
+  </p>
+</section>
+
+<div class="wrap">
+  <div id="formView">
+    <form class="form-card" id="form" autocomplete="off">
+
+      <!-- 1. 班別 -->
+      <div class="form-section">
+        <div class="form-section-head">
+          <span class="idx">01</span>
+          <h3>你的班別</h3>
+          <span class="hint">第二堂課由傑西現場交付</span>
+        </div>
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="class" value="台中週二班" required>
+            <span class="ct-day">TUE · 台中</span>
+            <span class="ct-name">週二班</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="class" value="台北週三班">
+            <span class="ct-day">WED · 台北</span>
+            <span class="ct-name">週三班</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="class" value="台中週四班">
+            <span class="ct-day">THU · 台中</span>
+            <span class="ct-name">週四班</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 2. 你的資訊 -->
+      <div class="form-section">
+        <div class="form-section-head">
+          <span class="idx">02</span>
+          <h3>你的資訊</h3>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label>姓名 <span class="req">*</span></label>
+            <input type="text" name="name" required placeholder="你的名字">
+          </div>
+          <div class="field">
+            <label>LINE 名稱 <span class="req">*</span></label>
+            <input type="text" name="line" required placeholder="方便在群組對到你">
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 想代購的器材 -->
+      <div class="form-section">
+        <div class="form-section-head">
+          <span class="idx">03</span>
+          <h3>想代購的器材</h3>
+          <span class="hint">可複選 · 已有就不用買</span>
+        </div>
+        <div class="items" id="items">
+
+          <div class="item" data-item="軟滾筒" data-price="200">
+            <input type="checkbox" class="chk">
+            <div class="info">
+              <div class="name">軟滾筒 10×30cm <span class="price">NT$200</span></div>
+              <div class="spec"><a href="https://tw.shp.ee/f4Zhz36" target="_blank" rel="noopener">自購參考</a></div>
+            </div>
+            <div class="qty">
+              <button type="button" data-d="-1" aria-label="減少">−</button>
+              <input type="text" inputmode="numeric" value="1" readonly>
+              <button type="button" data-d="1" aria-label="增加">＋</button>
+            </div>
+          </div>
+
+          <div class="item" data-item="長彈力帶" data-price="199">
+            <input type="checkbox" class="chk">
+            <div class="info">
+              <div class="name">長彈力帶 15kg <span class="price">NT$199</span></div>
+              <div class="spec"><a href="https://www.decathlon.tw/p/15-kg-%E5%BD%88%E5%8A%9B%E5%B8%B6-domyos-8928212.html" target="_blank" rel="noopener">自購參考</a></div>
+            </div>
+            <div class="qty">
+              <button type="button" data-d="-1" aria-label="減少">−</button>
+              <input type="text" inputmode="numeric" value="1" readonly>
+              <button type="button" data-d="1" aria-label="增加">＋</button>
+            </div>
+          </div>
+
+          <div class="item" data-item="短彈力帶" data-price="149">
+            <input type="checkbox" class="chk">
+            <div class="info">
+              <div class="name">短彈力帶 20~30 磅 <span class="price">NT$149</span></div>
+              <div class="spec"><a href="https://www.decathlon.tw/p/15-lbs-%E8%BF%B7%E4%BD%A0%E7%9F%BD%E8%86%A0%E5%BD%88%E5%8A%9B%E5%B8%B6-%E8%97%8D%E8%89%B2-domyos-8891401.html" target="_blank" rel="noopener">自購參考</a></div>
+            </div>
+            <div class="qty">
+              <button type="button" data-d="-1" aria-label="減少">−</button>
+              <input type="text" inputmode="numeric" value="1" readonly>
+              <button type="button" data-d="1" aria-label="增加">＋</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 4. 匯款 -->
+      <div class="form-section">
+        <div class="form-section-head">
+          <span class="idx">04</span>
+          <h3>匯款資訊</h3>
+          <span class="hint">先匯款 → 再回來填後五碼送出</span>
+        </div>
+        <div class="bank-info">
+          <div class="bank-row"><span class="bk">匯入銀行</span><span class="bv">台新銀行 <em>(代號 812)</em></span></div>
+          <div class="bank-row"><span class="bk">匯款帳號</span><span class="bv bv-mono">2888-1010-471385</span></div>
+          <div class="bank-row"><span class="bk">備註欄</span><span class="bv">請備註「<b>器材採購 + 你的名字</b>」</span></div>
+        </div>
+
+        <div class="field-grid" style="margin-top:18px">
+          <div class="field">
+            <label>匯款後五碼 <span class="req">*</span></label>
+            <input type="text" name="last5" required inputmode="numeric" maxlength="5" pattern="[0-9]{5}" placeholder="例如 12345">
+            <div class="help">請先依上方資訊匯款，再回來填寫此表單，方便對帳。</div>
+          </div>
+          <div class="field">
+            <label>備註 <span class="opt">(選填)</span></label>
+            <input type="text" name="notes" placeholder="例如:想自己買、或有其他需求">
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="price-summary">
+        <div>
+          <div class="lbl">合計</div>
+          <div class="amt" id="totalAmt">NT$ 0 <small>TWD</small></div>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">送出登記 <span class="arr">→</span></button>
+      </div>
+      <div class="err" id="err"></div>
+    </form>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="form-card ok" id="okView">
+    <div class="check">✅</div>
+    <h2>登記完成!</h2>
+    <p class="lead">傑西收到囉，第二堂課會把器材帶給你 🙂<br>有調整需要再到群組跟傑西說一聲。</p>
+    <div class="bank-info" id="bankBox">
+      <div class="bk-title">本次登記金額</div>
+      <div class="pay-amount"><span id="okTotal">NT$ 0</span><small>PAID</small></div>
+      <div class="bank-row"><span class="bk">匯入銀行</span><span class="bv">台新銀行 <em>(代號 812)</em></span></div>
+      <div class="bank-row"><span class="bk">匯款帳號</span><span class="bv bv-mono">2888-1010-471385</span></div>
+    </div>
+    <div class="screenshot-hint">
+      <b>建議截圖此頁面</b>方便之後對照。<br>
+      若還沒匯款，請依上方資訊完成後到群組告訴傑西 🙏
+    </div>
+  </div>
+</div>
+
+<footer>SOUL CHILL RUNNING CLUB</footer>
+
+<script>
+// ⬇️ 部署 Apps Script 後,把 Web App 網址貼到這裡
+const API_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+function calcTotal(){
+  let sum = 0;
+  document.querySelectorAll('.item').forEach(item=>{
+    if(item.querySelector('.chk').checked){
+      const price = parseInt(item.dataset.price,10) || 0;
+      const qty = parseInt(item.querySelector('.qty input').value,10) || 1;
+      sum += price * qty;
+    }
+  });
+  document.getElementById('totalAmt').innerHTML = 'NT$ ' + sum + ' <small>TWD</small>';
+  return sum;
+}
+
+document.querySelectorAll('.item').forEach(item=>{
+  const chk = item.querySelector('.chk');
+  const qtyInput = item.querySelector('.qty input');
+  chk.addEventListener('change',()=>{ item.classList.toggle('on', chk.checked); calcTotal(); });
+  item.querySelectorAll('.qty button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      let v = parseInt(qtyInput.value,10) || 1;
+      v += parseInt(btn.dataset.d,10);
+      if(v < 1) v = 1; if(v > 9) v = 9;
+      qtyInput.value = v;
+      if(!chk.checked){ chk.checked = true; item.classList.add('on'); }
+      calcTotal();
+    });
+  });
+});
+calcTotal();
+
+document.getElementById('form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const err = document.getElementById('err');
+  const btn = document.getElementById('submitBtn');
+  err.style.display = 'none';
+
+  const items = {};
+  let any = false;
+  document.querySelectorAll('.item').forEach(item=>{
+    const checked = item.querySelector('.chk').checked;
+    const qty = parseInt(item.querySelector('.qty input').value,10) || 1;
+    items[item.dataset.item] = checked ? qty : 0;
+    if(checked) any = true;
+  });
+
+  const fd = new FormData(this);
+  const last5 = (fd.get('last5')||'').trim();
+  if(!/^[0-9]{5}$/.test(last5)){
+    err.textContent = '匯款後五碼請填 5 位數字 (請先匯款再填表)。';
+    err.style.display = 'block'; return;
+  }
+  if(!any){
+    err.textContent = '請至少勾選一項器材。';
+    err.style.display = 'block'; return;
+  }
+
+  const total = calcTotal();
+  const payload = {
+    name: fd.get('name'),
+    line: fd.get('line'),
+    class: fd.get('class'),
+    last5: last5,
+    notes: fd.get('notes') || '',
+    items: items,
+    total: total
+  };
+
+  btn.disabled = true; btn.innerHTML = '送出中…';
+  fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+  })
+  .then(r => r.json())
+  .then(res => {
+    if(!res.ok) throw new Error(res.error||'fail');
+    document.getElementById('okTotal').textContent = 'NT$ ' + total;
+    if(total <= 0){ document.getElementById('bankBox').style.display = 'none'; }
+    document.getElementById('formView-hero').style.display = 'none';
+    document.getElementById('formView').style.display = 'none';
+    document.getElementById('okView').style.display = 'block';
+    window.scrollTo(0,0);
+  })
+  .catch(()=>{
+    err.textContent = '送出失敗,請再試一次,或直接在群組私訊傑西。';
+    err.style.display = 'block';
+    btn.disabled = false; btn.innerHTML = '送出登記 <span class="arr">→</span>';
+  });
+});
+</script>
+</body>
+</html>
