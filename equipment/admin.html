@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>器材團購採購總覽｜admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Style+Script&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --linen:#f1ede2;--linen-deep:#e7e1d1;--grass:#b9cf6f;
+  --forest:#1f3a2d;--forest-60:#4a5d51;--forest-30:#8f9b93;--forest-ink:#0f1f17;
+  --line:#d8d1bd;--white:#faf7ee;--warn:#b8542a;
+  --font-hd:'Syncopate','Noto Sans TC',sans-serif;
+  --font-script:'Style Script',cursive;
+  --font-tc:'Noto Sans TC','PingFang TC',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font-tc);-webkit-font-smoothing:antialiased;line-height:1.65;min-height:100vh}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(15,31,23,.92);backdrop-filter:blur(12px) saturate(120%);border-bottom:1px solid rgba(241,237,226,.1)}
+.nav-inner{max-width:1080px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand-mark{display:flex;align-items:center;line-height:1}
+.brand-mark img{height:42px;width:auto;display:block;filter:brightness(1.15)}
+.nav-right{font-family:var(--font-hd);font-size:10px;letter-spacing:.24em;color:rgba(241,237,226,.55);background:var(--warn);color:var(--linen);padding:6px 11px;border-radius:4px;font-weight:700;text-transform:uppercase}
+
+/* HERO */
+.hero{max-width:1080px;margin:0 auto;padding:40px 24px 18px}
+.hero .eyebrow{font-family:var(--font-hd);font-size:11px;letter-spacing:.32em;color:rgba(241,237,226,.55);font-weight:700;text-transform:uppercase}
+.hero h1{font-size:clamp(28px,4.5vw,40px);color:var(--linen);font-weight:700;letter-spacing:-.01em;line-height:1.15;margin:14px 0 14px;display:flex;flex-wrap:wrap;align-items:baseline;gap:14px}
+.hero .display{font-family:var(--font-hd);font-size:clamp(12px,1.4vw,15px);font-weight:700;letter-spacing:.24em;text-transform:uppercase;padding:6px 12px;background:var(--grass);border-radius:4px;color:var(--forest-ink);line-height:1.2;align-self:center}
+.hero .meta{display:flex;align-items:center;gap:14px;font-size:13px;color:rgba(241,237,226,.65);flex-wrap:wrap}
+.hero .meta .upd{font-family:var(--font-hd);font-size:10.5px;letter-spacing:.2em;font-weight:700}
+.refresh-btn{margin-left:auto;background:transparent;color:var(--grass);border:1.5px solid var(--grass);padding:8px 16px;border-radius:999px;cursor:pointer;font-family:var(--font-tc);font-size:13px;font-weight:600;transition:all .15s}
+.refresh-btn:hover{background:var(--grass);color:var(--forest-ink)}
+
+/* SECTION HEADER */
+.wrap{max-width:1080px;margin:0 auto;padding:8px 24px 64px}
+.sec{margin-bottom:32px}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.sec-head .idx{font-family:var(--font-hd);font-size:10.5px;letter-spacing:.2em;color:var(--forest-ink);background:var(--grass);padding:6px 11px;border-radius:4px;font-weight:700}
+.sec-head h2{font-size:18px;color:var(--linen);font-weight:700;letter-spacing:-.005em}
+.sec-head .hint{font-size:12px;color:var(--forest-30);margin-left:auto;font-family:var(--font-hd);letter-spacing:.16em;text-transform:uppercase}
+
+/* TOP STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stat{background:rgba(241,237,226,.04);border:1px solid rgba(241,237,226,.1);border-radius:14px;padding:20px 22px}
+.stat .lbl{font-family:var(--font-hd);font-size:10px;letter-spacing:.22em;color:rgba(241,237,226,.55);font-weight:700;text-transform:uppercase}
+.stat .num{font-size:36px;font-weight:700;color:var(--linen);line-height:1.05;margin-top:8px;letter-spacing:-.02em}
+.stat .num small{font-size:13px;color:rgba(241,237,226,.5);font-weight:400;margin-left:6px;letter-spacing:0}
+.stat.money .num{color:var(--grass)}
+
+/* PURCHASE TOTALS — 重點 */
+.purchase{background:linear-gradient(135deg, #1f3a2d 0%, #2a4a3a 100%);border-radius:18px;padding:32px 32px;border:1px solid rgba(185,207,111,.25)}
+.purchase .lbl{font-family:var(--font-hd);font-size:11px;letter-spacing:.26em;color:var(--grass);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+.purchase h3{font-size:22px;color:var(--linen);font-weight:700;margin-bottom:22px}
+.purchase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.purchase-item{background:rgba(15,31,23,.5);border:1px solid rgba(241,237,226,.08);border-radius:12px;padding:20px 22px}
+.purchase-item .name{font-size:14px;color:rgba(241,237,226,.7);font-weight:500;margin-bottom:6px}
+.purchase-item .qty{font-size:54px;font-weight:700;color:var(--grass);line-height:1;letter-spacing:-.03em}
+.purchase-item .qty small{font-family:var(--font-hd);font-size:13px;color:rgba(241,237,226,.5);margin-left:8px;letter-spacing:.1em;font-weight:400}
+.purchase-item .price{font-size:12px;color:var(--forest-30);margin-top:6px;font-family:var(--font-hd);letter-spacing:.08em}
+
+/* CLASS CARDS */
+.classes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cls-card{background:rgba(241,237,226,.04);border:1px solid rgba(241,237,226,.1);border-radius:14px;padding:22px}
+.cls-card .day{font-family:var(--font-hd);font-size:11px;letter-spacing:.2em;color:var(--grass);font-weight:700;margin-bottom:4px}
+.cls-card .city{font-size:18px;color:var(--linen);font-weight:700;margin-bottom:14px}
+.cls-card .ppl{font-size:30px;color:var(--linen);font-weight:700;line-height:1}
+.cls-card .ppl small{font-size:12px;color:rgba(241,237,226,.5);font-weight:400;margin-left:4px}
+.cls-card .qty-row{display:flex;justify-content:space-between;font-size:13px;color:rgba(241,237,226,.7);padding:6px 0;border-bottom:1px dashed rgba(241,237,226,.08)}
+.cls-card .qty-row:last-child{border-bottom:none}
+.cls-card .qty-row b{color:var(--linen);font-weight:600}
+.cls-card .qty-list{margin:14px 0 6px}
+.cls-card .toggle{display:block;width:100%;background:transparent;color:var(--grass);border:1px solid rgba(185,207,111,.4);padding:8px;border-radius:8px;cursor:pointer;font-family:var(--font-tc);font-size:12.5px;margin-top:10px;transition:all .15s}
+.cls-card .toggle:hover{background:rgba(185,207,111,.1)}
+.cls-card .roster{display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(241,237,226,.1);font-size:12.5px}
+.cls-card .roster.on{display:block}
+.cls-card .row{padding:10px 0;border-bottom:1px dashed rgba(241,237,226,.08)}
+.cls-card .row:last-child{border-bottom:none}
+.cls-card .row .nm{color:var(--linen);font-weight:600;font-size:13.5px}
+.cls-card .row .ln{color:var(--forest-30);font-size:11.5px;margin-left:8px}
+.cls-card .row .it{color:rgba(241,237,226,.7);margin-top:4px;font-size:12px}
+.cls-card .row .ft{display:flex;justify-content:space-between;color:var(--forest-30);font-size:11px;margin-top:4px;font-family:var(--font-hd);letter-spacing:.06em}
+.cls-card .row .ft .paid{color:var(--grass)}
+.cls-card .row .ft .unpaid{color:var(--warn)}
+.cls-card.empty{opacity:.55}
+
+/* GATE — 密碼輸入 */
+.gate{display:flex;align-items:center;justify-content:center;min-height:60vh;padding:40px 20px}
+.gate-card{background:rgba(241,237,226,.04);border:1px solid rgba(241,237,226,.1);border-radius:14px;padding:36px 32px;max-width:380px;width:100%;text-align:center}
+.gate-card h2{font-size:22px;color:var(--linen);margin-bottom:6px}
+.gate-card p{font-size:13px;color:var(--forest-30);margin-bottom:20px}
+.gate-card input{width:100%;padding:12px 14px;background:rgba(15,31,23,.6);border:1px solid rgba(241,237,226,.2);border-radius:8px;font-family:var(--font-tc);font-size:14.5px;color:var(--linen);text-align:center;letter-spacing:.04em}
+.gate-card input:focus{outline:none;border-color:var(--grass)}
+.gate-card button{width:100%;margin-top:14px;padding:13px;background:var(--grass);color:var(--forest-ink);border:none;border-radius:8px;font-family:var(--font-tc);font-size:14.5px;font-weight:700;cursor:pointer;letter-spacing:.04em}
+.gate-card .err{color:var(--warn);font-size:13px;margin-top:10px;min-height:18px}
+
+.loading{text-align:center;padding:60px 20px;color:var(--forest-30);font-family:var(--font-hd);font-size:11px;letter-spacing:.3em;font-weight:700}
+
+.empty-state{background:rgba(241,237,226,.04);border:1px dashed rgba(241,237,226,.15);border-radius:12px;padding:36px 20px;text-align:center;color:var(--forest-30);font-size:14px}
+
+/* MOBILE */
+@media (max-width: 720px){
+  .nav-inner{padding:12px 18px}
+  .nav-right{font-size:9.5px;padding:5px 9px}
+  .hero{padding:28px 18px 14px}
+  .hero h1{font-size:26px;gap:10px}
+  .wrap{padding:8px 14px 48px}
+  .stats{grid-template-columns:1fr 1fr;gap:10px}
+  .stat{padding:16px 16px}
+  .stat .num{font-size:28px}
+  .stat.full{grid-column:1/-1}
+  .purchase{padding:24px 20px;border-radius:14px}
+  .purchase h3{font-size:18px;margin-bottom:16px}
+  .purchase-grid{grid-template-columns:1fr;gap:10px}
+  .purchase-item{padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
+  .purchase-item .name{margin-bottom:0}
+  .purchase-item .qty{font-size:36px}
+  .purchase-item .price{display:none}
+  .classes{grid-template-columns:1fr;gap:10px}
+  .cls-card{padding:18px 18px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand-mark" href="#" aria-label="Soul Chill Running Club">
+      <img src="logo.png" alt="Soul Chill Running Club">
+    </a>
+    <span class="nav-right">ADMIN · GEAR DASH</span>
+  </div>
+</nav>
+
+<!-- 密碼 gate -->
+<div class="gate" id="gateView">
+  <div class="gate-card">
+    <h2>🔒 採購總覽</h2>
+    <p>請輸入存取密碼</p>
+    <input type="password" id="keyInput" placeholder="ADMIN KEY" autocomplete="off" autofocus>
+    <button id="keyBtn">解鎖</button>
+    <div class="err" id="keyErr"></div>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div id="dashView" style="display:none">
+  <section class="hero">
+    <div class="eyebrow">GEAR GROUP BUY</div>
+    <h1>採購總覽 <span class="display">ADMIN</span></h1>
+    <div class="meta">
+      <span class="upd">UPDATED <span id="updatedAt">—</span></span>
+      <button class="refresh-btn" id="refreshBtn">↻ 重新整理</button>
+    </div>
+  </section>
+
+  <div class="wrap">
+
+    <!-- 總覽 stats -->
+    <div class="sec">
+      <div class="sec-head">
+        <span class="idx">01</span>
+        <h2>整體狀態</h2>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="lbl">已登記</div>
+          <div class="num"><span id="totalPeople">0</span><small>人</small></div>
+        </div>
+        <div class="stat">
+          <div class="lbl">已匯款</div>
+          <div class="num"><span id="paidPeople">0</span><small>/ <span id="totalPeople2">0</span></small></div>
+        </div>
+        <div class="stat money">
+          <div class="lbl">總金額</div>
+          <div class="num">NT$<span id="totalMoney">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 需採購清單 重點 -->
+    <div class="sec">
+      <div class="sec-head">
+        <span class="idx">02</span>
+        <h2>我要買多少（總數）</h2>
+        <span class="hint">TO PROCURE</span>
+      </div>
+      <div class="purchase">
+        <div class="lbl">PURCHASE LIST</div>
+        <h3>下次去 Decathlon / 蝦皮 帶這些</h3>
+        <div class="purchase-grid" id="purchaseList">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 三班分組 -->
+    <div class="sec">
+      <div class="sec-head">
+        <span class="idx">03</span>
+        <h2>三班分組</h2>
+        <span class="hint">BY CLASS</span>
+      </div>
+      <div class="classes" id="classes">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div id="emptyState" class="empty-state" style="display:none">
+      還沒有人填表 — 等學員陸續登記中 🌱
+    </div>
+
+  </div>
+</div>
+
+<div class="loading" id="loadingView" style="display:none">LOADING…</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbynT2D3OL6fcBkb8ZNy33v34rYx_ScvQJ-RUvlznewzyLXzsemV0DmEVjJFb2iqlJ7BvA/exec';
+const LS_KEY = 'sc_gear_admin_key';
+
+const CLASS_META = {
+  '台中週二班': { day: 'TUE · 台中', city: '週二班' },
+  '台北週三班': { day: 'WED · 台北', city: '週三班' },
+  '台中週四班': { day: 'THU · 台中', city: '週四班' }
+};
+
+function num(n){ return Number(n||0).toLocaleString(); }
+
+function fetchSummary(key){
+  return fetch(`${API_URL}?view=summary&k=${encodeURIComponent(key)}`)
+    .then(r => r.json());
+}
+
+function render(d){
+  document.getElementById('updatedAt').textContent = d.updated || '—';
+  document.getElementById('totalPeople').textContent = d.people.total;
+  document.getElementById('totalPeople2').textContent = d.people.total;
+  document.getElementById('paidPeople').textContent = d.people.paid;
+  document.getElementById('totalMoney').textContent = ' ' + num(d.money.total);
+
+  // 採購清單
+  const pl = document.getElementById('purchaseList');
+  pl.innerHTML = '';
+  d.items.forEach(it => {
+    const qty = d.totals[it] || 0;
+    const price = d.prices[it] || 0;
+    const sub = qty * price;
+    pl.insertAdjacentHTML('beforeend', `
+      <div class="purchase-item">
+        <div>
+          <div class="name">${it}</div>
+          <div class="price">@ NT$${price} · 小計 NT$${num(sub)}</div>
+        </div>
+        <div class="qty">${qty}<small>個</small></div>
+      </div>
+    `);
+  });
+
+  // 三班
+  const cc = document.getElementById('classes');
+  cc.innerHTML = '';
+  ['台中週二班','台北週三班','台中週四班'].forEach(cls => {
+    const b = d.byClass[cls] || { people:0, totals:{}, money:0, rows:[] };
+    const meta = CLASS_META[cls];
+    const emptyCls = b.people === 0;
+    const qtyRows = d.items.map(it =>
+      `<div class="qty-row"><span>${it}</span><b>× ${b.totals[it]||0}</b></div>`
+    ).join('');
+    const roster = b.rows.map(r => {
+      const itemsStr = d.items.filter(it => r.items[it]>0).map(it => `${it}×${r.items[it]}`).join('、') || '—';
+      const paid = r.last5 ? `<span class="paid">後五碼 ${r.last5}</span>` : `<span class="unpaid">待匯款</span>`;
+      return `
+        <div class="row">
+          <div><span class="nm">${r.name}</span><span class="ln">${r.line||''}</span></div>
+          <div class="it">${itemsStr}　NT$${num(r.total)}${r.notes? '　備註：'+r.notes : ''}</div>
+          <div class="ft"><span>${r.time||''}</span>${paid}</div>
+        </div>
+      `;
+    }).join('');
+
+    cc.insertAdjacentHTML('beforeend', `
+      <div class="cls-card ${emptyCls?'empty':''}">
+        <div class="day">${meta.day}</div>
+        <div class="city">${meta.city}</div>
+        <div class="ppl">${b.people}<small>人 · NT$${num(b.money)}</small></div>
+        <div class="qty-list">${qtyRows}</div>
+        ${b.rows.length ? `<button class="toggle">展開名單 (${b.rows.length})</button>
+        <div class="roster">${roster}</div>` : ''}
+      </div>
+    `);
+  });
+
+  // toggles
+  cc.querySelectorAll('.toggle').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const r = btn.nextElementSibling;
+      r.classList.toggle('on');
+      btn.textContent = r.classList.contains('on') ? '收起名單' : `展開名單 (${r.children.length})`;
+    });
+  });
+
+  document.getElementById('emptyState').style.display = d.people.total === 0 ? 'block' : 'none';
+}
+
+function load(key){
+  document.getElementById('gateView').style.display = 'none';
+  document.getElementById('loadingView').style.display = 'block';
+  document.getElementById('dashView').style.display = 'none';
+
+  fetchSummary(key).then(d => {
+    document.getElementById('loadingView').style.display = 'none';
+    if (!d.ok) {
+      localStorage.removeItem(LS_KEY);
+      document.getElementById('gateView').style.display = 'flex';
+      document.getElementById('keyErr').textContent = '密碼錯誤,請再試一次。';
+      return;
+    }
+    localStorage.setItem(LS_KEY, key);
+    document.getElementById('dashView').style.display = 'block';
+    render(d);
+  }).catch(()=>{
+    document.getElementById('loadingView').style.display = 'none';
+    document.getElementById('gateView').style.display = 'flex';
+    document.getElementById('keyErr').textContent = '連線失敗,請稍後再試。';
+  });
+}
+
+document.getElementById('keyBtn').addEventListener('click',()=>{
+  const k = document.getElementById('keyInput').value.trim();
+  if (k) load(k);
+});
+document.getElementById('keyInput').addEventListener('keydown',e=>{
+  if (e.key === 'Enter') document.getElementById('keyBtn').click();
+});
+document.getElementById('refreshBtn').addEventListener('click',()=>{
+  const k = localStorage.getItem(LS_KEY);
+  if (k) load(k);
+});
+
+// 自動載入(若已存過 key)
+const savedKey = localStorage.getItem(LS_KEY);
+if (savedKey) {
+  load(savedKey);
+} else {
+  document.getElementById('gateView').style.display = 'flex';
+}
+</script>
+</body>
+</html>
