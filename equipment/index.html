@@ -43,6 +43,15 @@ body{overflow-x:hidden}
 .hero .display{font-family:var(--font-hd);color:var(--forest);font-size:clamp(13px,1.6vw,16px);font-weight:700;letter-spacing:.24em;text-transform:uppercase;padding:6px 12px;background:var(--grass);border-radius:4px;color:var(--forest-ink);line-height:1.2;align-self:center}
 .hero .intro{font-size:15px;color:var(--forest-60);line-height:1.8;max-width:60ch}
 .hero .intro b{color:var(--forest)}
+.deadline{margin-top:22px;max-width:60ch;background:#fff7e6;border:1.5px solid #e8a85c;border-left:5px solid #d48232;border-radius:10px;padding:16px 18px;display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px}
+.deadline .deadline-tag{font-family:var(--font-hd);font-size:10.5px;letter-spacing:.22em;font-weight:700;color:#fff;background:#d48232;padding:5px 10px;border-radius:4px;text-transform:uppercase}
+.deadline .deadline-time{font-size:18px;font-weight:700;color:#8a4a14;letter-spacing:.01em}
+.deadline .deadline-note{font-size:13px;color:#8a4a14;width:100%;line-height:1.55;margin-top:2px}
+@media (max-width: 640px){
+  .deadline{padding:14px 14px;margin-top:18px;border-radius:8px}
+  .deadline .deadline-time{font-size:16px}
+  .deadline .deadline-note{font-size:12.5px}
+}
 
 /* FORM CARD */
 .wrap{max-width:760px;margin:0 auto;padding:8px 24px 56px}
@@ -200,6 +209,11 @@ footer{text-align:center;font-size:11px;letter-spacing:.2em;font-family:var(--fo
     想請傑西代購的，勾選品項、填寫資訊送出後，依合計金額匯款即可。<br>
     也可以自己買，下方有商品連結；<b>若你已經有類似的產品，就不用再買了。</b>
   </p>
+  <div class="deadline">
+    <span class="deadline-tag">登記截止</span>
+    <span class="deadline-time">6/1（一）中午 12:00</span>
+    <span class="deadline-note">傑西要依登記數量去採購，過了時間就無法代購了</span>
+  </div>
 </section>
 
 <div class="wrap">
