@@ -74,18 +74,20 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
 .cls-card .qty-row:last-child{border-bottom:none}
 .cls-card .qty-row b{color:var(--linen);font-weight:600}
 .cls-card .qty-list{margin:14px 0 6px}
-.cls-card .toggle{display:block;width:100%;background:transparent;color:var(--grass);border:1px solid rgba(185,207,111,.4);padding:8px;border-radius:8px;cursor:pointer;font-family:var(--font-tc);font-size:12.5px;margin-top:10px;transition:all .15s}
-.cls-card .toggle:hover{background:rgba(185,207,111,.1)}
-.cls-card .roster{display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(241,237,226,.1);font-size:12.5px}
-.cls-card .roster.on{display:block}
-.cls-card .row{padding:10px 0;border-bottom:1px dashed rgba(241,237,226,.08)}
-.cls-card .row:last-child{border-bottom:none}
-.cls-card .row .nm{color:var(--linen);font-weight:600;font-size:13.5px}
-.cls-card .row .ln{color:var(--forest-30);font-size:11.5px;margin-left:8px}
-.cls-card .row .it{color:rgba(241,237,226,.7);margin-top:4px;font-size:12px}
-.cls-card .row .ft{display:flex;justify-content:space-between;color:var(--forest-30);font-size:11px;margin-top:4px;font-family:var(--font-hd);letter-spacing:.06em}
+.cls-card .roster{margin-top:14px;padding-top:14px;border-top:1px solid rgba(241,237,226,.1)}
+.cls-card .roster-label{font-family:var(--font-hd);font-size:9.5px;letter-spacing:.24em;color:rgba(241,237,226,.45);font-weight:700;text-transform:uppercase;margin-bottom:8px}
+.cls-card .row{padding:12px 0;border-bottom:1px dashed rgba(241,237,226,.1)}
+.cls-card .row:last-child{border-bottom:none;padding-bottom:0}
+.cls-card .row-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.cls-card .row .nm{color:var(--linen);font-weight:700;font-size:15px;line-height:1.2}
+.cls-card .row .ln{color:var(--forest-30);font-size:11.5px;margin-left:6px;font-weight:400}
+.cls-card .row .amt{color:var(--grass);font-weight:700;font-size:13px;font-family:var(--font-hd);letter-spacing:.04em;white-space:nowrap}
+.cls-card .row .it{color:rgba(241,237,226,.85);margin-top:6px;font-size:13.5px;line-height:1.5;background:rgba(185,207,111,.08);padding:6px 10px;border-radius:6px;border-left:2px solid var(--grass)}
+.cls-card .row .it b{color:var(--grass);font-weight:700}
+.cls-card .row .ft{display:flex;justify-content:space-between;color:var(--forest-30);font-size:10.5px;margin-top:6px;font-family:var(--font-hd);letter-spacing:.08em}
 .cls-card .row .ft .paid{color:var(--grass)}
 .cls-card .row .ft .unpaid{color:var(--warn)}
+.cls-card .row .nt{color:rgba(241,237,226,.55);font-size:12px;margin-top:4px;font-style:italic}
 .cls-card.empty{opacity:.55}
 
 /* GATE — 密碼輸入 */
@@ -272,13 +274,20 @@ function render(d){
       `<div class="qty-row"><span>${it}</span><b>× ${b.totals[it]||0}</b></div>`
     ).join('');
     const roster = b.rows.map(r => {
-      const itemsStr = d.items.filter(it => r.items[it]>0).map(it => `${it}×${r.items[it]}`).join('、') || '—';
-      const paid = r.last5 ? `<span class="paid">後五碼 ${r.last5}</span>` : `<span class="unpaid">待匯款</span>`;
+      const itemsStr = d.items.filter(it => r.items[it]>0)
+        .map(it => `${it} <b>×${r.items[it]}</b>`).join('　') || '—';
+      const paid = r.last5
+        ? `<span class="paid">✓ 後五碼 ${r.last5}</span>`
+        : `<span class="unpaid">⚠ 待匯款</span>`;
       return `
         <div class="row">
-          <div><span class="nm">${r.name}</span><span class="ln">${r.line||''}</span></div>
-          <div class="it">${itemsStr}　NT$${num(r.total)}${r.notes? '　備註：'+r.notes : ''}</div>
+          <div class="row-head">
+            <div><span class="nm">${r.name}</span><span class="ln">${r.line||''}</span></div>
+            <div class="amt">NT$${num(r.total)}</div>
+          </div>
+          <div class="it">${itemsStr}</div>
           <div class="ft"><span>${r.time||''}</span>${paid}</div>
+          ${r.notes ? `<div class="nt">備註：${r.notes}</div>` : ''}
         </div>
       `;
     }).join('');
@@ -289,19 +298,14 @@ function render(d){
         <div class="city">${meta.city}</div>
         <div class="ppl">${b.people}<small>人 · NT$${num(b.money)}</small></div>
         <div class="qty-list">${qtyRows}</div>
-        ${b.rows.length ? `<button class="toggle">展開名單 (${b.rows.length})</button>
-        <div class="roster">${roster}</div>` : ''}
+        ${b.rows.length ? `
+          <div class="roster">
+            <div class="roster-label">交貨清單 · ${b.rows.length} 人</div>
+            ${roster}
+          </div>
+        ` : ''}
       </div>
     `);
-  });
-
-  // toggles
-  cc.querySelectorAll('.toggle').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const r = btn.nextElementSibling;
-      r.classList.toggle('on');
-      btn.textContent = r.classList.contains('on') ? '收起名單' : `展開名單 (${r.children.length})`;
-    });
   });
 
   document.getElementById('emptyState').style.display = d.people.total === 0 ? 'block' : 'none';
