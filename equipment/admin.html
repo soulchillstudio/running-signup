@@ -220,7 +220,7 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
 <div class="loading" id="loadingView" style="display:none">LOADING…</div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbynT2D3OL6fcBkb8ZNy33v34rYx_ScvQJ-RUvlznewzyLXzsemV0DmEVjJFb2iqlJ7BvA/exec';
+const API_URL = 'https://soulchill-forms.qazmnbvgamil.workers.dev/api/equipment/summary';
 const LS_KEY = 'sc_gear_admin_key';
 
 const CLASS_META = {
@@ -232,7 +232,7 @@ const CLASS_META = {
 function num(n){ return Number(n||0).toLocaleString(); }
 
 function fetchSummary(key){
-  return fetch(`${API_URL}?view=summary&k=${encodeURIComponent(key)}`)
+  return fetch(`${API_URL}?k=${encodeURIComponent(key)}`)
     .then(r => r.json());
 }
 
