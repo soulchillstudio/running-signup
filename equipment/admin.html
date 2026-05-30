@@ -75,10 +75,22 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
 .cls-card .qty-row b{color:var(--linen);font-weight:600}
 .cls-card .qty-list{margin:14px 0 6px}
 .cls-card .roster{margin-top:14px;padding-top:14px;border-top:1px solid rgba(241,237,226,.1)}
-.cls-card .roster-label{font-family:var(--font-hd);font-size:9.5px;letter-spacing:.24em;color:rgba(241,237,226,.45);font-weight:700;text-transform:uppercase;margin-bottom:8px}
-.cls-card .row{padding:12px 0;border-bottom:1px dashed rgba(241,237,226,.1)}
+.cls-card .roster-label{font-family:var(--font-hd);font-size:9.5px;letter-spacing:.24em;color:rgba(241,237,226,.45);font-weight:700;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cls-card .row{padding:12px 0;border-bottom:1px dashed rgba(241,237,226,.1);display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;transition:opacity .2s}
 .cls-card .row:last-child{border-bottom:none;padding-bottom:0}
+.cls-card .row .body{min-width:0}
 .cls-card .row-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+
+/* 交貨 checkbox */
+.deliver{position:relative;width:28px;height:28px;flex-shrink:0;cursor:pointer;margin-top:2px}
+.deliver input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
+.deliver .box{position:absolute;inset:0;border:2px solid rgba(185,207,111,.5);border-radius:7px;background:rgba(15,31,23,.5);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.deliver .box::after{content:"";width:14px;height:8px;border-left:2.5px solid var(--forest-ink);border-bottom:2.5px solid var(--forest-ink);transform:rotate(-45deg) translate(1px,-2px);opacity:0;transition:opacity .15s}
+.deliver input:checked + .box{background:var(--grass);border-color:var(--grass)}
+.deliver input:checked + .box::after{opacity:1}
+.cls-card .row.done{opacity:.45}
+.cls-card .row.done .nm{text-decoration:line-through;text-decoration-color:rgba(241,237,226,.4)}
+.cls-card .deliver-count{font-family:var(--font-hd);font-size:9.5px;letter-spacing:.18em;color:var(--grass);font-weight:700;margin-left:auto}
 .cls-card .row .nm{color:var(--linen);font-weight:700;font-size:15px;line-height:1.2}
 .cls-card .row .ln{color:var(--forest-30);font-size:11.5px;margin-left:6px;font-weight:400}
 .cls-card .row .amt{color:var(--grass);font-weight:700;font-size:13px;font-family:var(--font-hd);letter-spacing:.04em;white-space:nowrap}
@@ -106,24 +118,58 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
 
 /* MOBILE */
 @media (max-width: 720px){
-  .nav-inner{padding:12px 18px}
-  .nav-right{font-size:9.5px;padding:5px 9px}
-  .hero{padding:28px 18px 14px}
-  .hero h1{font-size:26px;gap:10px}
-  .wrap{padding:8px 14px 48px}
+  .nav-inner{padding:10px 16px}
+  .nav-inner .brand-mark img{height:34px}
+  .nav-right{font-size:9px;padding:4px 8px;letter-spacing:.18em}
+  .hero{padding:22px 16px 10px}
+  .hero h1{font-size:24px;gap:8px;margin:10px 0 10px}
+  .hero .display{font-size:11px;padding:5px 10px;letter-spacing:.2em}
+  .hero .meta{font-size:12px;gap:10px}
+  .refresh-btn{margin-left:auto;padding:8px 14px;font-size:12.5px}
+  .wrap{padding:4px 14px 56px}
+  .sec{margin-bottom:24px}
+  .sec-head{margin-bottom:12px;gap:10px}
+  .sec-head h2{font-size:16px}
+  .sec-head .hint{font-size:10.5px;letter-spacing:.14em}
+
   .stats{grid-template-columns:1fr 1fr;gap:10px}
-  .stat{padding:16px 16px}
-  .stat .num{font-size:28px}
+  .stat{padding:14px 16px;border-radius:12px}
+  .stat .num{font-size:26px}
+  .stat .lbl{font-size:9.5px}
   .stat.full{grid-column:1/-1}
-  .purchase{padding:24px 20px;border-radius:14px}
-  .purchase h3{font-size:18px;margin-bottom:16px}
+  .stat.money .num{font-size:32px}
+
+  .purchase{padding:20px 18px;border-radius:14px}
+  .purchase h3{font-size:16px;margin-bottom:14px;line-height:1.35}
+  .purchase .lbl{font-size:10px;letter-spacing:.22em}
   .purchase-grid{grid-template-columns:1fr;gap:10px}
-  .purchase-item{padding:16px 18px;display:flex;align-items:center;justify-content:space-between}
-  .purchase-item .name{margin-bottom:0}
-  .purchase-item .qty{font-size:36px}
-  .purchase-item .price{display:none}
+  .purchase-item{padding:14px 16px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px}
+  .purchase-item .name{margin-bottom:2px;font-size:14.5px;color:var(--linen);font-weight:600}
+  .purchase-item .price{display:block;margin-top:2px;font-size:10.5px}
+  .purchase-item .qty{font-size:38px;line-height:.95}
+  .purchase-item .qty small{font-size:11px;margin-left:4px}
+
   .classes{grid-template-columns:1fr;gap:10px}
-  .cls-card{padding:18px 18px}
+  .cls-card{padding:18px 16px;border-radius:12px}
+  .cls-card .city{font-size:17px;margin-bottom:12px}
+  .cls-card .ppl{font-size:26px}
+  .cls-card .qty-list{margin:12px 0 4px}
+  .cls-card .qty-row{font-size:13px;padding:7px 0}
+  .cls-card .row{padding:11px 0}
+  .cls-card .row-head{flex-wrap:wrap;gap:4px 10px}
+  .cls-card .row .nm{font-size:14.5px}
+  .cls-card .row .ln{display:block;margin-left:0;margin-top:2px}
+  .cls-card .row .amt{font-size:12.5px}
+  .cls-card .row .it{font-size:13px;padding:6px 9px;line-height:1.45}
+  .cls-card .row .ft{flex-wrap:wrap;gap:4px 10px;font-size:10px}
+}
+
+/* 超窄機（iPhone SE 等）*/
+@media (max-width: 380px){
+  .hero h1{font-size:21px}
+  .stat .num{font-size:22px}
+  .stat.money .num{font-size:26px}
+  .purchase-item .qty{font-size:32px}
 }
 </style>
 </head>
@@ -177,7 +223,7 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
           <div class="lbl">已匯款</div>
           <div class="num"><span id="paidPeople">0</span><small>/ <span id="totalPeople2">0</span></small></div>
         </div>
-        <div class="stat money">
+        <div class="stat money full">
           <div class="lbl">總金額</div>
           <div class="num">NT$<span id="totalMoney">0</span></div>
         </div>
@@ -224,6 +270,15 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
 <script>
 const API_URL = 'https://soulchill-forms.qazmnbvgamil.workers.dev/api/equipment/summary';
 const LS_KEY = 'sc_gear_admin_key';
+const LS_DELIVERED = 'sc_gear_delivered_v1';
+
+function loadDelivered(){
+  try { return JSON.parse(localStorage.getItem(LS_DELIVERED) || '{}'); }
+  catch(e){ return {}; }
+}
+function saveDelivered(d){ localStorage.setItem(LS_DELIVERED, JSON.stringify(d)); }
+function rowKey(cls, r){ return `${cls}|${r.name}|${r.line||''}|${r.time||''}`; }
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 const CLASS_META = {
   '台中週二班': { day: 'TUE · 台中', city: '週二班' },
@@ -273,21 +328,32 @@ function render(d){
     const qtyRows = d.items.map(it =>
       `<div class="qty-row"><span>${it}</span><b>× ${b.totals[it]||0}</b></div>`
     ).join('');
+    const delivered = loadDelivered();
+    let doneCount = 0;
     const roster = b.rows.map(r => {
       const itemsStr = d.items.filter(it => r.items[it]>0)
-        .map(it => `${it} <b>×${r.items[it]}</b>`).join('　') || '—';
+        .map(it => `${esc(it)} <b>×${r.items[it]}</b>`).join('　') || '—';
       const paid = r.last5
-        ? `<span class="paid">✓ 後五碼 ${r.last5}</span>`
+        ? `<span class="paid">✓ 後五碼 ${esc(r.last5)}</span>`
         : `<span class="unpaid">⚠ 待匯款</span>`;
+      const key = rowKey(cls, r);
+      const isDone = !!delivered[key];
+      if (isDone) doneCount++;
       return `
-        <div class="row">
-          <div class="row-head">
-            <div><span class="nm">${r.name}</span><span class="ln">${r.line||''}</span></div>
-            <div class="amt">NT$${num(r.total)}</div>
+        <div class="row ${isDone?'done':''}" data-key="${esc(key)}">
+          <label class="deliver" title="勾選 = 已交貨">
+            <input type="checkbox" class="deliver-cb" ${isDone?'checked':''}>
+            <span class="box"></span>
+          </label>
+          <div class="body">
+            <div class="row-head">
+              <div><span class="nm">${esc(r.name)}</span><span class="ln">${esc(r.line||'')}</span></div>
+              <div class="amt">NT$${num(r.total)}</div>
+            </div>
+            <div class="it">${itemsStr}</div>
+            <div class="ft"><span>${esc(r.time||'')}</span>${paid}</div>
+            ${r.notes ? `<div class="nt">備註：${esc(r.notes)}</div>` : ''}
           </div>
-          <div class="it">${itemsStr}</div>
-          <div class="ft"><span>${r.time||''}</span>${paid}</div>
-          ${r.notes ? `<div class="nt">備註：${r.notes}</div>` : ''}
         </div>
       `;
     }).join('');
@@ -300,12 +366,35 @@ function render(d){
         <div class="qty-list">${qtyRows}</div>
         ${b.rows.length ? `
           <div class="roster">
-            <div class="roster-label">交貨清單 · ${b.rows.length} 人</div>
+            <div class="roster-label">交貨清單 · ${b.rows.length} 人<span class="deliver-count">已交貨 ${doneCount} / ${b.rows.length}</span></div>
             ${roster}
           </div>
         ` : ''}
       </div>
     `);
+  });
+
+  // 勾選綁定
+  document.querySelectorAll('.deliver-cb').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const row = cb.closest('.row');
+      const key = row.dataset.key;
+      const delivered = loadDelivered();
+      if (cb.checked) {
+        delivered[key] = new Date().toISOString();
+        row.classList.add('done');
+      } else {
+        delete delivered[key];
+        row.classList.remove('done');
+      }
+      saveDelivered(delivered);
+      // 更新該班 "已交貨 X / Y"
+      const card = row.closest('.cls-card');
+      const total = card.querySelectorAll('.row').length;
+      const done  = card.querySelectorAll('.row.done').length;
+      const cnt = card.querySelector('.deliver-count');
+      if (cnt) cnt.textContent = `已交貨 ${done} / ${total}`;
+    });
   });
 
   document.getElementById('emptyState').style.display = d.people.total === 0 ? 'block' : 'none';
