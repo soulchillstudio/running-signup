@@ -851,8 +851,8 @@ img{max-width:100%;height:auto}
           <button class="class-tab active" type="button" role="tab" data-class="taichung-tue" aria-selected="true">
             <span class="tab-city">台中</span><span class="tab-divider">·</span><span class="tab-day">TUE 週二</span>
           </button>
-          <button class="class-tab class-tab--full" type="button" role="tab" data-class="taipei-wed" aria-selected="false" aria-disabled="true" disabled>
-            <span class="tab-city">台北</span><span class="tab-divider">·</span><span class="tab-day">WED 週三</span><span class="tab-badge">已額滿</span>
+          <button class="class-tab" type="button" role="tab" data-class="taipei-wed" aria-selected="false">
+            <span class="tab-city">台北</span><span class="tab-divider">·</span><span class="tab-day">WED 週三</span><span class="tab-badge">新生額滿</span>
           </button>
           <button class="class-tab" type="button" role="tab" data-class="taichung-thu" aria-selected="false">
             <span class="tab-city">台中</span><span class="tab-divider">·</span><span class="tab-day">THU 週四</span>
@@ -1496,7 +1496,6 @@ const CLASS_MAP = {
 
 function switchClass(classKey){
   if(!CLASS_MAP[classKey]) return;
-  if(classKey === 'taipei-wed') return; // 已額滿，不可切換
 
   // Update tab active state
   document.querySelectorAll('.class-tab').forEach(tab=>{
@@ -1526,8 +1525,49 @@ function switchClass(classKey){
   const bankNote = document.querySelector('.bank-note-class');
   if(bankNote) bankNote.textContent = CLASS_MAP[classKey].shortName;
 
+  // 台北週三新生額滿,只開放舊生方案 (B)
+  applyClassPlanLimit(classKey);
+
   // Persist
   try{ localStorage.setItem('soulchill_class', classKey); }catch(e){}
+}
+
+function applyClassPlanLimit(classKey){
+  const wedOnly = classKey === 'taipei-wed';
+  document.querySelectorAll('input[name="plan"]').forEach(el=>{
+    const labelEl = el.closest('label.choice');
+    if(!labelEl) return;
+    const allow = !wedOnly || el.value === 'B';
+    labelEl.style.display = allow ? '' : 'none';
+    // 取消未開放方案的選取狀態
+    if(!allow && el.checked){
+      el.checked = false;
+    }
+  });
+  // 週三班自動選 B 並觸發 change(更新金額/必填規則)
+  if(wedOnly){
+    const planB = document.querySelector('input[name="plan"][value="B"]');
+    if(planB && !planB.checked){
+      planB.checked = true;
+      planB.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  }
+  // 週三限定舊生提示
+  let notice = document.getElementById('classPlanNotice');
+  if(wedOnly){
+    if(!notice){
+      notice = document.createElement('div');
+      notice.id = 'classPlanNotice';
+      notice.className = 'help';
+      notice.style.cssText = 'margin:-4px 0 12px;padding:10px 14px;background:rgba(184,84,42,.08);border-left:3px solid #b8542a;border-radius:6px;color:var(--forest-ink);font-weight:500;';
+      notice.textContent = '台北週三班新生名額已滿,目前僅開放「舊生方案」報名。';
+      const choices = document.querySelector('.choices');
+      if(choices) choices.parentNode.insertBefore(notice, choices);
+    }
+    notice.style.display = '';
+  } else if(notice){
+    notice.style.display = 'none';
+  }
 }
 
 // Bind tab clicks
@@ -1594,8 +1634,9 @@ function handleSubmit(){
   const classKey = document.getElementById('form-class-input').value;
   const className = (CLASS_MAP[classKey] || {}).name || '';
 
-  if(classKey === 'taipei-wed'){
-    alert('台北週三班已額滿，請選擇台中週二或週四班。');
+  const planVal = (new FormData(form)).get('plan');
+  if(classKey === 'taipei-wed' && planVal !== 'B'){
+    alert('台北週三班新生名額已滿,目前僅開放舊生方案 (B) 報名。');
     return;
   }
 
