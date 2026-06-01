@@ -91,6 +91,13 @@ body{overflow-x:hidden}
 }
 .class-tab.active .tab-city,
 .class-tab.active .tab-day{color:var(--forest-ink);opacity:1}
+.class-tab--full{opacity:.45;cursor:not-allowed}
+.class-tab--full:hover{background:transparent;color:rgba(241,237,226,.7)}
+.class-tab .tab-badge{
+  display:inline-block;margin-left:6px;padding:2px 8px;
+  border-radius:999px;background:#b8542a;color:#fff;
+  font-family:var(--font-hd);font-size:10px;letter-spacing:.14em;font-weight:600;
+}
 
 /* Per-class content toggles (hero + schedule + form + bank note) */
 [data-class-content]{display:none}
@@ -844,8 +851,8 @@ img{max-width:100%;height:auto}
           <button class="class-tab active" type="button" role="tab" data-class="taichung-tue" aria-selected="true">
             <span class="tab-city">台中</span><span class="tab-divider">·</span><span class="tab-day">TUE 週二</span>
           </button>
-          <button class="class-tab" type="button" role="tab" data-class="taipei-wed" aria-selected="false">
-            <span class="tab-city">台北</span><span class="tab-divider">·</span><span class="tab-day">WED 週三</span>
+          <button class="class-tab class-tab--full" type="button" role="tab" data-class="taipei-wed" aria-selected="false" aria-disabled="true" disabled>
+            <span class="tab-city">台北</span><span class="tab-divider">·</span><span class="tab-day">WED 週三</span><span class="tab-badge">已額滿</span>
           </button>
           <button class="class-tab" type="button" role="tab" data-class="taichung-thu" aria-selected="false">
             <span class="tab-city">台中</span><span class="tab-divider">·</span><span class="tab-day">THU 週四</span>
@@ -1305,8 +1312,8 @@ img{max-width:100%;height:auto}
             <div class="help">報名確認信將寄到這個信箱,請填寫常用的。</div>
           </div>
           <div class="field" id="lineField">
-            <label>LINE 名稱 / LINE ID<span class="req lineReq">*</span><span class="opt lineOpt" style="display:none">舊生免填</span></label>
-            <input type="text" name="line" id="lineInput" placeholder="填寫你的 LINE 名稱或 ID" required>
+            <label>LINE ID / 顯示名稱<span class="req lineReq">*</span><span class="opt lineOpt" style="display:none">舊生免填</span></label>
+            <input type="text" name="line" id="lineInput" placeholder="LINE ID / 顯示名稱" required>
             <div class="help">會邀請加入跑班專屬 LINE 群,請確認是否有拒絕陌生好友。</div>
           </div>
           <div class="field full" id="runningField">
@@ -1489,6 +1496,7 @@ const CLASS_MAP = {
 
 function switchClass(classKey){
   if(!CLASS_MAP[classKey]) return;
+  if(classKey === 'taipei-wed') return; // 已額滿，不可切換
 
   // Update tab active state
   document.querySelectorAll('.class-tab').forEach(tab=>{
@@ -1585,6 +1593,11 @@ function handleSubmit(){
   const form = document.getElementById('signup-form');
   const classKey = document.getElementById('form-class-input').value;
   const className = (CLASS_MAP[classKey] || {}).name || '';
+
+  if(classKey === 'taipei-wed'){
+    alert('台北週三班已額滿，請選擇台中週二或週四班。');
+    return;
+  }
 
   // 收集欄位
   const fd = new FormData(form);
