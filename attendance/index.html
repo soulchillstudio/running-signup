@@ -27,6 +27,7 @@
   <!-- PIN 輸入 (助教) -->
   <div id="pin-form" class="hidden bg-white rounded-2xl shadow p-6 mt-12">
     <h2 class="text-lg font-semibold mb-1">輸入助教 PIN</h2>
+    <p class="text-sm text-gray-500 mb-1">班別：<span id="pin-class-label" class="font-medium text-gray-800"></span></p>
     <p class="text-sm text-gray-500 mb-4">本班 PIN 由 Jesse 提供</p>
     <input id="pin-input" type="text" inputmode="numeric" autocomplete="off"
       class="w-full text-2xl tracking-widest text-center border rounded-xl py-3 mb-3" placeholder="••••">
@@ -170,7 +171,12 @@ async function loadClass() {
     const j = await r.json();
     if (!j.ok) {
       if (j.error === 'unauthorized') {
-        showPinForm();
+        // 清掉可能卡住的舊 PIN，讓助教重新輸入
+        if (!isAdmin() && pinClass) {
+          localStorage.removeItem('att_pin_' + pinClass);
+          pinValue = '';
+        }
+        showPinForm('PIN 不正確，請重新輸入');
         return;
       }
       $('groups').innerHTML = '<p class="text-red-600">' + j.error + '</p>';
@@ -378,10 +384,18 @@ function renderDateOptions() {
 }
 
 // ---- 登入流程 ----
-function showPinForm() {
+function showPinForm(errMsg) {
   $('main').classList.add('hidden');
   $('k-form').classList.add('hidden');
   $('pin-form').classList.remove('hidden');
+  $('pin-class-label').textContent = CLASS_LABELS[pinClass] || pinClass || '(未指定 — URL 缺 ?c=)';
+  if (errMsg) {
+    $('pin-error').textContent = errMsg;
+    $('pin-error').classList.remove('hidden');
+  } else {
+    $('pin-error').classList.add('hidden');
+  }
+  $('pin-input').value = '';
   $('pin-input').focus();
 }
 function showKForm() {
@@ -420,14 +434,28 @@ function init() {
     }
   }
 
-  $('pin-submit').onclick = () => {
+  $('pin-submit').onclick = async () => {
     const v = $('pin-input').value.trim();
     if (!v) return;
+    if (!pinClass) {
+      $('pin-error').textContent = '網址沒有班別參數，請用 Jesse 提供的完整連結（含 ?c=tc-tue 等）';
+      $('pin-error').classList.remove('hidden');
+      return;
+    }
+    $('pin-error').classList.add('hidden');
+    $('pin-submit').textContent = '驗證中…';
+    $('pin-submit').disabled = true;
     pinValue = v;
     localStorage.setItem('att_pin_' + pinClass, pinValue);
     currentClass = pinClass;
     currentDate = pickDefaultDate(currentClass);
-    enterMain();
+    try {
+      await new Promise(r => setTimeout(r, 10));
+      enterMain();
+    } finally {
+      $('pin-submit').textContent = '進入';
+      $('pin-submit').disabled = false;
+    }
   };
   $('pin-input').onkeydown = (e) => { if (e.key === 'Enter') $('pin-submit').click(); };
 
