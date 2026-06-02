@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>跑班點名</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif; }
+  .chip { display:inline-flex; align-items:center; padding:2px 8px; border-radius:9999px; font-size:11px; line-height:1.4; }
+  .stcard { transition: background-color .15s, border-color .15s; -webkit-tap-highlight-color: transparent; user-select:none; }
+  .stcard:active { transform: scale(0.98); }
+  .st-absent  { background:#f3f4f6; border-color:#d1d5db; color:#374151; }
+  .st-present { background:#dcfce7; border-color:#22c55e; color:#14532d; }
+  .st-leave   { background:#fef9c3; border-color:#eab308; color:#713f12; }
+  .st-trial   { background:#dbeafe; border-color:#3b82f6; color:#1e3a8a; }
+</style>
+</head>
+<body class="bg-stone-50 text-gray-900">
+
+<div id="app" class="max-w-2xl mx-auto px-4 py-4 pb-32">
+
+  <!-- 載入中 / 錯誤 -->
+  <div id="boot" class="text-center text-gray-500 py-20">載入中…</div>
+
+  <!-- PIN 輸入 -->
+  <div id="pin-form" class="hidden bg-white rounded-2xl shadow p-6 mt-12">
+    <h2 class="text-lg font-semibold mb-1">輸入助教 PIN</h2>
+    <p class="text-sm text-gray-500 mb-4">本班 PIN 由 Jesse 提供</p>
+    <input id="pin-input" type="text" inputmode="numeric" autocomplete="off"
+      class="w-full text-2xl tracking-widest text-center border rounded-xl py-3 mb-3"
+      placeholder="••••">
+    <button id="pin-submit" class="w-full bg-emerald-700 text-white rounded-xl py-3 font-medium">進入</button>
+    <p id="pin-error" class="text-red-600 text-sm mt-3 hidden"></p>
+  </div>
+
+  <!-- 主畫面 -->
+  <div id="main" class="hidden">
+    <header class="mb-4">
+      <div class="flex items-center justify-between gap-2">
+        <h1 id="class-name" class="text-xl font-bold"></h1>
+        <button id="reload-btn" class="text-xs text-gray-500 underline">重新整理</button>
+      </div>
+      <div class="flex items-center gap-3 mt-2 text-sm">
+        <label class="text-gray-600">日期</label>
+        <input id="date-input" type="date" class="border rounded-lg px-2 py-1">
+        <label class="text-gray-600 ml-2">點名員</label>
+        <input id="marker-input" type="text" placeholder="你的名字"
+          class="border rounded-lg px-2 py-1 flex-1 min-w-0">
+      </div>
+    </header>
+
+    <!-- 統計列 -->
+    <div id="stats" class="grid grid-cols-4 gap-2 mb-4">
+      <div class="bg-emerald-50 rounded-xl py-2 text-center">
+        <div class="text-xs text-emerald-700">出席</div>
+        <div class="text-xl font-bold text-emerald-800" id="stat-present">0</div>
+      </div>
+      <div class="bg-yellow-50 rounded-xl py-2 text-center">
+        <div class="text-xs text-yellow-700">請假</div>
+        <div class="text-xl font-bold text-yellow-800" id="stat-leave">0</div>
+      </div>
+      <div class="bg-blue-50 rounded-xl py-2 text-center">
+        <div class="text-xs text-blue-700">體驗</div>
+        <div class="text-xl font-bold text-blue-800" id="stat-trial">0</div>
+      </div>
+      <div class="bg-gray-100 rounded-xl py-2 text-center">
+        <div class="text-xs text-gray-600">未到</div>
+        <div class="text-xl font-bold text-gray-700" id="stat-absent">0</div>
+      </div>
+    </div>
+
+    <!-- 說明 -->
+    <p class="text-xs text-gray-500 mb-3">
+      點一下卡片切換：<span class="chip st-absent border">未到</span> →
+      <span class="chip st-present border">出席</span> →
+      <span class="chip st-leave border">請假</span> →
+      <span class="chip st-absent border">未到</span>。
+      <span class="chip st-trial border">體驗</span>由 Jesse 設定。
+    </p>
+
+    <!-- 學員清單（依 VDOT 分組） -->
+    <div id="groups"></div>
+
+    <p id="save-toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/80 text-white text-sm px-4 py-2 rounded-full"></p>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = 'https://soulchill-forms.qazmnbvgamil.workers.dev';
+const CLASS_LABELS = {
+  'tc-tue': '台中週二班',
+  'tp-wed': '台北週三班',
+  'tc-thu': '台中週四班',
+};
+
+const $ = (id) => document.getElementById(id);
+const q = new URLSearchParams(location.search);
+const classCode = q.get('c') || '';
+const adminKey  = q.get('k') || '';
+
+let pin = q.get('p') || localStorage.getItem('att_pin_' + classCode) || '';
+let students = [];
+let savedMarker = localStorage.getItem('att_marker') || '';
+
+function tpeTodayISO() {
+  // 取台灣當地日期 YYYY-MM-DD
+  const d = new Date();
+  const tz = new Date(d.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  const y = tz.getFullYear(), m = String(tz.getMonth()+1).padStart(2,'0'), dd = String(tz.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+
+function toast(msg, ms=1500) {
+  const t = $('save-toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.add('hidden'), ms);
+}
+
+async function loadClass() {
+  $('boot').classList.remove('hidden');
+  $('boot').textContent = '載入中…';
+  $('main').classList.add('hidden');
+  $('pin-form').classList.add('hidden');
+
+  const date = $('date-input').value;
+  const params = new URLSearchParams({ c: classCode, date });
+  if (adminKey) params.set('k', adminKey);
+  else params.set('p', pin);
+
+  try {
+    const r = await fetch(`${API_BASE}/api/attendance/class?${params}`);
+    const j = await r.json();
+    if (!j.ok) {
+      if (j.error === 'unauthorized') {
+        $('boot').classList.add('hidden');
+        $('pin-form').classList.remove('hidden');
+        return;
+      }
+      $('boot').textContent = '載入失敗：' + j.error;
+      return;
+    }
+    students = j.students || [];
+    render();
+    $('boot').classList.add('hidden');
+    $('main').classList.remove('hidden');
+  } catch (e) {
+    $('boot').textContent = '網路錯誤：' + e.message;
+  }
+}
+
+function render() {
+  // 按 VDOT 分組
+  const groups = {};
+  for (const s of students) {
+    const g = s.vdot || '—';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(s);
+  }
+  // VDOT 排序（數字大→小，「新」放後，無 VDOT 最後）
+  const orderKey = (k) => {
+    if (k === '新') return -1;
+    if (k === '—') return -999;
+    const m = String(k).match(/^(\d+)/);
+    return m ? parseInt(m[1]) : -500;
+  };
+  const sortedKeys = Object.keys(groups).sort((a, b) => orderKey(b) - orderKey(a));
+
+  let html = '';
+  for (const k of sortedKeys) {
+    const list = groups[k];
+    html += `
+      <div class="mb-4">
+        <h3 class="text-sm font-semibold text-gray-600 mb-2">VDOT ${k} <span class="text-gray-400 font-normal">(${list.length})</span></h3>
+        <div class="grid grid-cols-1 gap-2">
+          ${list.map(renderCard).join('')}
+        </div>
+      </div>`;
+  }
+  $('groups').innerHTML = html;
+  updateStats();
+
+  // attach handlers
+  document.querySelectorAll('[data-sid]').forEach(el => {
+    el.onclick = () => onToggle(el);
+  });
+}
+
+function renderCard(s) {
+  const st = s.att_status || 'absent';
+  const stClass = 'st-' + st;
+  const planChip = s.plan ? `<span class="chip bg-white border border-gray-300 text-gray-600">${s.plan}</span>` : '';
+  const noteFlag = s.note ? `<span class="text-amber-600 text-xs">📌</span>` : '';
+  const pending  = s.status === 'pending_payment' ? `<span class="chip bg-orange-100 border border-orange-300 text-orange-700">⏳待匯款</span>` : '';
+  const trialChip = s.status === 'trial' ? `<span class="chip bg-blue-100 border border-blue-300 text-blue-700">體驗</span>` : '';
+  return `
+    <div class="stcard border-2 ${stClass} rounded-xl px-3 py-3 flex items-center justify-between gap-2 cursor-pointer"
+         data-sid="${s.id}" data-status="${st}">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="font-medium truncate">${s.name}</span>
+        ${noteFlag}
+      </div>
+      <div class="flex items-center gap-1 shrink-0">
+        ${planChip}
+        ${pending}
+        ${trialChip}
+        <span class="ml-1 text-xs font-bold" data-status-label>${labelOf(st)}</span>
+      </div>
+    </div>`;
+}
+
+function labelOf(st) {
+  return { absent:'未到', present:'出席', leave:'請假', trial:'體驗' }[st] || st;
+}
+
+function nextStatus(cur) {
+  // trial 不在循環裡（admin 設定）
+  if (cur === 'trial') return 'trial';
+  const cycle = ['absent', 'present', 'leave'];
+  const i = cycle.indexOf(cur);
+  return cycle[(i + 1) % cycle.length];
+}
+
+async function onToggle(el) {
+  const sid = Number(el.dataset.sid);
+  const cur = el.dataset.status;
+  const next = nextStatus(cur);
+  if (next === cur) return;
+
+  // optimistic
+  el.dataset.status = next;
+  el.classList.remove('st-absent', 'st-present', 'st-leave', 'st-trial');
+  el.classList.add('st-' + next);
+  el.querySelector('[data-status-label]').textContent = labelOf(next);
+  // sync local students
+  const s = students.find(x => x.id === sid);
+  if (s) s.att_status = next;
+  updateStats();
+
+  const marker = $('marker-input').value.trim();
+  if (marker) localStorage.setItem('att_marker', marker);
+
+  const body = {
+    c: classCode,
+    date: $('date-input').value,
+    student_id: sid,
+    status: next,
+    marked_by: marker,
+  };
+  if (adminKey) body.k = adminKey;
+  else body.p = pin;
+
+  try {
+    const r = await fetch(`${API_BASE}/api/attendance/mark`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || 'fail');
+  } catch (e) {
+    toast('儲存失敗：' + e.message + '（請重試）', 2500);
+    // rollback
+    el.dataset.status = cur;
+    el.classList.remove('st-absent', 'st-present', 'st-leave', 'st-trial');
+    el.classList.add('st-' + cur);
+    el.querySelector('[data-status-label]').textContent = labelOf(cur);
+    if (s) s.att_status = cur;
+    updateStats();
+  }
+}
+
+function updateStats() {
+  const c = { present:0, leave:0, trial:0, absent:0 };
+  for (const s of students) {
+    const st = s.att_status || 'absent';
+    if (c[st] !== undefined) c[st]++;
+    else c.absent++;
+  }
+  $('stat-present').textContent = c.present;
+  $('stat-leave').textContent   = c.leave;
+  $('stat-trial').textContent   = c.trial;
+  $('stat-absent').textContent  = c.absent;
+}
+
+// ---- 啟動 ----
+function init() {
+  if (!classCode || !CLASS_LABELS[classCode]) {
+    $('boot').textContent = '網址錯誤：缺少班別（c=tc-tue / tp-wed / tc-thu）';
+    return;
+  }
+  $('class-name').textContent = CLASS_LABELS[classCode];
+  document.title = CLASS_LABELS[classCode] + ' · 點名';
+  $('date-input').value = tpeTodayISO();
+  $('marker-input').value = savedMarker;
+
+  $('date-input').onchange = loadClass;
+  $('reload-btn').onclick = loadClass;
+  $('marker-input').onchange = () => localStorage.setItem('att_marker', $('marker-input').value.trim());
+
+  $('pin-submit').onclick = () => {
+    const v = $('pin-input').value.trim();
+    if (!v) return;
+    pin = v;
+    localStorage.setItem('att_pin_' + classCode, pin);
+    $('pin-error').classList.add('hidden');
+    loadClass();
+  };
+  $('pin-input').onkeydown = (e) => { if (e.key === 'Enter') $('pin-submit').click(); };
+
+  loadClass();
+}
+
+init();
+</script>
+</body>
+</html>
