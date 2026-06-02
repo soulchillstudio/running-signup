@@ -102,6 +102,22 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
 .cls-card .row .nt{color:rgba(241,237,226,.55);font-size:12px;margin-top:4px;font-style:italic}
 .cls-card.empty{opacity:.55}
 
+/* 對帳區（Fish 對帳用，與交貨完全分離）*/
+.reconcile{background:rgba(241,237,226,.04);border:1px solid rgba(241,237,226,.1);border-radius:14px;overflow:hidden}
+.reconcile-head{display:flex;justify-content:space-between;align-items:baseline;padding:18px 22px;background:rgba(15,31,23,.5);border-bottom:1px solid rgba(241,237,226,.08);flex-wrap:wrap;gap:8px}
+.reconcile-head .ttl{font-size:14px;color:var(--linen);font-weight:600}
+.reconcile-head .cnt{font-family:var(--font-hd);font-size:10.5px;letter-spacing:.18em;color:var(--grass);font-weight:700}
+.rec-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;padding:14px 22px;border-bottom:1px dashed rgba(241,237,226,.08);transition:opacity .2s}
+.rec-row:last-child{border-bottom:none}
+.rec-row.done{opacity:.4}
+.rec-row.done .rec-nm,.rec-row.done .rec-last5,.rec-row.done .rec-amt{text-decoration:line-through;text-decoration-color:rgba(241,237,226,.4)}
+.rec-row .rec-nm{color:var(--linen);font-weight:600;font-size:14px}
+.rec-row .rec-nm .rec-cls{display:block;font-size:10.5px;color:var(--forest-30);font-family:var(--font-hd);letter-spacing:.14em;margin-top:3px;font-weight:700;text-transform:uppercase}
+.rec-row .rec-last5{font-family:var(--font-hd);font-size:13.5px;color:var(--grass);letter-spacing:.08em;font-weight:700;white-space:nowrap}
+.rec-row .rec-amt{color:var(--linen);font-size:13px;font-family:var(--font-hd);letter-spacing:.04em;font-weight:600;white-space:nowrap}
+.rec-row .rec-last5.empty{color:var(--warn);font-size:11.5px;letter-spacing:.1em}
+.rec-empty{padding:32px 20px;text-align:center;color:var(--forest-30);font-size:13.5px}
+
 /* GATE — 密碼輸入 */
 .gate{display:flex;align-items:center;justify-content:center;min-height:60vh;padding:40px 20px}
 .gate-card{background:rgba(241,237,226,.04);border:1px solid rgba(241,237,226,.1);border-radius:14px;padding:36px 32px;max-width:380px;width:100%;text-align:center}
@@ -162,6 +178,12 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
   .cls-card .row .amt{font-size:12.5px}
   .cls-card .row .it{font-size:13px;padding:6px 9px;line-height:1.45}
   .cls-card .row .ft{flex-wrap:wrap;gap:4px 10px;font-size:10px}
+
+  .reconcile-head{padding:14px 16px}
+  .rec-row{padding:12px 16px;gap:10px;grid-template-columns:auto 1fr auto}
+  .rec-row .rec-amt{display:none}
+  .rec-row .rec-nm{font-size:13.5px}
+  .rec-row .rec-last5{font-size:12.5px}
 }
 
 /* 超窄機（iPhone SE 等）*/
@@ -262,6 +284,22 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
       還沒有人填表 — 等學員陸續登記中 🌱
     </div>
 
+    <!-- 對帳區（Fish 對帳用）-->
+    <div class="sec" id="reconcileSec" style="display:none">
+      <div class="sec-head">
+        <span class="idx">04</span>
+        <h2>對帳清單（Fish 用）</h2>
+        <span class="hint">RECONCILE</span>
+      </div>
+      <div class="reconcile">
+        <div class="reconcile-head">
+          <span class="ttl">勾選 = 已在帳戶內看到入帳</span>
+          <span class="cnt" id="recCount">— / —</span>
+        </div>
+        <div id="reconcileList"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -271,12 +309,18 @@ html,body{background:var(--forest-ink);color:var(--linen);font-family:var(--font
 const API_URL = 'https://soulchill-forms.qazmnbvgamil.workers.dev/api/equipment/summary';
 const LS_KEY = 'sc_gear_admin_key';
 const LS_DELIVERED = 'sc_gear_delivered_v1';
+const LS_RECONCILED = 'sc_gear_reconciled_v1';
 
 function loadDelivered(){
   try { return JSON.parse(localStorage.getItem(LS_DELIVERED) || '{}'); }
   catch(e){ return {}; }
 }
 function saveDelivered(d){ localStorage.setItem(LS_DELIVERED, JSON.stringify(d)); }
+function loadReconciled(){
+  try { return JSON.parse(localStorage.getItem(LS_RECONCILED) || '{}'); }
+  catch(e){ return {}; }
+}
+function saveReconciled(d){ localStorage.setItem(LS_RECONCILED, JSON.stringify(d)); }
 function rowKey(cls, r){ return `${cls}|${r.name}|${r.line||''}|${r.time||''}`; }
 function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
@@ -398,6 +442,66 @@ function render(d){
   });
 
   document.getElementById('emptyState').style.display = d.people.total === 0 ? 'block' : 'none';
+
+  // 對帳區
+  renderReconcile(d);
+}
+
+function renderReconcile(d){
+  const sec = document.getElementById('reconcileSec');
+  const list = document.getElementById('reconcileList');
+  const cnt = document.getElementById('recCount');
+
+  const all = [];
+  ['台中週二班','台北週三班','台中週四班'].forEach(cls => {
+    const b = d.byClass[cls];
+    if (!b) return;
+    b.rows.forEach(r => all.push({ cls, r }));
+  });
+
+  if (!all.length){ sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+
+  all.sort((a,b) => String(a.r.time||'').localeCompare(String(b.r.time||'')));
+
+  const reconciled = loadReconciled();
+  let doneCount = 0;
+
+  list.innerHTML = all.map(({cls, r}) => {
+    const key = rowKey(cls, r);
+    const isDone = !!reconciled[key];
+    if (isDone) doneCount++;
+    const last5 = r.last5
+      ? `<span class="rec-last5">後五碼 ${esc(r.last5)}</span>`
+      : `<span class="rec-last5 empty">⚠ 未填後五碼</span>`;
+    return `
+      <div class="rec-row ${isDone?'done':''}" data-key="${esc(key)}">
+        <label class="deliver" title="勾選 = 已對到帳">
+          <input type="checkbox" class="rec-cb" ${isDone?'checked':''}>
+          <span class="box"></span>
+        </label>
+        <div class="rec-nm">${esc(r.name)}<span class="rec-cls">${esc(cls)}</span></div>
+        ${last5}
+        <span class="rec-amt">NT$${num(r.total)}</span>
+      </div>
+    `;
+  }).join('');
+
+  cnt.textContent = `已對帳 ${doneCount} / ${all.length}`;
+
+  document.querySelectorAll('.rec-cb').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const row = cb.closest('.rec-row');
+      const key = row.dataset.key;
+      const rec = loadReconciled();
+      if (cb.checked) { rec[key] = new Date().toISOString(); row.classList.add('done'); }
+      else { delete rec[key]; row.classList.remove('done'); }
+      saveReconciled(rec);
+      const total = document.querySelectorAll('.rec-row').length;
+      const done = document.querySelectorAll('.rec-row.done').length;
+      cnt.textContent = `已對帳 ${done} / ${total}`;
+    });
+  });
 }
 
 function load(key){
