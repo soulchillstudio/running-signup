@@ -6,8 +6,8 @@
 <title>跑班點名</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif; }
-  .tab { padding:8px 14px; border-radius:9999px; cursor:pointer; font-weight:500; font-size:14px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 18px; }
+  .tab { padding:10px 18px; border-radius:9999px; cursor:pointer; font-weight:500; font-size:18px; }
   .tab-active   { background:#0f3e36; color:#fff; }
   .tab-inactive { background:#e5e7eb; color:#4b5563; }
   .stcard { transition: background-color .15s, border-color .15s; -webkit-tap-highlight-color: transparent; user-select:none; }
@@ -15,9 +15,11 @@
   .st-present  { background:#dcfce7; border-color:#22c55e; color:#14532d; }
   .st-absent   { background:#fef9c3; border-color:#eab308; color:#713f12; }
   .st-unmarked { background:#fff;    border-color:#e5e7eb; color:#9ca3af; }
-  th, td { padding: 6px 8px; font-size: 13px; }
+  th, td { padding: 10px 12px; font-size: 17px; }
   th { background:#f9fafb; text-align:left; font-weight:600; color:#4b5563; }
   tbody tr { border-top: 1px solid #f3f4f6; }
+  .edit-btn { padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,.05); }
+  .edit-btn:active { background: rgba(0,0,0,.1); }
 </style>
 </head>
 <body class="bg-stone-50 text-gray-900">
@@ -26,21 +28,21 @@
 
   <!-- PIN 輸入 (助教) -->
   <div id="pin-form" class="hidden bg-white rounded-2xl shadow p-6 mt-12">
-    <h2 class="text-lg font-semibold mb-1">輸入助教 PIN</h2>
-    <p class="text-sm text-gray-500 mb-1">班別：<span id="pin-class-label" class="font-medium text-gray-800"></span></p>
-    <p class="text-sm text-gray-500 mb-4">本班 PIN 由 Jesse 提供</p>
+    <h2 class="text-2xl font-semibold mb-1">輸入助教 PIN</h2>
+    <p class="text-lg text-gray-500 mb-1">班別：<span id="pin-class-label" class="font-medium text-gray-800"></span></p>
+    <p class="text-lg text-gray-500 mb-4">本班 PIN 由 Jesse 提供</p>
     <input id="pin-input" type="text" inputmode="numeric" autocomplete="off"
-      class="w-full text-2xl tracking-widest text-center border rounded-xl py-3 mb-3" placeholder="••••">
+      class="w-full text-4xl tracking-widest text-center border rounded-xl py-3 mb-3" placeholder="••••">
     <button id="pin-submit" class="w-full bg-emerald-700 text-white rounded-xl py-3 font-medium">進入</button>
-    <p id="pin-error" class="text-red-600 text-sm mt-3 hidden"></p>
+    <p id="pin-error" class="text-red-600 text-lg mt-3 hidden"></p>
   </div>
 
   <!-- 密碼登入 (Jesse) -->
   <div id="k-form" class="hidden max-w-sm mx-auto bg-white rounded-2xl shadow p-6 mt-12">
-    <h2 class="text-lg font-semibold mb-1">Jesse 管理密碼</h2>
-    <input id="k-input" type="password" class="w-full text-lg border rounded-xl py-3 px-3 mb-3" placeholder="ADMIN_KEY">
+    <h2 class="text-2xl font-semibold mb-1">Jesse 管理密碼</h2>
+    <input id="k-input" type="password" class="w-full text-2xl border rounded-xl py-3 px-3 mb-3" placeholder="ADMIN_KEY">
     <button id="k-submit" class="w-full bg-emerald-700 text-white rounded-xl py-3 font-medium">進入</button>
-    <p id="k-error" class="text-red-600 text-sm mt-3 hidden"></p>
+    <p id="k-error" class="text-red-600 text-lg mt-3 hidden"></p>
   </div>
 
   <!-- 主畫面 -->
@@ -51,28 +53,28 @@
 
     <!-- 控制列 -->
     <div class="flex flex-wrap items-center gap-2 mb-3">
-      <select id="date-input" class="border rounded-lg px-2 py-2 text-sm flex-1 min-w-0"></select>
-      <button id="reload-btn" class="text-sm bg-white border rounded-lg px-3 py-2">↻</button>
-      <button id="logout-btn" class="hidden text-xs text-gray-500 underline">登出</button>
+      <select id="date-input" class="border rounded-lg px-2 py-2 text-lg flex-1 min-w-0"></select>
+      <button id="reload-btn" class="text-lg bg-white border rounded-lg px-3 py-2">↻</button>
+      <button id="logout-btn" class="hidden text-base text-gray-500 underline">登出</button>
     </div>
 
     <!-- 今日統計 + 全勤摘要 -->
     <div id="stats" class="grid grid-cols-3 gap-2 mb-4">
       <div class="bg-emerald-50 rounded-xl py-2 text-center">
-        <div class="text-xs text-emerald-700">今日出席</div>
-        <div class="text-xl font-bold text-emerald-800"><span id="stat-present">0</span> / <span id="stat-total" class="text-emerald-600">0</span></div>
+        <div class="text-base text-emerald-700">今日出席</div>
+        <div class="text-3xl font-bold text-emerald-800"><span id="stat-present">0</span> / <span id="stat-total" class="text-emerald-600">0</span></div>
       </div>
       <div class="bg-yellow-50 rounded-xl py-2 text-center">
-        <div class="text-xs text-yellow-700">今日請假</div>
-        <div class="text-xl font-bold text-yellow-800" id="stat-absent">0</div>
+        <div class="text-base text-yellow-700">今日請假</div>
+        <div class="text-3xl font-bold text-yellow-800" id="stat-absent">0</div>
       </div>
       <div class="bg-blue-50 rounded-xl py-2 text-center">
-        <div class="text-xs text-blue-700">本期全勤 (<span id="stat-sessions">0</span> 堂)</div>
-        <div class="text-xl font-bold text-blue-800" id="stat-perfect">0</div>
+        <div class="text-base text-blue-700">本期全勤 (<span id="stat-sessions">0</span> 堂)</div>
+        <div class="text-3xl font-bold text-blue-800" id="stat-perfect">0</div>
       </div>
     </div>
 
-    <p class="text-xs text-gray-500 mb-2">
+    <p class="text-base text-gray-500 mb-2">
       預設 <span class="inline-block px-2 py-0.5 rounded border st-unmarked">未點名</span>，點一下變
       <span class="inline-block px-2 py-0.5 rounded border st-present">出席</span>，再一下變
       <span class="inline-block px-2 py-0.5 rounded border st-absent">請假</span>，再點回未點名。
@@ -81,7 +83,7 @@
     <!-- 學員清單 -->
     <div id="groups"></div>
 
-    <p id="save-toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/80 text-white text-sm px-4 py-2 rounded-full z-40"></p>
+    <p id="save-toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/80 text-white text-lg px-4 py-2 rounded-full z-40"></p>
   </div>
 
 </div>
@@ -249,39 +251,88 @@ function renderCards() {
     const list = groups[k];
     html += `
       <div class="mb-4">
-        <h3 class="text-sm font-semibold text-gray-600 mb-2">VDOT ${k} <span class="text-gray-400 font-normal">(${list.length})</span></h3>
+        <h3 class="text-lg font-semibold text-gray-600 mb-2">VDOT ${k} <span class="text-gray-400 font-normal">(${list.length})</span></h3>
         <div class="grid grid-cols-1 gap-2">
           ${list.map(renderCard).join('')}
         </div>
       </div>`;
   }
   $('groups').innerHTML = html;
-  // 預設沒記錄 = 出席（綠色） — 二態邏輯
-  document.querySelectorAll('[data-sid]').forEach(el => {
-    el.onclick = () => onToggle(el);
+  // 卡片 toggle
+  document.querySelectorAll('.stcard[data-sid]').forEach(el => {
+    el.onclick = (e) => {
+      if (e.target.closest('[data-edit-nick]')) return;  // 點 ✎ 不觸發 toggle
+      onToggle(el);
+    };
+  });
+  // ✎ 編輯暱稱
+  document.querySelectorAll('[data-edit-nick]').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      editNickname(Number(el.dataset.editNick));
+    };
   });
   updateTodayStats();
 }
 
 const LABEL = { present:'出席', absent:'請假', unmarked:'未點名' };
 
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 function renderCard(s) {
-  // 三態：unmarked (預設) / present / absent
   const st = (s.att_status === 'present' || s.att_status === 'absent') ? s.att_status : 'unmarked';
   const stClass = 'st-' + st;
-  const planChip = s.plan ? `<span class="text-xs text-gray-500">${s.plan}</span>` : '';
+  const planChip = s.plan ? `<span class="text-base text-gray-500">${escapeHtml(s.plan)}</span>` : '';
+  // 名字顯示：有 nickname → 暱稱 (本名 小灰字)；無 → 本名
+  const nameHtml = s.nickname
+    ? `<span class="font-bold truncate">${escapeHtml(s.nickname)}</span>
+       <span class="text-base text-gray-500 truncate">(${escapeHtml(s.name)})</span>`
+    : `<span class="font-medium truncate">${escapeHtml(s.name)}</span>`;
   return `
-    <div class="stcard border-2 ${stClass} rounded-xl px-3 py-3 flex items-center justify-between gap-2 cursor-pointer"
+    <div class="stcard border-2 ${stClass} rounded-xl px-4 py-4 flex items-center justify-between gap-2 cursor-pointer"
          data-sid="${s.id}" data-status="${st}">
-      <div class="flex items-center gap-2 min-w-0">
-        <span class="font-medium truncate">${s.name}</span>
+      <div class="flex items-center gap-2 min-w-0 flex-1">
+        ${nameHtml}
+        <button class="edit-btn text-base text-gray-500 shrink-0" data-edit-nick="${s.id}" title="編輯暱稱">✎</button>
         ${planChip}
       </div>
-      <div class="flex items-center gap-3 shrink-0 text-sm">
-        <span data-attend-count data-sid="${s.id}" class="text-xs text-gray-500"></span>
+      <div class="flex items-center gap-3 shrink-0 text-2xl">
+        <span data-attend-count data-sid="${s.id}" class="text-base text-gray-500"></span>
         <span data-status-label class="font-bold">${LABEL[st]}</span>
       </div>
     </div>`;
+}
+
+async function editNickname(sid) {
+  const s = dashData?.students.find(x => x.id === sid);
+  if (!s) return;
+  const cur = s.nickname || '';
+  const next = prompt(`為「${s.name}」設定暱稱（跑跑名 / 代號）\n留空 = 清除暱稱`, cur);
+  if (next === null) return;  // 取消
+  const trimmed = next.trim();
+  if (trimmed === cur) return; // 無變化
+
+  const body = { c: currentClass, student_id: sid, nickname: trimmed };
+  if (isAdmin()) body.k = adminKey;
+  else body.p = pinValue;
+
+  try {
+    const r = await fetch(`${API_BASE}/api/attendance/nickname`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error);
+    s.nickname = trimmed || null;
+    renderCards();
+    loadAllAttendance();
+    toast('已儲存暱稱');
+  } catch (e) {
+    toast('儲存失敗：' + e.message, 2500);
+  }
 }
 
 function nextStatus(cur) {
