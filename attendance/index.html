@@ -286,9 +286,9 @@ function renderCard(s) {
   const stClass = 'st-' + st;
   // 名字顯示：有 nickname → 暱稱 (本名 小灰字)；無 → 本名
   const nameHtml = s.nickname
-    ? `<span class="font-bold truncate">${escapeHtml(s.nickname)}</span>
+    ? `<span class="text-2xl font-bold truncate">${escapeHtml(s.nickname)}</span>
        <span class="text-base text-gray-500 truncate">(${escapeHtml(s.name)})</span>`
-    : `<span class="font-medium truncate">${escapeHtml(s.name)}</span>`;
+    : `<span class="text-2xl font-medium truncate">${escapeHtml(s.name)}</span>`;
   return `
     <div class="stcard border-2 ${stClass} rounded-xl px-4 py-4 flex items-center justify-between gap-2 cursor-pointer"
          data-sid="${s.id}" data-status="${st}">
