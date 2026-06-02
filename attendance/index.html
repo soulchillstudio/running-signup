@@ -284,7 +284,6 @@ function escapeHtml(s) {
 function renderCard(s) {
   const st = (s.att_status === 'present' || s.att_status === 'absent') ? s.att_status : 'unmarked';
   const stClass = 'st-' + st;
-  const planChip = s.plan ? `<span class="text-base text-gray-500">${escapeHtml(s.plan)}</span>` : '';
   // 名字顯示：有 nickname → 暱稱 (本名 小灰字)；無 → 本名
   const nameHtml = s.nickname
     ? `<span class="font-bold truncate">${escapeHtml(s.nickname)}</span>
@@ -296,7 +295,6 @@ function renderCard(s) {
       <div class="flex items-center gap-2 min-w-0 flex-1">
         ${nameHtml}
         <button class="edit-btn text-base text-gray-500 shrink-0" data-edit-nick="${s.id}" title="編輯暱稱">✎</button>
-        ${planChip}
       </div>
       <div class="flex items-center gap-3 shrink-0 text-2xl">
         <span data-attend-count data-sid="${s.id}" class="text-base text-gray-500"></span>
