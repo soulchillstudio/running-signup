@@ -12,8 +12,9 @@
   .tab-inactive { background:#e5e7eb; color:#4b5563; }
   .stcard { transition: background-color .15s, border-color .15s; -webkit-tap-highlight-color: transparent; user-select:none; }
   .stcard:active { transform: scale(0.98); }
-  .st-present { background:#dcfce7; border-color:#22c55e; color:#14532d; }
-  .st-absent  { background:#fef9c3; border-color:#eab308; color:#713f12; }
+  .st-present  { background:#dcfce7; border-color:#22c55e; color:#14532d; }
+  .st-absent   { background:#fef9c3; border-color:#eab308; color:#713f12; }
+  .st-unmarked { background:#fff;    border-color:#e5e7eb; color:#9ca3af; }
   th, td { padding: 6px 8px; font-size: 13px; }
   th { background:#f9fafb; text-align:left; font-weight:600; color:#4b5563; }
   tbody tr { border-top: 1px solid #f3f4f6; }
@@ -50,7 +51,6 @@
     <!-- 控制列 -->
     <div class="flex flex-wrap items-center gap-2 mb-3">
       <select id="date-input" class="border rounded-lg px-2 py-2 text-sm flex-1 min-w-0"></select>
-      <button id="manage-btn" class="hidden text-sm bg-white border rounded-lg px-3 py-2">⚙️ 管理</button>
       <button id="reload-btn" class="text-sm bg-white border rounded-lg px-3 py-2">↻</button>
       <button id="logout-btn" class="hidden text-xs text-gray-500 underline">登出</button>
     </div>
@@ -72,8 +72,9 @@
     </div>
 
     <p class="text-xs text-gray-500 mb-2">
-      <span class="inline-block px-2 py-0.5 rounded border st-present">出席</span> 預設綠色 ← 點一下 →
-      <span class="inline-block px-2 py-0.5 rounded border st-absent">請假</span> 黃色（不論是否事先申請，沒到都算）
+      預設 <span class="inline-block px-2 py-0.5 rounded border st-unmarked">未點名</span>，點一下變
+      <span class="inline-block px-2 py-0.5 rounded border st-present">出席</span>，再一下變
+      <span class="inline-block px-2 py-0.5 rounded border st-absent">請假</span>，再點回未點名。
     </p>
 
     <!-- 學員清單 -->
@@ -84,79 +85,6 @@
 
 </div>
 
-<!-- 管理 modal (Jesse only) -->
-<div id="manage-modal" class="hidden fixed inset-0 bg-black/50 z-50 overflow-y-auto p-4">
-  <div class="bg-white rounded-2xl shadow-xl max-w-3xl mx-auto my-6 p-5">
-    <div class="flex items-center justify-between mb-3">
-      <h3 class="text-lg font-semibold">學員管理（<span id="manage-class-label"></span>）</h3>
-      <button id="manage-close" class="text-gray-500 text-2xl leading-none">×</button>
-    </div>
-    <button id="manage-add" class="mb-3 bg-emerald-700 text-white rounded-xl px-3 py-2 text-sm">+ 新增學員</button>
-    <div class="overflow-x-auto">
-      <table class="w-full">
-        <thead>
-          <tr><th>排序</th><th>姓名</th><th>VDOT</th><th>方案</th><th>狀態</th><th>備註</th><th></th></tr>
-        </thead>
-        <tbody id="manage-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- 學員編輯 modal -->
-<div id="edit-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-    <h3 id="edit-title" class="text-lg font-semibold mb-4">編輯學員</h3>
-    <div class="space-y-3">
-      <div>
-        <label class="text-xs text-gray-600">班別</label>
-        <select id="edit-class" class="w-full border rounded-lg py-2 px-2">
-          <option value="tc-tue">台中週二班</option>
-          <option value="tp-wed">台北週三班</option>
-          <option value="tc-thu">台中週四班</option>
-        </select>
-      </div>
-      <div>
-        <label class="text-xs text-gray-600">姓名（全名）</label>
-        <input id="edit-name" type="text" class="w-full border rounded-lg py-2 px-2">
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="text-xs text-gray-600">VDOT</label>
-          <input id="edit-vdot" type="text" class="w-full border rounded-lg py-2 px-2" placeholder="39 / 新">
-        </div>
-        <div>
-          <label class="text-xs text-gray-600">方案</label>
-          <input id="edit-plan" type="text" class="w-full border rounded-lg py-2 px-2" placeholder="A/B/C/D/E/F">
-        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="text-xs text-gray-600">狀態</label>
-          <select id="edit-status" class="w-full border rounded-lg py-2 px-2">
-            <option value="active">active 正常</option>
-            <option value="pending_payment">pending_payment 待匯款</option>
-            <option value="trial">trial 體驗</option>
-            <option value="dropped">dropped 退課（不顯示）</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs text-gray-600">排序 (小→前)</label>
-          <input id="edit-sort" type="number" class="w-full border rounded-lg py-2 px-2" value="999">
-        </div>
-      </div>
-      <div>
-        <label class="text-xs text-gray-600">備註</label>
-        <textarea id="edit-note" rows="2" class="w-full border rounded-lg py-2 px-2"></textarea>
-      </div>
-    </div>
-    <div class="flex gap-2 mt-5">
-      <button id="edit-cancel" class="flex-1 bg-gray-200 rounded-xl py-2">取消</button>
-      <button id="edit-delete" class="hidden bg-red-100 text-red-700 rounded-xl py-2 px-3">刪除</button>
-      <button id="edit-save" class="flex-1 bg-emerald-700 text-white rounded-xl py-2">儲存</button>
-    </div>
-  </div>
-</div>
 
 <script>
 const API_BASE = 'https://soulchill-forms.qazmnbvgamil.workers.dev';
@@ -329,10 +257,11 @@ function renderCards() {
   updateTodayStats();
 }
 
+const LABEL = { present:'出席', absent:'請假', unmarked:'未點名' };
+
 function renderCard(s) {
-  // 二態：present (預設) / absent
-  // 若 DB 有記錄 absent，顯示 absent；否則 present
-  const st = s.att_status === 'absent' ? 'absent' : 'present';
+  // 三態：unmarked (預設) / present / absent
+  const st = (s.att_status === 'present' || s.att_status === 'absent') ? s.att_status : 'unmarked';
   const stClass = 'st-' + st;
   const planChip = s.plan ? `<span class="text-xs text-gray-500">${s.plan}</span>` : '';
   return `
@@ -344,27 +273,35 @@ function renderCard(s) {
       </div>
       <div class="flex items-center gap-3 shrink-0 text-sm">
         <span data-attend-count data-sid="${s.id}" class="text-xs text-gray-500"></span>
-        <span data-status-label class="font-bold">${st === 'present' ? '出席' : '請假'}</span>
+        <span data-status-label class="font-bold">${LABEL[st]}</span>
       </div>
     </div>`;
+}
+
+function nextStatus(cur) {
+  // unmarked → present → absent → unmarked
+  return cur === 'unmarked' ? 'present'
+       : cur === 'present'  ? 'absent'
+       : 'unmarked';
 }
 
 async function onToggle(el) {
   const sid = Number(el.dataset.sid);
   const cur = el.dataset.status;
-  const next = cur === 'present' ? 'absent' : 'present';
+  const next = nextStatus(cur);
 
   // optimistic
   el.dataset.status = next;
-  el.classList.remove('st-present', 'st-absent');
+  el.classList.remove('st-present', 'st-absent', 'st-unmarked');
   el.classList.add('st-' + next);
-  el.querySelector('[data-status-label]').textContent = next === 'present' ? '出席' : '請假';
-  // local
+  el.querySelector('[data-status-label]').textContent = LABEL[next];
   const s = dashData.students.find(x => x.id === sid);
-  if (s) s.att_status = next;
+  if (s) s.att_status = next === 'unmarked' ? null : next;
   updateTodayStats();
 
-  const body = { c: currentClass, date: currentDate, student_id: sid, status: next };
+  // unmarked = 送 status='clear' 讓 worker DELETE 記錄
+  const apiStatus = next === 'unmarked' ? 'clear' : next;
+  const body = { c: currentClass, date: currentDate, student_id: sid, status: apiStatus };
   if (isAdmin()) body.k = adminKey;
   else body.p = pinValue;
 
@@ -376,15 +313,14 @@ async function onToggle(el) {
     });
     const j = await r.json();
     if (!j.ok) throw new Error(j.error);
-    // 重新拉 dashboard 更新 attend-count
     loadAllAttendance();
   } catch (e) {
     toast('儲存失敗：' + e.message, 2500);
     el.dataset.status = cur;
-    el.classList.remove('st-present', 'st-absent');
+    el.classList.remove('st-present', 'st-absent', 'st-unmarked');
     el.classList.add('st-' + cur);
-    el.querySelector('[data-status-label]').textContent = cur === 'present' ? '出席' : '請假';
-    if (s) s.att_status = cur;
+    el.querySelector('[data-status-label]').textContent = LABEL[cur];
+    if (s) s.att_status = cur === 'unmarked' ? null : cur;
     updateTodayStats();
   }
 }
@@ -394,7 +330,8 @@ function updateTodayStats() {
   const all = dashData.students || [];
   let p = 0, a = 0;
   for (const s of all) {
-    if (s.att_status === 'absent') a++; else p++;
+    if (s.att_status === 'present') p++;
+    else if (s.att_status === 'absent') a++;
   }
   $('stat-present').textContent = p;
   $('stat-absent').textContent = a;
@@ -440,102 +377,6 @@ function renderDateOptions() {
   }
 }
 
-// ---- 管理 modal ----
-async function openManage() {
-  $('manage-class-label').textContent = CLASS_LABELS[currentClass];
-  $('manage-tbody').innerHTML = '<tr><td colspan="7" class="text-center text-gray-400 py-8">載入中…</td></tr>';
-  $('manage-modal').classList.remove('hidden');
-  try {
-    const r = await fetch(`${API_BASE}/api/attendance/admin/students?k=${encodeURIComponent(adminKey)}`);
-    const j = await r.json();
-    if (!j.ok) {
-      $('manage-tbody').innerHTML = '<tr><td colspan="7" class="text-red-600">' + j.error + '</td></tr>';
-      return;
-    }
-    adminStudents = j.students || [];
-    renderManageTable();
-  } catch (e) {
-    $('manage-tbody').innerHTML = '<tr><td colspan="7" class="text-red-600">' + e.message + '</td></tr>';
-  }
-}
-function renderManageTable() {
-  const list = adminStudents.filter(s => s.class_code === currentClass);
-  const STATUS_LABEL = { active:'正常', pending_payment:'待匯款', trial:'體驗', dropped:'退課' };
-  $('manage-tbody').innerHTML = list.map(s => `
-    <tr>
-      <td class="text-gray-400 text-xs">${s.sort_order}</td>
-      <td>${s.name}</td>
-      <td>${s.vdot || '—'}</td>
-      <td>${s.plan || '—'}</td>
-      <td class="${s.status === 'dropped' ? 'text-gray-400' : ''}">${STATUS_LABEL[s.status] || s.status}</td>
-      <td class="text-gray-500 text-xs max-w-xs truncate">${s.note || ''}</td>
-      <td><button class="text-emerald-700 underline" data-edit="${s.id}">編輯</button></td>
-    </tr>
-  `).join('') || '<tr><td colspan="7" class="text-center text-gray-500 py-6">尚無學員</td></tr>';
-  document.querySelectorAll('[data-edit]').forEach(el => {
-    el.onclick = () => openEdit(Number(el.dataset.edit));
-  });
-}
-
-function openEdit(id) {
-  const s = id ? adminStudents.find(x => x.id === id) : null;
-  $('edit-title').textContent = s ? '編輯：' + s.name : '新增學員';
-  $('edit-class').value = s?.class_code || currentClass;
-  $('edit-name').value  = s?.name || '';
-  $('edit-vdot').value  = s?.vdot || '';
-  $('edit-plan').value  = s?.plan || '';
-  $('edit-status').value= s?.status || 'active';
-  $('edit-sort').value  = s?.sort_order ?? 999;
-  $('edit-note').value  = s?.note || '';
-  $('edit-modal').dataset.id = id || '';
-  $('edit-delete').classList.toggle('hidden', !id);
-  $('edit-modal').classList.remove('hidden');
-}
-
-async function saveEdit() {
-  const id = $('edit-modal').dataset.id;
-  const body = {
-    class_code: $('edit-class').value,
-    name:       $('edit-name').value.trim(),
-    vdot:       $('edit-vdot').value.trim(),
-    plan:       $('edit-plan').value.trim(),
-    status:     $('edit-status').value,
-    sort_order: Number($('edit-sort').value) || 999,
-    note:       $('edit-note').value.trim(),
-  };
-  if (!body.name) return alert('姓名必填');
-  if (id) body.id = Number(id);
-
-  try {
-    const r = await fetch(`${API_BASE}/api/attendance/admin/student?k=${encodeURIComponent(adminKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
-    const j = await r.json();
-    if (!j.ok) return alert(j.error);
-    $('edit-modal').classList.add('hidden');
-    await openManage();
-    await loadClass();
-  } catch (e) { alert('儲存失敗：' + e.message); }
-}
-
-async function deleteStudent() {
-  const id = $('edit-modal').dataset.id;
-  if (!id) return;
-  if (!confirm('確定刪除？此操作會連同點名紀錄一併刪除。')) return;
-  try {
-    const r = await fetch(`${API_BASE}/api/attendance/admin/student?k=${encodeURIComponent(adminKey)}&id=${id}`, {
-      method: 'DELETE',
-    });
-    const j = await r.json();
-    if (!j.ok) return alert(j.error);
-    $('edit-modal').classList.add('hidden');
-    await openManage();
-    await loadClass();
-  } catch (e) { alert('刪除失敗：' + e.message); }
-}
-
 // ---- 登入流程 ----
 function showPinForm() {
   $('main').classList.add('hidden');
@@ -553,7 +394,6 @@ function enterMain() {
   $('pin-form').classList.add('hidden');
   $('k-form').classList.add('hidden');
   $('main').classList.remove('hidden');
-  $('manage-btn').classList.toggle('hidden', !isAdmin());
   $('logout-btn').classList.toggle('hidden', !isAdmin());
   renderTabs();
   renderDateOptions();
@@ -607,14 +447,6 @@ function init() {
   };
   $('reload-btn').onclick = loadClass;
   $('date-input').onchange = () => { currentDate = $('date-input').value; loadClass(); };
-  $('manage-btn').onclick = openManage;
-  $('manage-close').onclick = () => $('manage-modal').classList.add('hidden');
-  $('manage-add').onclick = () => openEdit(null);
-  $('edit-cancel').onclick = () => $('edit-modal').classList.add('hidden');
-  $('edit-save').onclick = saveEdit;
-  $('edit-delete').onclick = deleteStudent;
-  $('edit-modal').onclick = (e) => { if (e.target === $('edit-modal')) $('edit-modal').classList.add('hidden'); };
-  $('manage-modal').onclick = (e) => { if (e.target === $('manage-modal')) $('manage-modal').classList.add('hidden'); };
 }
 
 init();
