@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>跑班 W01 baseline — 400m + 體感</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 18px; }
+  .tab { padding:10px 18px; border-radius:9999px; cursor:pointer; font-weight:500; font-size:18px; }
+  .tab-active   { background:#0f3e36; color:#fff; }
+  .tab-inactive { background:#e5e7eb; color:#4b5563; }
+  .stcard { transition: background-color .15s, border-color .15s; -webkit-tap-highlight-color: transparent; user-select:none; }
+  .stcard:active { transform: scale(0.99); }
+  .st-filled  { background:#dcfce7; border-color:#22c55e; }
+  .st-empty   { background:#fff;    border-color:#e5e7eb; }
+  .rpe-btn {
+    border: 2px solid #e5e7eb; background: #fff;
+    padding: 10px 0; border-radius: 10px; font-size: 20px; font-weight: 600;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .rpe-btn:active { transform: scale(0.95); }
+  .rpe-btn.selected { background:#0f3e36; color:#fff; border-color:#0f3e36; }
+  .rpe-row {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+  }
+</style>
+</head>
+<body class="bg-stone-50 text-gray-900">
+
+<div class="max-w-2xl mx-auto px-3 py-4 pb-24">
+
+  <!-- PIN 輸入 -->
+  <div id="pin-form" class="hidden bg-white rounded-2xl shadow p-6 mt-12">
+    <h2 class="text-2xl font-semibold mb-1">輸入助教 PIN</h2>
+    <p class="text-lg text-gray-500 mb-1">班別：<span id="pin-class-label" class="font-medium text-gray-800"></span></p>
+    <p class="text-lg text-gray-500 mb-4">本班 PIN 由 Jesse 提供</p>
+    <input id="pin-input" type="text" inputmode="numeric" autocomplete="off"
+      class="w-full text-4xl tracking-widest text-center border rounded-xl py-3 mb-3" placeholder="••••">
+    <button id="pin-submit" class="w-full bg-emerald-700 text-white rounded-xl py-3 font-medium">進入</button>
+    <p id="pin-error" class="text-red-600 text-lg mt-3 hidden"></p>
+  </div>
+
+  <!-- 密碼登入 (Jesse) -->
+  <div id="k-form" class="hidden max-w-sm mx-auto bg-white rounded-2xl shadow p-6 mt-12">
+    <h2 class="text-2xl font-semibold mb-1">Jesse 管理密碼</h2>
+    <input id="k-input" type="password" class="w-full text-2xl border rounded-xl py-3 px-3 mb-3" placeholder="ADMIN_KEY">
+    <button id="k-submit" class="w-full bg-emerald-700 text-white rounded-xl py-3 font-medium">進入</button>
+    <p id="k-error" class="text-red-600 text-lg mt-3 hidden"></p>
+  </div>
+
+  <!-- 學員清單畫面 -->
+  <div id="list-view" class="hidden">
+    <h1 class="text-2xl font-bold mb-1">W01 400m 測驗紀錄</h1>
+    <p class="text-base text-gray-500 mb-3" id="class-title"></p>
+
+    <!-- 助教/Jesse 切班 tab -->
+    <div id="tabs" class="flex gap-2 mb-3 flex-wrap"></div>
+
+    <div class="flex items-center gap-2 mb-3">
+      <div class="flex-1 text-base text-gray-600">
+        已填：<span id="stat-filled" class="font-bold text-emerald-700">0</span>
+        <span class="text-gray-400">/</span>
+        <span id="stat-total">0</span>
+      </div>
+      <button id="reload-btn" class="text-lg bg-white border rounded-lg px-3 py-2">↻</button>
+      <button id="logout-btn" class="hidden text-base text-gray-500 underline">登出</button>
+    </div>
+
+    <p class="text-base text-gray-500 mb-2">點下方自己的名字，填 400m 成績與體感。</p>
+
+    <div id="student-list"></div>
+
+    <p id="save-toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/80 text-white text-lg px-4 py-2 rounded-full z-40"></p>
+  </div>
+
+  <!-- 填寫畫面 -->
+  <div id="entry-view" class="hidden">
+    <button id="back-btn" class="text-base text-gray-500 mb-3">← 回名單</button>
+
+    <div class="bg-white rounded-2xl shadow p-5 mb-4">
+      <p class="text-base text-gray-500">填寫對象</p>
+      <h2 id="entry-name" class="text-3xl font-bold mb-1"></h2>
+      <p class="text-base text-gray-500" id="entry-vdot"></p>
+    </div>
+
+    <!-- 400m 成績 -->
+    <div class="bg-white rounded-2xl shadow p-5 mb-4">
+      <h3 class="text-xl font-semibold mb-2">400m 成績</h3>
+      <p class="text-base text-gray-500 mb-3">輸入 <b>分:秒</b>（例如 1:32），秒可帶小數。</p>
+      <div class="flex items-center gap-2">
+        <input id="entry-min" type="number" min="0" max="9" inputmode="numeric"
+          class="w-20 text-3xl text-center border rounded-xl py-3" placeholder="分">
+        <span class="text-3xl">:</span>
+        <input id="entry-sec" type="number" min="0" max="59.9" step="0.1" inputmode="decimal"
+          class="w-28 text-3xl text-center border rounded-xl py-3" placeholder="秒">
+      </div>
+      <p id="entry-time-hint" class="text-base text-gray-400 mt-2"></p>
+    </div>
+
+    <!-- 體感 RPE 1-10 -->
+    <div class="bg-white rounded-2xl shadow p-5 mb-4">
+      <h3 class="text-xl font-semibold mb-1">體感分數 (RPE 1–10)</h3>
+      <p class="text-base text-gray-500 mb-3">這次 400m 跑下來的<b>主觀體感</b>有多累？</p>
+
+      <div class="rpe-row mb-2" id="rpe-row-1"></div>
+      <div class="rpe-row mb-3" id="rpe-row-2"></div>
+
+      <div id="rpe-desc" class="bg-stone-100 rounded-xl px-4 py-3 text-base text-gray-700 min-h-[3rem]">
+        （點上方 1–10 選一個）
+      </div>
+    </div>
+
+    <!-- 備註 -->
+    <div class="bg-white rounded-2xl shadow p-5 mb-4">
+      <h3 class="text-xl font-semibold mb-2">備註（選填）</h3>
+      <textarea id="entry-note" rows="2"
+        class="w-full text-base border rounded-xl py-2 px-3" placeholder="例如：腳有點酸、最後 50m 撐住、配速亂掉…"></textarea>
+    </div>
+
+    <button id="entry-submit"
+      class="w-full bg-emerald-700 text-white rounded-2xl py-4 text-xl font-semibold">送出</button>
+    <p id="entry-error" class="text-red-600 text-base mt-3 hidden text-center"></p>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = 'https://soulchill-forms.qazmnbvgamil.workers.dev';
+const CLASS_LABELS = {
+  'tc-tue': '台中週二班',
+  'tp-wed': '台北週三班',
+  'tc-thu': '台中週四班',
+};
+const RPE_DESC = {
+  1:  '非常輕鬆 — 像走路、完全不喘',
+  2:  '很輕鬆 — 慢跑暖身那種',
+  3:  '輕鬆 — 可以完整對話',
+  4:  '中等偏輕 — 對話略喘',
+  5:  '中等 — 只能講短句',
+  6:  '中等偏強 — 只能說幾個字',
+  7:  '強 — 幾乎不能說話',
+  8:  '很強 — 呼吸急促、想停下',
+  9:  '非常強 — 接近極限',
+  10: '全力衝刺 — 無法持續',
+};
+
+const $ = (id) => document.getElementById(id);
+const q = new URLSearchParams(location.search);
+let adminKey = q.get('k') || localStorage.getItem('att_admin_key') || '';
+let pinClass = q.get('c') || '';
+let pinValue = q.get('p') || (pinClass ? localStorage.getItem('att_pin_' + pinClass) || '' : '');
+const isAdmin = () => !!adminKey;
+
+let currentClass = pinClass && CLASS_LABELS[pinClass] ? pinClass : 'tc-tue';
+let students = [];               // 該班學員 + baseline
+let editingStudent = null;
+let selectedRPE = null;
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function fmtMMSS(sec) {
+  if (sec == null) return '';
+  const s = Number(sec);
+  const m = Math.floor(s / 60);
+  const r = (s - m * 60);
+  const rStr = r % 1 === 0 ? String(r).padStart(2, '0') : r.toFixed(1).padStart(4, '0');
+  return `${m}:${rStr}`;
+}
+function toast(msg, ms=1500) {
+  const t = $('save-toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.add('hidden'), ms);
+}
+
+// ---- 載入 ----
+async function loadList() {
+  if (!isAdmin() && currentClass !== pinClass) {
+    currentClass = pinClass;
+    renderTabs();
+  }
+  $('student-list').innerHTML = '<div class="text-center text-gray-400 py-12">載入中…</div>';
+
+  const params = new URLSearchParams({ c: currentClass });
+  if (isAdmin()) params.set('k', adminKey);
+  else params.set('p', pinValue);
+
+  try {
+    const r = await fetch(`${API_BASE}/api/baseline/class?${params}`);
+    const j = await r.json();
+    if (!j.ok) {
+      if (j.error === 'unauthorized') {
+        if (!isAdmin() && pinClass) {
+          localStorage.removeItem('att_pin_' + pinClass);
+          pinValue = '';
+        }
+        showPinForm('PIN 不正確，請重新輸入');
+        return;
+      }
+      $('student-list').innerHTML = '<p class="text-red-600">' + j.error + '</p>';
+      return;
+    }
+    students = j.students || [];
+    $('class-title').textContent = j.class.label + ' · 共 ' + students.length + ' 人';
+    renderList();
+  } catch (e) {
+    $('student-list').innerHTML = '<p class="text-red-600">網路錯誤：' + e.message + '</p>';
+  }
+}
+
+function renderList() {
+  const filled = students.filter(s => s.time_400m_sec != null || s.body_feel != null).length;
+  $('stat-filled').textContent = filled;
+  $('stat-total').textContent = students.length;
+
+  // 分組：VDOT
+  const groups = {};
+  for (const s of students) {
+    const g = s.vdot || '—';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(s);
+  }
+  const orderKey = (k) => {
+    if (k === '新') return -1;
+    if (k === '—' || k === '待補') return -999;
+    const m = String(k).match(/^(\d+)/);
+    return m ? parseInt(m[1]) : -500;
+  };
+  const sortedKeys = Object.keys(groups).sort((a, b) => orderKey(b) - orderKey(a));
+
+  let html = '';
+  for (const k of sortedKeys) {
+    const list = groups[k];
+    html += `
+      <div class="mb-4">
+        <h3 class="text-lg font-semibold text-gray-600 mb-2">VDOT ${k} <span class="text-gray-400 font-normal">(${list.length})</span></h3>
+        <div class="grid grid-cols-1 gap-2">
+          ${list.map(renderCard).join('')}
+        </div>
+      </div>`;
+  }
+  $('student-list').innerHTML = html;
+  document.querySelectorAll('.stcard[data-sid]').forEach(el => {
+    el.onclick = () => openEntry(Number(el.dataset.sid));
+  });
+}
+
+function renderCard(s) {
+  const has = s.time_400m_sec != null || s.body_feel != null;
+  const stClass = has ? 'st-filled' : 'st-empty';
+  const nameHtml = s.nickname
+    ? `<span class="text-2xl font-bold">${escapeHtml(s.nickname)}</span>
+       <span class="text-base text-gray-500">(${escapeHtml(s.name)})</span>`
+    : `<span class="text-2xl font-medium">${escapeHtml(s.name)}</span>`;
+  const detail = has
+    ? `<div class="text-base text-gray-700 mt-1">
+         ${s.time_400m_sec != null ? `400m <b>${fmtMMSS(s.time_400m_sec)}</b>` : '<span class="text-gray-400">無 400m</span>'}
+         · 體感 ${s.body_feel != null ? `<b>${s.body_feel}</b>` : '<span class="text-gray-400">—</span>'}
+       </div>`
+    : `<div class="text-base text-gray-400 mt-1">尚未填寫</div>`;
+  return `
+    <div class="stcard border-2 ${stClass} rounded-xl px-4 py-3 cursor-pointer"
+         data-sid="${s.id}">
+      <div class="flex items-center gap-2">
+        ${nameHtml}
+        ${has ? '<span class="ml-auto text-emerald-700 text-xl">✓</span>' : '<span class="ml-auto text-gray-300 text-xl">›</span>'}
+      </div>
+      ${detail}
+    </div>`;
+}
+
+// ---- 填寫頁 ----
+function openEntry(sid) {
+  editingStudent = students.find(s => s.id === sid);
+  if (!editingStudent) return;
+
+  $('entry-name').textContent = editingStudent.nickname
+    ? `${editingStudent.nickname}（${editingStudent.name}）`
+    : editingStudent.name;
+  $('entry-vdot').textContent = editingStudent.vdot ? `VDOT ${editingStudent.vdot}` : '';
+
+  // 預填既有資料
+  if (editingStudent.time_400m_sec != null) {
+    const t = Number(editingStudent.time_400m_sec);
+    const m = Math.floor(t / 60);
+    const r = t - m * 60;
+    $('entry-min').value = m;
+    $('entry-sec').value = r % 1 === 0 ? r : r.toFixed(1);
+  } else {
+    $('entry-min').value = '';
+    $('entry-sec').value = '';
+  }
+  $('entry-note').value = editingStudent.note || '';
+  selectedRPE = editingStudent.body_feel != null ? Number(editingStudent.body_feel) : null;
+
+  buildRPE();
+  updateTimeHint();
+  $('entry-error').classList.add('hidden');
+  $('list-view').classList.add('hidden');
+  $('entry-view').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+function buildRPE() {
+  const mkBtn = (n) => `<button class="rpe-btn ${selectedRPE === n ? 'selected' : ''}" data-rpe="${n}">${n}</button>`;
+  $('rpe-row-1').innerHTML = [1,2,3,4,5].map(mkBtn).join('');
+  $('rpe-row-2').innerHTML = [6,7,8,9,10].map(mkBtn).join('');
+  document.querySelectorAll('[data-rpe]').forEach(el => {
+    el.onclick = () => {
+      selectedRPE = Number(el.dataset.rpe);
+      buildRPE();
+      $('rpe-desc').innerHTML = `<b>${selectedRPE}</b> · ${escapeHtml(RPE_DESC[selectedRPE])}`;
+    };
+  });
+  if (selectedRPE != null) {
+    $('rpe-desc').innerHTML = `<b>${selectedRPE}</b> · ${escapeHtml(RPE_DESC[selectedRPE])}`;
+  } else {
+    $('rpe-desc').textContent = '（點上方 1–10 選一個）';
+  }
+}
+
+function readTimeSec() {
+  const m = Number($('entry-min').value || 0);
+  const s = Number($('entry-sec').value || 0);
+  if (!$('entry-min').value && !$('entry-sec').value) return null;
+  if (!Number.isFinite(m) || !Number.isFinite(s)) return NaN;
+  if (m < 0 || s < 0 || s >= 60) return NaN;
+  return Math.round((m * 60 + s) * 10) / 10;
+}
+function updateTimeHint() {
+  const t = readTimeSec();
+  if (t == null) { $('entry-time-hint').textContent = ''; return; }
+  if (Number.isNaN(t)) { $('entry-time-hint').textContent = '⚠️ 格式不對，秒要 < 60'; return; }
+  $('entry-time-hint').textContent = `= ${t} 秒`;
+}
+$('entry-min')?.addEventListener?.('input', updateTimeHint);
+$('entry-sec')?.addEventListener?.('input', updateTimeHint);
+
+async function submitEntry() {
+  if (!editingStudent) return;
+  const t = readTimeSec();
+  if (Number.isNaN(t)) {
+    $('entry-error').textContent = '400m 格式不對';
+    $('entry-error').classList.remove('hidden');
+    return;
+  }
+  if (t == null && selectedRPE == null) {
+    $('entry-error').textContent = '至少要填一個（400m 或體感）';
+    $('entry-error').classList.remove('hidden');
+    return;
+  }
+
+  $('entry-error').classList.add('hidden');
+  $('entry-submit').textContent = '送出中…';
+  $('entry-submit').disabled = true;
+
+  const body = {
+    c: currentClass,
+    student_id: editingStudent.id,
+    time_400m_sec: t,
+    body_feel: selectedRPE,
+    recorded_by: isAdmin() ? 'jesse' : 'self',
+    note: $('entry-note').value.trim(),
+  };
+  if (isAdmin()) body.k = adminKey;
+  else body.p = pinValue;
+
+  try {
+    const r = await fetch(`${API_BASE}/api/baseline/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error);
+    toast('已儲存 ✓');
+    // optimistic 更新本地
+    if (t != null) editingStudent.time_400m_sec = t;
+    if (selectedRPE != null) editingStudent.body_feel = selectedRPE;
+    if (body.note) editingStudent.note = body.note;
+    setTimeout(() => {
+      $('entry-view').classList.add('hidden');
+      $('list-view').classList.remove('hidden');
+      renderList();
+    }, 600);
+  } catch (e) {
+    $('entry-error').textContent = '儲存失敗：' + e.message;
+    $('entry-error').classList.remove('hidden');
+  } finally {
+    $('entry-submit').textContent = '送出';
+    $('entry-submit').disabled = false;
+  }
+}
+
+// ---- Tabs ----
+function renderTabs() {
+  const html = Object.entries(CLASS_LABELS).map(([code, label]) => {
+    if (!isAdmin() && code !== pinClass) return '';
+    const cls = code === currentClass ? 'tab-active' : 'tab-inactive';
+    return `<button class="tab ${cls}" data-class="${code}">${label}</button>`;
+  }).join('');
+  $('tabs').innerHTML = html;
+  document.querySelectorAll('[data-class]').forEach(el => {
+    el.onclick = () => {
+      currentClass = el.dataset.class;
+      renderTabs();
+      loadList();
+    };
+  });
+}
+
+// ---- 登入 ----
+function showPinForm(errMsg) {
+  $('list-view').classList.add('hidden');
+  $('entry-view').classList.add('hidden');
+  $('k-form').classList.add('hidden');
+  $('pin-form').classList.remove('hidden');
+  $('pin-class-label').textContent = CLASS_LABELS[pinClass] || pinClass || '(未指定 — URL 缺 ?c=)';
+  if (errMsg) {
+    $('pin-error').textContent = errMsg;
+    $('pin-error').classList.remove('hidden');
+  } else {
+    $('pin-error').classList.add('hidden');
+  }
+  $('pin-input').value = '';
+  $('pin-input').focus();
+}
+function showKForm() {
+  $('list-view').classList.add('hidden');
+  $('entry-view').classList.add('hidden');
+  $('pin-form').classList.add('hidden');
+  $('k-form').classList.remove('hidden');
+  $('k-input').focus();
+}
+function enterMain() {
+  $('pin-form').classList.add('hidden');
+  $('k-form').classList.add('hidden');
+  $('entry-view').classList.add('hidden');
+  $('list-view').classList.remove('hidden');
+  $('logout-btn').classList.toggle('hidden', !isAdmin());
+  renderTabs();
+  loadList();
+}
+
+function init() {
+  if (pinClass && CLASS_LABELS[pinClass] && !adminKey) {
+    if (!pinValue) showPinForm();
+    else { currentClass = pinClass; enterMain(); }
+  } else {
+    if (!adminKey) showKForm();
+    else enterMain();
+  }
+
+  $('pin-submit').onclick = async () => {
+    const v = $('pin-input').value.trim();
+    if (!v) return;
+    if (!pinClass) {
+      $('pin-error').textContent = '網址沒有班別參數，請用 Jesse 提供的完整連結（含 ?c=tc-tue 等）';
+      $('pin-error').classList.remove('hidden');
+      return;
+    }
+    $('pin-error').classList.add('hidden');
+    pinValue = v;
+    localStorage.setItem('att_pin_' + pinClass, pinValue);
+    currentClass = pinClass;
+    enterMain();
+  };
+  $('pin-input').onkeydown = (e) => { if (e.key === 'Enter') $('pin-submit').click(); };
+
+  $('k-submit').onclick = () => {
+    const v = $('k-input').value.trim();
+    if (!v) return;
+    adminKey = v;
+    localStorage.setItem('att_admin_key', adminKey);
+    enterMain();
+  };
+  $('k-input').onkeydown = (e) => { if (e.key === 'Enter') $('k-submit').click(); };
+
+  $('logout-btn').onclick = () => {
+    localStorage.removeItem('att_admin_key');
+    location.reload();
+  };
+  $('reload-btn').onclick = loadList;
+  $('back-btn').onclick = () => {
+    $('entry-view').classList.add('hidden');
+    $('list-view').classList.remove('hidden');
+  };
+  $('entry-submit').onclick = submitEntry;
+}
+
+init();
+</script>
+</body>
+</html>
