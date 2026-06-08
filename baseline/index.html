@@ -117,9 +117,8 @@
       <p class="text-base text-gray-500 mb-3">
         第一個數字是你的<b>組別</b>，第二個是<b>影片順序</b>。找到自己在哪一個影片之後，填入該編碼。
       </p>
-      <a href="https://drive.google.com/drive/folders/1gYcEChUMWx3vqOPwOQf9sVX9fzKabf4z"
-        target="_blank" rel="noopener"
-        class="inline-flex items-center gap-2 mb-3 px-4 py-2 rounded-xl bg-emerald-600 text-white text-base font-semibold no-underline">
+      <a id="vcode-link" href="#" target="_blank" rel="noopener"
+        class="hidden items-center gap-2 mb-3 px-4 py-2 rounded-xl bg-emerald-600 text-white text-base font-semibold no-underline">
         🎬 開啟雲端跑姿影片，找自己的編碼
       </a>
       <input id="entry-vcode" type="text" autocomplete="off"
@@ -191,12 +190,34 @@ function toast(msg, ms=1500) {
   toast._t = setTimeout(() => t.classList.add('hidden'), ms);
 }
 
+// ---- 跑姿影片雲端連結（依班別）----
+// 週四班（tc-thu）上課後上傳再補；沒連結 → 隱藏按鈕
+const VIDEO_FOLDERS = {
+  'tc-tue': 'https://drive.google.com/drive/folders/1gYcEChUMWx3vqOPwOQf9sVX9fzKabf4z',
+  'tp-wed': 'https://drive.google.com/drive/folders/1sYh2rmEwhlfU-3UlyoiTFGjyqcXx0VxT',
+  'tc-thu': '',
+};
+function updateVideoLink() {
+  const el = $('vcode-link');
+  if (!el) return;
+  const url = VIDEO_FOLDERS[currentClass] || '';
+  if (url) {
+    el.href = url;
+    el.classList.remove('hidden');
+    el.classList.add('inline-flex');
+  } else {
+    el.classList.add('hidden');
+    el.classList.remove('inline-flex');
+  }
+}
+
 // ---- 載入 ----
 async function loadList() {
   if (!isAdmin() && currentClass !== pinClass) {
     currentClass = pinClass;
     renderTabs();
   }
+  updateVideoLink();
   $('student-list').innerHTML = '<div class="text-center text-gray-400 py-12">載入中…</div>';
 
   const params = new URLSearchParams({ c: currentClass });
