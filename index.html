@@ -906,6 +906,14 @@ img{max-width:100%;height:auto}
             <div class="info-value-strong">NT$ 5,400 <em>· 舊生 4,860</em></div>
           </div>
         </div>
+        <div class="info-row">
+          <div class="info-label">報名狀態</div>
+          <div class="info-value-strong" style="color:var(--grass)">
+            <span data-class-content="taichung-tue" class="active">已開課 · 目前仍開放 單堂體驗 ＆ 插班報名</span>
+            <span data-class-content="taipei-wed">新生額滿 · 目前僅開放「舊生插班」</span>
+            <span data-class-content="taichung-thu">已開課 · 目前仍開放 單堂體驗 ＆ 插班報名</span>
+          </div>
+        </div>
       </div>
 
       <div class="hero-cta-row">
@@ -1262,8 +1270,8 @@ img{max-width:100%;height:auto}
             <input type="radio" name="plan" value="D">
             <div class="choice-body">
               <div class="title">(D) 插班報名 × 剩餘堂數</div>
-              <div class="meta">請私訊確認剩餘堂數與費用</div>
-              <div class="price">依實際剩餘堂數計算</div>
+              <div class="meta">原價 × 剩餘堂數 · 請私訊確認</div>
+              <div class="price">原價計費 · 依剩餘堂數</div>
             </div>
           </label>
           <label class="choice">
@@ -1394,7 +1402,7 @@ img{max-width:100%;height:auto}
 
         <div class="field-grid" style="margin-top:24px">
           <div class="field">
-            <label>匯款金額<span class="opt">依選項自動帶入</span></label>
+            <label>匯款金額<span class="opt" id="amountOptHint">依選項自動帶入</span></label>
             <input type="text" name="amount" id="amountInput" placeholder="選擇方案後自動帶入" readonly style="background:var(--linen-deep);color:var(--forest);font-weight:700;cursor:not-allowed">
           </div>
           <div class="field">
@@ -1532,38 +1540,57 @@ function switchClass(classKey){
   try{ localStorage.setItem('soulchill_class', classKey); }catch(e){}
 }
 
+// 各班開放方案(2026-06-15:三班皆已開課)
+//   台中週二 / 台中週四 → 課程已開始,只開放單堂體驗(C) + 插班(D)
+//   台北週三 → 維持「新生額滿、只開舊生方案(B)」
+//   未列入此表的班別 = 全方案開放
+const CLASS_ALLOWED_PLANS = {
+  'taichung-tue': ['C','D'],
+  'taipei-wed':   ['D'],
+  'taichung-thu': ['C','D']
+};
+const CLASS_PLAN_NOTICE = {
+  'taichung-tue': '本期已開課,目前僅開放「單堂體驗」與「插班報名」。歡迎先單堂體驗,或私訊確認剩餘堂數插班。',
+  'taipei-wed':   '台北週三班新生名額已滿,目前僅開放「舊生插班」。請私訊確認剩餘堂數與費用。',
+  'taichung-thu': '本期已開課,目前僅開放「單堂體驗」與「插班報名」。歡迎先單堂體驗,或私訊確認剩餘堂數插班。'
+};
+
 function applyClassPlanLimit(classKey){
-  const wedOnly = classKey === 'taipei-wed';
+  const allowed = CLASS_ALLOWED_PLANS[classKey] || null; // null = 全方案開放
   document.querySelectorAll('input[name="plan"]').forEach(el=>{
     const labelEl = el.closest('label.choice');
     if(!labelEl) return;
-    const allow = !wedOnly || el.value === 'B';
+    const allow = !allowed || allowed.includes(el.value);
     labelEl.style.display = allow ? '' : 'none';
     // 取消未開放方案的選取狀態
     if(!allow && el.checked){
       el.checked = false;
     }
   });
-  // 週三班自動選 B 並觸發 change(更新金額/必填規則)
-  if(wedOnly){
-    const planB = document.querySelector('input[name="plan"][value="B"]');
-    if(planB && !planB.checked){
-      planB.checked = true;
-      planB.dispatchEvent(new Event('change', {bubbles:true}));
+  // 受限班別:若目前沒有任何開放方案被選取,自動選第一個開放方案並觸發 change(更新金額/必填規則)
+  if(allowed && allowed.length){
+    const anyChecked = document.querySelector('input[name="plan"]:checked');
+    if(!anyChecked){
+      const first = document.querySelector('input[name="plan"][value="'+allowed[0]+'"]');
+      if(first){
+        first.checked = true;
+        first.dispatchEvent(new Event('change', {bubbles:true}));
+      }
     }
   }
-  // 週三限定舊生提示
+  // 班別限定提示橫幅(方案區上方)
   let notice = document.getElementById('classPlanNotice');
-  if(wedOnly){
+  const msg = CLASS_PLAN_NOTICE[classKey];
+  if(msg){
     if(!notice){
       notice = document.createElement('div');
       notice.id = 'classPlanNotice';
       notice.className = 'help';
       notice.style.cssText = 'margin:-4px 0 12px;padding:10px 14px;background:rgba(184,84,42,.08);border-left:3px solid #b8542a;border-radius:6px;color:var(--forest-ink);font-weight:500;';
-      notice.textContent = '台北週三班新生名額已滿,目前僅開放「舊生方案」報名。';
       const choices = document.querySelector('.choices');
       if(choices) choices.parentNode.insertBefore(notice, choices);
     }
+    notice.textContent = msg;
     notice.style.display = '';
   } else if(notice){
     notice.style.display = 'none';
@@ -1575,11 +1602,8 @@ document.querySelectorAll('.class-tab').forEach(tab=>{
   tab.addEventListener('click', ()=> switchClass(tab.dataset.class));
 });
 
-// Restore persisted selection
-try{
-  const saved = localStorage.getItem('soulchill_class');
-  if(saved && CLASS_MAP[saved]) switchClass(saved);
-}catch(e){}
+// Restore persisted selection 移至方案 change listener 綁定之後(見下方),
+// 確保初始 switchClass 派發的 change 能正確更新金額/備註。
 
 // Nav CTA preserves current tab (already uses #signup, no extra work needed — tab state is in-page)
 
@@ -1588,7 +1612,7 @@ const PLAN_MAP = {
   A: { amt: 'NT$ 5,400',  label: '/ 新生 12 堂',     note: '完整 12 週訓練 · 將自動帶入匯款金額',             autoAmount: '5400',  bankNote: '新生' },
   B: { amt: 'NT$ 4,860',  label: '/ 舊生 12 堂',     note: '曾上過任一期「傑西跑班」課程 · 自動帶入金額',     autoAmount: '4860',  bankNote: '舊生' },
   C: { amt: 'NT$ 450',    label: '/ 單堂體驗',        note: '請先 LINE 或 IG 告知預約日期,確認後再匯款。',     autoAmount: '450',   bankNote: '單堂' },
-  D: { amt: '依剩餘堂數',  label: '· 插班報名',        note: '請私訊確認剩餘堂數與實際費用後匯款。',            autoAmount: '',      bankNote: '插班' },
+  D: { amt: '原價 · 依剩餘堂數',  label: '· 插班報名',  note: '插班依原價 × 剩餘堂數計費(整期 12 堂才有舊生優惠)。請私訊確認剩餘堂數與費用後匯款。',  autoAmount: '',  bankNote: '插班' },
   E: { amt: 'NT$ 5,130',  label: '/ 兩人同行 每人',   note: '新生限定 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名',  autoAmount: '5130',  bankNote: '兩人同行' },
   F: { amt: 'NT$ 4,860',  label: '/ 三人同行 每人',   note: '新生限定 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名',   autoAmount: '4860',  bankNote: '三人同行' },
   G: { amt: 'NT$ 9,000',  label: '/ 個人課表 12 週',  note: '請先私訊預約免費諮詢。',                         autoAmount: '9000',  bankNote: '個人課表' }
@@ -1615,15 +1639,40 @@ document.querySelectorAll('input[name="plan"]').forEach(el=>{
     const p = PLAN_MAP[el.value]; if(!p) return;
     document.getElementById('summaryAmt').innerHTML = p.amt + ' <small id="summaryLabel">' + p.label + '</small>';
     document.getElementById('summaryNote').textContent = p.note;
-    // 自動帶入匯款金額(唯讀)
+    // 匯款金額:有固定金額的方案自動帶入並唯讀;插班(無固定金額)開放學生自填
     const amtInput = document.getElementById('amountInput');
-    if (amtInput) amtInput.value = p.autoAmount;
+    const amtHint = document.getElementById('amountOptHint');
+    if (amtInput) {
+      if (p.autoAmount) {
+        amtInput.value = p.autoAmount;
+        amtInput.readOnly = true;
+        amtInput.style.background = 'var(--linen-deep)';
+        amtInput.style.cursor = 'not-allowed';
+        amtInput.placeholder = '選擇方案後自動帶入';
+        if (amtHint) amtHint.textContent = '依選項自動帶入';
+      } else {
+        // 插班:金額依剩餘堂數變動,無法自動帶入 → 開放學生填寫
+        amtInput.value = '';
+        amtInput.readOnly = false;
+        amtInput.style.background = 'var(--linen)';
+        amtInput.style.cursor = 'text';
+        amtInput.placeholder = '請填寫與傑西確認後的插班金額';
+        if (amtHint) amtHint.textContent = '插班金額請自行填寫';
+      }
+    }
     // 同步匯款備註方案名稱
     document.querySelectorAll('.bank-note-plan').forEach(n => n.textContent = p.bankNote);
     // 依方案套用必填規則
     applyPlanRequiredRules(el.value);
   });
 });
+
+// Restore persisted selection(無 saved 時預設台中週二班,確保首次到訪也套用班別方案限制)
+// 放在 change listener 綁定之後,讓初始 switchClass 的 change 事件能更新金額/備註。
+try{
+  const saved = localStorage.getItem('soulchill_class');
+  switchClass(saved && CLASS_MAP[saved] ? saved : 'taichung-tue');
+}catch(e){}
 
 // ===== Form submit to Google Apps Script =====
 const API_URL = 'https://script.google.com/macros/s/AKfycbzkZABMZKdXO9RoNvAf_-183zhFbwJ_QurjTSBCHNjEhtVeBEDeCr2EGawQ3BZ0VjfouQ/exec';
@@ -1635,8 +1684,9 @@ function handleSubmit(){
   const className = (CLASS_MAP[classKey] || {}).name || '';
 
   const planVal = (new FormData(form)).get('plan');
-  if(classKey === 'taipei-wed' && planVal !== 'B'){
-    alert('台北週三班新生名額已滿,目前僅開放舊生方案 (B) 報名。');
+  const allowedPlans = CLASS_ALLOWED_PLANS[classKey];
+  if(allowedPlans && !allowedPlans.includes(planVal)){
+    alert(CLASS_PLAN_NOTICE[classKey] || '此班別目前不開放所選方案,請重新選擇。');
     return;
   }
 
