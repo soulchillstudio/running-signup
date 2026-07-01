@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="跑班控制台">
+<meta name="theme-color" content="#0f3e36">
+<title>Soul Chill 跑班控制台</title>
+<style>
+  :root{
+    --cream:#f2efe5;
+    --forest:#0f3e36;
+    --forest-2:#155046;
+    --grass:#b9ca74;
+    --ink:#1c1c1a;
+    --muted:#6b7268;
+    --card:#ffffff;
+    --line:#e3e0d4;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.5;
+    padding:0 16px 48px;
+  }
+  header{max-width:960px;margin:0 auto;padding:28px 4px 12px;}
+  header h1{font-size:22px;margin:0 0 4px;color:var(--forest);letter-spacing:.5px;}
+  header .sub{font-size:13px;color:var(--muted);}
+  main{max-width:960px;margin:0 auto;}
+
+  .section{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 16px 16px;
+    margin-top:16px;
+    box-shadow:0 1px 2px rgba(15,62,54,.04);
+  }
+  .section-head{display:flex;align-items:center;gap:9px;margin-bottom:6px;}
+  .section-head .emoji{font-size:20px;}
+  .section-head h2{font-size:16px;margin:0;color:var(--forest);}
+  .section-note{font-size:12px;color:var(--muted);margin:0 0 12px;}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:10px;}
+  @media(min-width:640px){.grid.cols3{grid-template-columns:repeat(3,1fr);}}
+
+  .btn{
+    display:flex;flex-direction:column;justify-content:center;
+    text-decoration:none;
+    background:var(--forest);
+    color:#fff;
+    border-radius:12px;
+    padding:15px 16px;
+    min-height:60px;
+    transition:transform .05s ease,background .15s ease;
+  }
+  .btn:active{transform:scale(.98);background:var(--forest-2);}
+  .btn .label{font-size:16px;font-weight:600;}
+  .btn .meta{font-size:12px;opacity:.8;margin-top:2px;}
+
+  .btn.tue{border-left:5px solid #e6a15c;}
+  .btn.wed{border-left:5px solid var(--grass);}
+  .btn.thu{border-left:5px solid #8fb0d6;}
+
+  .btn.admin{
+    background:var(--cream);
+    color:var(--forest);
+    border:1.5px solid var(--forest);
+  }
+  .btn.admin:active{background:#e8e5d8;}
+  .btn.admin .meta{opacity:.7;}
+  .btn.wide{min-height:56px;}
+
+  footer{max-width:960px;margin:22px auto 0;font-size:11.5px;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏃 Soul Chill 跑班控制台</h1>
+  <div class="sub">S2 本期 · 三班（台中週二 / 台北週三 / 台中週四）</div>
+</header>
+
+<main>
+
+  <!-- 1. 點名表 -->
+  <section class="section">
+    <div class="section-head"><span class="emoji">📋</span><h2>點名表</h2></div>
+    <p class="section-note">上課現場點名。班別連結已內建 PIN，點了直接進。彙總 Dashboard 進去後輸入 admin 密碼。</p>
+    <div class="grid cols3">
+      <a class="btn tue" href="https://soulchillstudio.github.io/running-signup/attendance/?c=tc-tue&p=1603" target="_blank" rel="noopener">
+        <span class="label">週二 · 台中</span><span class="meta">現場點名</span></a>
+      <a class="btn wed" href="https://soulchillstudio.github.io/running-signup/attendance/?c=tp-wed&p=9343" target="_blank" rel="noopener">
+        <span class="label">週三 · 台北</span><span class="meta">現場點名</span></a>
+      <a class="btn thu" href="https://soulchillstudio.github.io/running-signup/attendance/?c=tc-thu&p=9649" target="_blank" rel="noopener">
+        <span class="label">週四 · 台中</span><span class="meta">現場點名</span></a>
+    </div>
+    <div class="grid" style="margin-top:10px;">
+      <a class="btn admin wide" href="https://soulchillstudio.github.io/running-signup/attendance/" target="_blank" rel="noopener">
+        <span class="label">📊 我的彙總 Dashboard</span><span class="meta">三班出席統計（進入後輸入 admin 密碼）</span></a>
+    </div>
+  </section>
+
+  <!-- 2. 課後成績表 -->
+  <section class="section">
+    <div class="section-head"><span class="emoji">📊</span><h2>課後成績表（baseline）</h2></div>
+    <p class="section-note">學員課後填 400m 成績 / RPE。班別 PIN 與點名表共用，連結已內建。</p>
+    <div class="grid cols3">
+      <a class="btn tue" href="https://soulchillstudio.github.io/running-signup/baseline/?c=tc-tue&p=1603" target="_blank" rel="noopener">
+        <span class="label">週二 · 台中</span><span class="meta">成績登記</span></a>
+      <a class="btn wed" href="https://soulchillstudio.github.io/running-signup/baseline/?c=tp-wed&p=9343" target="_blank" rel="noopener">
+        <span class="label">週三 · 台北</span><span class="meta">成績登記</span></a>
+      <a class="btn thu" href="https://soulchillstudio.github.io/running-signup/baseline/?c=tc-thu&p=9649" target="_blank" rel="noopener">
+        <span class="label">週四 · 台中</span><span class="meta">成績登記</span></a>
+    </div>
+    <div class="grid" style="margin-top:10px;">
+      <a class="btn admin wide" href="https://soulchillstudio.github.io/running-signup/baseline/" target="_blank" rel="noopener">
+        <span class="label">📊 我的彙總</span><span class="meta">三班成績彙總（進入後輸入 admin 密碼）</span></a>
+    </div>
+  </section>
+
+  <!-- 3. 報名表 -->
+  <section class="section">
+    <div class="section-head"><span class="emoji">📝</span><h2>報名表（對外）</h2></div>
+    <p class="section-note">對外招生頁，可直接分享給潛在學員。</p>
+    <div class="grid">
+      <a class="btn wide" href="https://soulchillstudio.github.io/running-signup/" target="_blank" rel="noopener">
+        <span class="label">開啟報名頁</span><span class="meta">soulchillstudio.github.io/running-signup</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Soul Chill · 跑班控制台 · 收藏此頁（加入主畫面）即可一鍵開啟
+</footer>
+
+</body>
+</html>
