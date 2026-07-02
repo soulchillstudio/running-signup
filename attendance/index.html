@@ -99,6 +99,13 @@ const CLASS_LABELS = {
 const CLASS_DOW = { 'tc-tue': 2, 'tp-wed': 3, 'tc-thu': 4 };  // 0=日 1=一 2=二 ...
 const SEASON_START = '2026-06-02';      // W01 = 6/2 (週二) 開始
 const TOTAL_WEEKS = 12;
+// 停課日期（該班該日沒上課；日期照排但不佔 W 編號，末端自動補回）
+// 真相來源：students/跑班行事曆_S2.md
+const CLASS_SKIP = {
+  'tc-tue': ['2026-06-09', '2026-06-16'],
+  'tp-wed': ['2026-06-17'],
+  'tc-thu': ['2026-06-04'],
+};
 const $ = (id) => document.getElementById(id);
 
 const q = new URLSearchParams(location.search);
@@ -121,18 +128,25 @@ function fmtISO(d) {
   return `${y}-${m}-${dd}`;
 }
 function classSessionDates(classCode) {
-  // 由 SEASON_START 起，往後找該 class 的 12 個 dow 日期
+  // 由 SEASON_START 起，往後排該 class 的 dow 日期。
+  // 停課日照排在序列上，但不佔 W 編號 → 多排「停課數」週，讓末端補回 12 堂。
   const dow = CLASS_DOW[classCode];
+  const skip = CLASS_SKIP[classCode] || [];
   const start = new Date(SEASON_START + 'T00:00:00');
   // 先找到 SEASON_START 起第一個該 dow 的日期
   let d = new Date(start);
   while (d.getDay() !== dow) d.setDate(d.getDate() + 1);
   const out = [];
-  for (let i = 0; i < TOTAL_WEEKS; i++) {
+  const need = TOTAL_WEEKS + skip.length;   // 補回被停課吃掉的堂數
+  for (let i = 0; i < need; i++) {
     out.push(fmtISO(d));
     d.setDate(d.getDate() + 7);
   }
   return out;
+}
+// 某日期是否為該班停課日
+function isSkipDate(classCode, iso) {
+  return (CLASS_SKIP[classCode] || []).includes(iso);
 }
 function pickDefaultDate(classCode) {
   const today = fmtISO(tpeNow());
@@ -416,11 +430,13 @@ function renderDateOptions() {
   const dates = classSessionDates(currentClass);
   const today = fmtISO(tpeNow());
   const sel = $('date-input');
-  sel.innerHTML = dates.map((d, i) => {
+  let wn = 0;   // W 編號計數器（停課日不遞增）
+  sel.innerHTML = dates.map((d) => {
     const dt = new Date(d + 'T00:00:00');
     const m = dt.getMonth() + 1, dd = dt.getDate();
     const dowLabel = ['日','一','二','三','四','五','六'][dt.getDay()];
-    const week = 'W' + String(i+1).padStart(2,'0');
+    const skip = isSkipDate(currentClass, d);
+    const week = skip ? '停課' : 'W' + String(++wn).padStart(2,'0');
     const past = d < today ? ' (已過)' : '';
     const tag = d === today ? ' ← 今天' : '';
     return `<option value="${d}" ${d === currentDate ? 'selected' : ''}>${week} · ${m}/${dd}(週${dowLabel})${tag}${past}</option>`;
