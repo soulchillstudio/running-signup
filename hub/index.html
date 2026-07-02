@@ -75,6 +75,29 @@
   .btn.admin .meta{opacity:.7;}
   .btn.wide{min-height:56px;}
 
+  /* QR 分享區 */
+  .qr-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+  @media(min-width:640px){.qr-grid{grid-template-columns:repeat(3,1fr);}}
+  .qr-card{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 14px;
+    text-align:center;
+  }
+  .qr-card h3{font-size:15px;margin:0 0 10px;color:var(--forest);}
+  .qr-card .qrbox{
+    background:#fff;border-radius:10px;padding:10px;display:inline-block;
+    line-height:0;box-shadow:0 1px 2px rgba(15,62,54,.06);
+  }
+  .qr-card img{width:180px;height:180px;display:block;}
+  .qr-card a.open{
+    display:inline-block;margin-top:11px;
+    font-size:13px;color:var(--forest);font-weight:600;
+    text-decoration:none;border:1.5px solid var(--forest);
+    border-radius:999px;padding:6px 18px;
+  }
+  .qr-card a.open:active{background:#e8e5d8;}
   footer{max-width:960px;margin:22px auto 0;font-size:11.5px;color:var(--muted);text-align:center;}
 </style>
 </head>
@@ -130,6 +153,45 @@
     <div class="grid">
       <a class="btn wide" href="https://soulchillstudio.github.io/running-signup/" target="_blank" rel="noopener">
         <span class="label">開啟報名頁</span><span class="meta">soulchillstudio.github.io/running-signup</span></a>
+    </div>
+  </section>
+
+  <!-- 4. 路人分享 QR（現場遇到民眾問課程，掏手機給他掃）-->
+  <section class="section">
+    <div class="section-head"><span class="emoji">📱</span><h2>現場介紹（給路過詢問的人掃）</h2></div>
+    <p class="section-note">路上有人問課程，打開這頁讓對方掃 QR，或直接點「開啟」傳給他。</p>
+    <div class="qr-grid">
+
+      <div class="qr-card">
+        <h3>Skool 社群</h3>
+        <span class="qrbox">
+          <img alt="Skool QR" loading="lazy"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https%3A%2F%2Fwww.skool.com%2Frun-grow-together-9533%2Fabout">
+        </span>
+        <br>
+        <a class="open" href="https://www.skool.com/run-grow-together-9533/about" target="_blank" rel="noopener">開啟</a>
+      </div>
+
+      <div class="qr-card">
+        <h3>官方 LINE</h3>
+        <span class="qrbox">
+          <img alt="官方 LINE QR" loading="lazy"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https%3A%2F%2Flin.ee%2FrMpSGFV">
+        </span>
+        <br>
+        <a class="open" href="https://lin.ee/rMpSGFV" target="_blank" rel="noopener">開啟</a>
+      </div>
+
+      <div class="qr-card">
+        <h3>Instagram</h3>
+        <span class="qrbox">
+          <img alt="IG QR" loading="lazy"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https%3A%2F%2Fwww.instagram.com%2Fjesse.coach.26%2F">
+        </span>
+        <br>
+        <a class="open" href="https://www.instagram.com/jesse.coach.26/" target="_blank" rel="noopener">開啟</a>
+      </div>
+
     </div>
   </section>
 
