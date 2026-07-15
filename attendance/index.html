@@ -109,8 +109,9 @@ const CLASS_SKIP = {
 const $ = (id) => document.getElementById(id);
 
 const q = new URLSearchParams(location.search);
-let adminKey  = q.get('k') || localStorage.getItem('att_admin_key') || '';
 let pinClass  = q.get('c') || '';
+// URL 帶 ?c= 一律走助教模式，忽略 localStorage 殘留 adminKey（避免 Jesse 自測時被舊 key 綁架 → 無限跳轉）
+let adminKey  = pinClass ? '' : (q.get('k') || localStorage.getItem('att_admin_key') || '');
 let pinValue  = q.get('p') || (pinClass ? localStorage.getItem('att_pin_' + pinClass) || '' : '');
 const isAdmin = () => !!adminKey;
 
@@ -187,12 +188,19 @@ async function loadClass() {
     const j = await r.json();
     if (!j.ok) {
       if (j.error === 'unauthorized') {
-        // 清掉可能卡住的舊 PIN，讓助教重新輸入
-        if (!isAdmin() && pinClass) {
-          localStorage.removeItem('att_pin_' + pinClass);
-          pinValue = '';
+        if (isAdmin()) {
+          // Jesse admin 模式 stale key → 清掉並回 KForm，不要跳 PinForm 造成無限跳轉
+          localStorage.removeItem('att_admin_key');
+          adminKey = '';
+          showKForm();
+        } else {
+          // 助教 PIN 錯 → 清舊 PIN 重輸
+          if (pinClass) {
+            localStorage.removeItem('att_pin_' + pinClass);
+            pinValue = '';
+          }
+          showPinForm('PIN 不正確，請重新輸入');
         }
-        showPinForm('PIN 不正確，請重新輸入');
         return;
       }
       $('groups').innerHTML = '<p class="text-red-600">' + j.error + '</p>';
