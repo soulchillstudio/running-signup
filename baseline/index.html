@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>跑班 W01 baseline — 400m + 體感</title>
+<title>跑班成績紀錄 — 400m + 100m + 體感</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 18px; }
@@ -51,7 +51,7 @@
 
   <!-- 學員清單畫面 -->
   <div id="list-view" class="hidden">
-    <h1 class="text-2xl font-bold mb-1">W01 400m 測驗紀錄</h1>
+    <h1 class="text-2xl font-bold mb-1">跑班成績紀錄（400m ＋ 100m）</h1>
     <p class="text-base text-gray-500 mb-3" id="class-title"></p>
 
     <!-- 助教/Jesse 切班 tab -->
@@ -96,6 +96,18 @@
           class="w-28 text-3xl text-center border rounded-xl py-3" placeholder="秒">
       </div>
       <p id="entry-time-hint" class="text-base text-gray-400 mt-2"></p>
+    </div>
+
+    <!-- 100m 成績（W07 起） -->
+    <div class="bg-white rounded-2xl shadow p-5 mb-4">
+      <h3 class="text-xl font-semibold mb-2">100m 秒數 <span class="text-gray-400 text-base">選填 · W07 起</span></h3>
+      <p class="text-base text-gray-500 mb-3">100m 計時秒數（例如 <b>15.3</b>），可帶一位小數。末幾週依此分組跑 200m 間歇。</p>
+      <div class="flex items-center gap-2">
+        <input id="entry-100m" type="number" min="0" max="120" step="0.1" inputmode="decimal"
+          class="w-28 text-3xl text-center border rounded-xl py-3" placeholder="秒">
+        <span class="text-2xl text-gray-400">秒</span>
+      </div>
+      <p id="entry-100m-hint" class="text-base text-gray-400 mt-2"></p>
     </div>
 
     <!-- 體感 RPE 1-10 -->
@@ -285,7 +297,7 @@ function renderList() {
 }
 
 function renderCard(s) {
-  const has = s.time_400m_sec != null || s.body_feel != null || s.video_code;
+  const has = s.time_400m_sec != null || s.time_100m_sec != null || s.body_feel != null || s.video_code;
   const stClass = has ? 'st-filled' : 'st-empty';
   const nameHtml = s.nickname
     ? `<span class="text-2xl font-bold">${escapeHtml(s.nickname)}</span>
@@ -295,6 +307,7 @@ function renderCard(s) {
     ? `<div class="text-base text-gray-700 mt-1">
          ${s.video_code ? `🎬 <b>${escapeHtml(s.video_code)}</b> · ` : ''}
          ${s.time_400m_sec != null ? `400m <b>${fmtMMSS(s.time_400m_sec)}</b>` : '<span class="text-gray-400">無 400m</span>'}
+         ${s.time_100m_sec != null ? ` · 100m <b>${s.time_100m_sec}s</b>` : ''}
          · 體感 ${s.body_feel != null ? `<b>${s.body_feel}</b>` : '<span class="text-gray-400">—</span>'}
        </div>`
     : `<div class="text-base text-gray-400 mt-1">尚未填寫</div>`;
@@ -331,11 +344,13 @@ function openEntry(sid) {
     $('entry-sec').value = '';
   }
   $('entry-vcode').value = editingStudent.video_code || '';
+  $('entry-100m').value = editingStudent.time_100m_sec != null ? editingStudent.time_100m_sec : '';
   $('entry-note').value = editingStudent.note || '';
   selectedRPE = editingStudent.body_feel != null ? Number(editingStudent.body_feel) : null;
 
   buildRPE();
   updateTimeHint();
+  update100Hint();
   $('entry-error').classList.add('hidden');
   $('list-view').classList.add('hidden');
   $('entry-view').classList.remove('hidden');
@@ -377,6 +392,23 @@ function updateTimeHint() {
 $('entry-min')?.addEventListener?.('input', updateTimeHint);
 $('entry-sec')?.addEventListener?.('input', updateTimeHint);
 
+function read100Sec() {
+  const v = $('entry-100m').value;
+  if (v === '' || v == null) return null;
+  const n = Number(v);
+  if (!Number.isFinite(n)) return NaN;
+  if (n <= 0 || n > 120) return NaN;
+  return Math.round(n * 10) / 10;
+}
+function update100Hint() {
+  const v = $('entry-100m').value;
+  if (v === '' || v == null) { $('entry-100m-hint').textContent = ''; return; }
+  const n = read100Sec();
+  if (Number.isNaN(n)) { $('entry-100m-hint').textContent = '⚠️ 秒數要在 0–120 之間'; return; }
+  $('entry-100m-hint').textContent = `= ${n} 秒`;
+}
+$('entry-100m')?.addEventListener?.('input', update100Hint);
+
 async function submitEntry() {
   if (!editingStudent) return;
   const t = readTimeSec();
@@ -390,6 +422,12 @@ async function submitEntry() {
     $('entry-error').classList.remove('hidden');
     return;
   }
+  const t100 = read100Sec();
+  if (Number.isNaN(t100)) {
+    $('entry-error').textContent = '100m 秒數格式不對（例 15.3，0–120 秒）';
+    $('entry-error').classList.remove('hidden');
+    return;
+  }
   const vcode = $('entry-vcode').value.trim();
 
   $('entry-error').classList.add('hidden');
@@ -400,6 +438,7 @@ async function submitEntry() {
     c: currentClass,
     student_id: editingStudent.id,
     time_400m_sec: t,
+    time_100m_sec: t100,
     body_feel: selectedRPE,
     video_code: vcode,
     recorded_by: isAdmin() ? 'jesse' : 'self',
@@ -419,6 +458,7 @@ async function submitEntry() {
     toast('已儲存 ✓');
     // optimistic 更新本地
     if (t != null) editingStudent.time_400m_sec = t;
+    if (t100 != null) editingStudent.time_100m_sec = t100;
     if (selectedRPE != null) editingStudent.body_feel = selectedRPE;
     if (vcode) editingStudent.video_code = vcode;
     if (body.note) editingStudent.note = body.note;
