@@ -278,7 +278,7 @@ async function loadList() {
 }
 
 function renderList() {
-  const filled = students.filter(s => s.time_400m_sec != null || s.body_feel != null).length;
+  const filled = students.filter(s => s.time_100m_sec != null).length;
   $('stat-filled').textContent = filled;
   $('stat-total').textContent = students.length;
 
@@ -317,7 +317,7 @@ function renderList() {
 function renderCard(s) {
   const has = s.time_400m_sec != null || s.time_100m_sec != null || s.body_feel != null || s.video_code;
   const has100m = s.time_100m_sec != null;
-  const stClass = has ? 'st-filled' : 'st-empty';
+  const stClass = has100m ? 'st-filled' : 'st-empty';
   const nameHtml = s.nickname
     ? `<span class="text-2xl font-bold">${escapeHtml(s.nickname)}</span>
        <span class="text-base text-gray-500">(${escapeHtml(s.name)})</span>`
