@@ -63,6 +63,7 @@
         <span class="text-gray-400">/</span>
         <span id="stat-total">0</span>
       </div>
+      <button id="share-btn" class="hidden text-base bg-emerald-700 text-white rounded-lg px-3 py-2">🔗 複製學員連結</button>
       <button id="reload-btn" class="text-lg bg-white border rounded-lg px-3 py-2">↻</button>
       <button id="logout-btn" class="hidden text-base text-gray-500 underline">登出</button>
     </div>
@@ -158,6 +159,15 @@ const CLASS_LABELS = {
   'tp-wed': '台北週三班',
   'tc-thu': '台中週四班',
 };
+const CLASS_PINS = {
+  'tc-tue': '1603',
+  'tp-wed': '9343',
+  'tc-thu': '9649',
+};
+function studentShareURL(code) {
+  const base = location.origin + location.pathname;
+  return `${base}?c=${code}&p=${CLASS_PINS[code]}`;
+}
 const RPE_DESC = {
   1:  '非常輕鬆 — 像走路、完全不喘',
   2:  '很輕鬆 — 慢跑暖身那種',
@@ -523,8 +533,20 @@ function enterMain() {
   $('entry-view').classList.add('hidden');
   $('list-view').classList.remove('hidden');
   $('logout-btn').classList.toggle('hidden', !isAdmin());
+  $('share-btn').classList.toggle('hidden', !isAdmin());
   renderTabs();
   loadList();
+}
+
+async function copyShareURL() {
+  const url = studentShareURL(currentClass);
+  const label = CLASS_LABELS[currentClass] || currentClass;
+  try {
+    await navigator.clipboard.writeText(url);
+    toast(`已複製 ${label} 學員連結 ✓`, 2000);
+  } catch (e) {
+    window.prompt(`複製失敗，請手動複製 ${label} 學員連結：`, url);
+  }
 }
 
 function init() {
@@ -566,6 +588,7 @@ function init() {
     location.reload();
   };
   $('reload-btn').onclick = loadList;
+  $('share-btn').onclick = copyShareURL;
   $('back-btn').onclick = () => {
     $('entry-view').classList.add('hidden');
     $('list-view').classList.remove('hidden');
