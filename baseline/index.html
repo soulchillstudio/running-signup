@@ -298,6 +298,7 @@ function renderList() {
 
 function renderCard(s) {
   const has = s.time_400m_sec != null || s.time_100m_sec != null || s.body_feel != null || s.video_code;
+  const has100m = s.time_100m_sec != null;
   const stClass = has ? 'st-filled' : 'st-empty';
   const nameHtml = s.nickname
     ? `<span class="text-2xl font-bold">${escapeHtml(s.nickname)}</span>
@@ -316,7 +317,7 @@ function renderCard(s) {
          data-sid="${s.id}">
       <div class="flex items-center gap-2">
         ${nameHtml}
-        ${has ? '<span class="ml-auto text-emerald-700 text-xl">✓</span>' : '<span class="ml-auto text-gray-300 text-xl">›</span>'}
+        ${has100m ? '<span class="ml-auto text-emerald-700 text-xl">✓</span>' : '<span class="ml-auto text-gray-300 text-xl">›</span>'}
       </div>
       ${detail}
     </div>`;
