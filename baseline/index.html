@@ -183,8 +183,9 @@ const RPE_DESC = {
 
 const $ = (id) => document.getElementById(id);
 const q = new URLSearchParams(location.search);
-let adminKey = q.get('k') || localStorage.getItem('att_admin_key') || '';
 let pinClass = q.get('c') || '';
+// URL 帶 ?c= 一律走學員模式，忽略 localStorage 殘留 adminKey（避免 Jesse 自測時被舊 key 綁架 → 誤報 PIN 錯）
+let adminKey = pinClass ? '' : (q.get('k') || localStorage.getItem('att_admin_key') || '');
 let pinValue = q.get('p') || (pinClass ? localStorage.getItem('att_pin_' + pinClass) || '' : '');
 const isAdmin = () => !!adminKey;
 
@@ -251,11 +252,18 @@ async function loadList() {
     const j = await r.json();
     if (!j.ok) {
       if (j.error === 'unauthorized') {
-        if (!isAdmin() && pinClass) {
-          localStorage.removeItem('att_pin_' + pinClass);
-          pinValue = '';
+        if (isAdmin()) {
+          // Jesse admin 模式 stale key → 清掉並回 KForm，不要跳 PinForm 造成誤報
+          localStorage.removeItem('att_admin_key');
+          adminKey = '';
+          showKForm();
+        } else {
+          if (pinClass) {
+            localStorage.removeItem('att_pin_' + pinClass);
+            pinValue = '';
+          }
+          showPinForm('PIN 不正確，請重新輸入');
         }
-        showPinForm('PIN 不正確，請重新輸入');
         return;
       }
       $('student-list').innerHTML = '<p class="text-red-600">' + j.error + '</p>';
