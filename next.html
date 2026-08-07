@@ -150,10 +150,27 @@ body{overflow-x:hidden}
 .date-cell.phase-2{border-top:3px solid var(--grass)}
 .date-cell.phase-3{border-top:3px solid var(--accent-warm)}
 
+/* 9 月銜接團練（免費，不計入 12 堂） */
+.warmup-block{max-width:900px;margin:0 auto 22px}
+.warmup-label{
+  font-family:var(--font-hd);font-size:10px;letter-spacing:.2em;color:var(--forest-60);
+  font-weight:700;text-align:center;margin-bottom:10px;
+}
+.warmup-label b{color:var(--grass-dk,var(--forest))}
+.warmup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.warmup-grid .date-cell{
+  background:rgba(185,202,116,.10);border:1px dashed var(--grass);border-top:3px solid var(--grass);
+}
+.warmup-grid .date-cell .free{
+  font-family:var(--font-hd);font-size:8.5px;letter-spacing:.18em;color:var(--forest-60);
+  margin-top:5px;
+}
+
 @media (max-width:720px){
   .date-grid{grid-template-columns:repeat(3,1fr);gap:10px}
   .date-cell{padding:12px 8px}
   .date-cell .md{font-size:17px}
+  .warmup-grid{gap:10px}
 }
 
 /* 報名加碼 — 銜接團練 / Premium 線上社群 */
@@ -871,7 +888,7 @@ img{max-width:100%;height:auto}
     <div class="hero-left">
       <div class="eyebrow">2026 Q4 · SPEED ENDURANCE BUILD · 12 WEEKS</div>
       <h1 class="hero-title">
-        耐力與<span class="accent">速耐力</span>，<span class="break">為你的賽事做準備</span>
+        耐力與<span class="accent">速耐力</span><span class="break">為你的賽事做準備</span>
       </h1>
       <div class="hero-subtitle">
         傑西跑步班｜台中、台北｜2026 第 3 期
@@ -989,22 +1006,22 @@ img{max-width:100%;height:auto}
     <div class="goal-head">
       <div class="eyebrow">Part 01 · The Build</div>
       <div class="kicker">note to self:</div>
-      <h2 class="goal-h2">賽季要的速耐力,<br><span class="script-underline">從 400 公尺開始練</span></h2>
+      <h2 class="goal-h2">跑得順暢、有餘裕,<br><span class="script-underline">甚至挑戰更強大的自己</span></h2>
     </div>
 
     <div class="goal-lead">
-      <p class="q1">多數跑者在賽季前問的是:『我要跑到多少量?』</p>
-      <p class="q2">但真正決定你賽季的是,<b>速度能撐多久?</b></p>
+      <p class="q1">比賽要跑到這個樣子,需要的不只是耐力。</p>
+      <p class="q2"><b>速耐力,是另一個關鍵。</b></p>
     </div>
 
     <div class="goal-points">
       <div class="goal-point">
         <span class="num">01</span>
-        <p>一年到頭都用差不多的配速跑,身體會慢慢忘記怎麼加速。等賽季真的要拚,才發現速度是硬撐出來的,撐不了幾公里。</p>
+        <p>速耐力的建立來自<b>比慢跑更快的訓練</b>,可以透過間歇訓練來提升。一年到頭都用差不多的配速跑,身體會慢慢忘記怎麼加速。</p>
       </div>
       <div class="goal-point solution">
         <span class="num">02</span>
-        <p><b>這一期,我們從 400 公尺開始練。</b>先在這個長度把動作、呼吸和節奏做對,再一段一段往上加。<br>不是一次跑到爆,是每四週往上加一階。</p>
+        <p>這不僅能讓你<b>更有餘裕地完賽</b>,還能建立身體的韌性。<br>訓練或比賽期間面對突發狀況時,能有更高的適應性,更有餘裕地回到自己的狀態。</p>
       </div>
     </div>
 
@@ -1027,12 +1044,12 @@ img{max-width:100%;height:auto}
     <div class="stage s1">
       <div class="week">WEEK 01 — 04</div>
       <div class="num">01<sup>短</sup></div>
-      <h3>速耐力的地基</h3>
+      <h3>速度轉換成速耐力的轉換期</h3>
       <div class="body">
-        以 400 公尺為主。在這個長度裡把動作、呼吸與節奏做對,同時把該有的肌力與活動度補起來。
+        開頭一兩週以 <b>400 公尺</b>為主,把動作、呼吸與節奏做對。第一個月走 <b>400 到 800 公尺</b>,同時把該有的肌力與活動度補起來。
       </div>
       <div class="tag-row">
-        <span>400m</span><span>動作控制</span><span>肌力打底</span>
+        <span>400–800m</span><span>動作控制</span><span>肌力打底</span>
       </div>
       <div class="bar"></div>
     </div>
@@ -1040,12 +1057,12 @@ img{max-width:100%;height:auto}
     <div class="stage s2">
       <div class="week">WEEK 05 — 08</div>
       <div class="num">02<sup>中</sup></div>
-      <h3>節奏的形成</h3>
+      <h3>速耐力強化期</h3>
       <div class="body">
-        往 800 公尺推進。學會在距離拉長的時候不掉速,把 400 公尺練到的東西留在身上。
+        第二個月推進到 <b>1200 到 1600 公尺</b>。學會在距離拉長的時候不掉速,把前一階段練到的東西留在身上。
       </div>
       <div class="tag-row">
-        <span>800m</span><span>配速控制</span><span>彈性反應</span>
+        <span>1200–1600m</span><span>配速控制</span><span>彈性反應</span>
       </div>
       <div class="bar"></div>
     </div>
@@ -1053,12 +1070,12 @@ img{max-width:100%;height:auto}
     <div class="stage s3">
       <div class="week">WEEK 09 — 12</div>
       <div class="num">03<sup>長</sup></div>
-      <h3>賽季的底</h3>
+      <h3>賽季前調整</h3>
       <div class="body">
-        把前兩階段的速耐力轉進更長的段落,慢慢堆疊到你自己賽季目標需要的距離。
+        接近賽季,拉到 <b>1600 到 2400 公尺</b>的中長距離練習,更接近比賽強度。把速耐力轉成你自己賽季目標需要的比賽節奏。
       </div>
       <div class="tag-row">
-        <span>更長段落</span><span>里程加載</span><span>賽季轉移</span>
+        <span>1600–2400m</span><span>比賽節奏轉換</span><span>賽季轉移</span>
       </div>
       <div class="bar"></div>
     </div>
@@ -1090,37 +1107,15 @@ img{max-width:100%;height:auto}
     </div>
   </div>
 
-  <div class="bonus-row">
-    <div class="schedule-bonus">
-      <div class="bonus-tag">實體加碼 · 免費</div>
-      <h3>9 月上半 銜接團練</h3>
-      <p>續報舊生與新報名學員都能免費參加，<b>不計入 12 堂正課</b>。開課前先一起把身體動起來。</p>
-      <ul>
-        <li><b>9/1–9/3 那一週</b>：傑西親自帶</li>
-        <li><b>9/8–9/16</b>：由教練團陪跑</li>
-      </ul>
-      <p class="bonus-note">12 堂正課全程由傑西教學。另有一場對外公開體驗場，日期近期公布。</p>
-    </div>
-
-    <div class="schedule-bonus premium">
-      <div class="bonus-tag">線上加碼 · 免費</div>
-      <h3>「慢慢進步」Premium 線上社群</h3>
-      <p>報名整期或插班，<b>自動取得 Premium 會員資格</b>。實體班每週練的東西，回家有一整套線上資源可以接著練。</p>
-      <ul>
-        <li>線上學習資源：練與養六個支柱的完整系統</li>
-        <li>線上社群：問題丟出來傑西會回，同路人一起走</li>
-        <li>每週日晚間直播（帶練習＋答疑，有回放）</li>
-      </ul>
-      <div class="bonus-value">
-        <span class="num">NT$ 4,000</span>
-        <span class="was">原價 NT$1,000 / 月 × 4 個月</span>
-        <span class="free">→ 隨報名免費</span>
-      </div>
-      <p class="bonus-note">開課當週開通，用到 <b>2027/1/31</b>（12 堂上完之後，再免費多用一個月）。單堂體驗課不含此加碼。</p>
-    </div>
-  </div>
-
   <div data-class-content="taichung-tue" class="active">
+    <div class="warmup-block">
+      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
+      <div class="warmup-grid">
+        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>01</div><div class="wk">TUE</div><div class="free">傑西親帶 · 對外開放</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>08</div><div class="wk">TUE</div><div class="free">教練團陪跑</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>15</div><div class="wk">TUE</div><div class="free">教練團陪跑</div></div>
+      </div>
+    </div>
     <div class="date-grid">
       <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>22</div><div class="wk">TUE</div></div>
       <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">9<span class="slash">/</span>29</div><div class="wk">TUE</div></div>
@@ -1138,6 +1133,14 @@ img{max-width:100%;height:auto}
   </div>
 
   <div data-class-content="taipei-wed">
+    <div class="warmup-block">
+      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
+      <div class="warmup-grid">
+        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>02</div><div class="wk">WED</div><div class="free">傑西親帶 · 對外開放</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>09</div><div class="wk">WED</div><div class="free">教練團陪跑</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>16</div><div class="wk">WED</div><div class="free">教練團陪跑</div></div>
+      </div>
+    </div>
     <div class="date-grid">
       <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>23</div><div class="wk">WED</div></div>
       <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">9<span class="slash">/</span>30</div><div class="wk">WED</div></div>
@@ -1155,6 +1158,14 @@ img{max-width:100%;height:auto}
   </div>
 
   <div data-class-content="taichung-thu">
+    <div class="warmup-block">
+      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
+      <div class="warmup-grid">
+        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">傑西親帶 · 對外開放</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團陪跑</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團陪跑</div></div>
+      </div>
+    </div>
     <div class="date-grid">
       <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>24</div><div class="wk">THU</div></div>
       <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">10<span class="slash">/</span>01</div><div class="wk">THU</div></div>
@@ -1170,6 +1181,40 @@ img{max-width:100%;height:auto}
       <div class="date-cell phase-3"><div class="idx">W12</div><div class="md">12<span class="slash">/</span>10</div><div class="wk">THU</div></div>
     </div>
   </div>
+
+  <div class="bonus-row">
+    <div class="schedule-bonus">
+      <div class="bonus-tag">實體加碼 · 免費</div>
+      <h3>9 月上半 銜接團練</h3>
+      <p>開課前先一起把身體動起來，<b>不計入 12 堂正課</b>。</p>
+      <ul>
+        <li><b>9/1 到 9/3 那一週：三場對外開放</b>。還沒報名也可以填報名表來體驗，感受一下班上的氛圍，也認識教練。</li>
+        <li><b>9/8 起的兩場</b>：由教練團 Trevor 與 Kris 陪跑。</li>
+      </ul>
+      <p class="bonus-note">各班場次日期請看上方月曆的綠色格子。</p>
+    </div>
+
+    <div class="schedule-bonus premium">
+      <div class="bonus-tag">線上加碼 · 免費</div>
+      <h3>「慢慢進步」Premium 線上社群</h3>
+      <p>報名整期或插班，課程開通後<b>自動取得 Premium 會員資格，為期 4 個月</b>（10、11、12 月，預計用到 1 月底）。實體班每週練的東西，回家有一整套線上資源可以接著練。</p>
+      <ul>
+        <li>線上學習資源：練與養六個支柱的完整系統</li>
+        <li>線上社群：問題丟出來傑西會回，同路人一起走</li>
+        <li>每週日晚間直播（帶練習＋答疑，有回放）</li>
+      </ul>
+      <div class="bonus-value">
+        <span class="num">NT$ 4,000</span>
+        <span class="was">原價 NT$1,000 / 月 × 4 個月</span>
+        <span class="free">→ 隨報名免費</span>
+      </div>
+      <p class="bonus-note">
+        這是跑步班之外的<b>另一個系統</b>，位在 Skool 平台上的
+        <a href="https://www.skool.com/run-grow-together-9533" target="_blank" rel="noopener"><b>「先喜歡跑步 · 再慢慢進步」</b></a>
+        社群。社群本身<b>免費就能加入瀏覽</b>，跑步班附贈的是裡面的 Premium 會員層。單堂體驗課不含此加碼。
+      </p>
+    </div>
+  </div>
 </section>
 
 <!-- ===== SLIDE 4 — COACHES ===== -->
@@ -1177,12 +1222,12 @@ img{max-width:100%;height:auto}
   <div class="coaches-head">
     <div>
       <div class="eyebrow">Part 03 · The Coach</div>
-      <h2>這一期<br>由傑西親自帶</h2>
+      <h2>Hi,<br>我是傑西</h2>
     </div>
     <div class="sum">
       <em>從課表設計到現場調整,</em><br>
       <em>都是同一個人。</em><br><br>
-      12 堂正課全程由傑西教學。<br>你在課堂上被調到的每一個動作,他都知道下一堂該接什麼。
+      我想做的不是讓你一直需要教練,<br>是讓你慢慢讀得懂自己的身體,<br>最後成為自己的教練。
     </div>
   </div>
 
@@ -1199,10 +1244,13 @@ img{max-width:100%;height:auto}
         <div class="skills">
           <span>姿勢跑法 L1 教練</span>
           <span>肌筋膜放鬆技術士</span>
+          <span>靈肌學 Level 2</span>
           <span>跑步專項轉移</span>
         </div>
         <div class="note">
-          教學合作品牌:XTERRA、The North Face、SUPERACE、New Balance、lululemon、迪卡儂。相信身心的連結與生活平衡。把肌力與動作訓練的成果有效轉移到你的跑步,讓每一次調整,在跑動中被自己清楚感覺到。
+          教學合作品牌:XTERRA、The North Face、SUPERACE、New Balance、lululemon、迪卡儂。<br><br>
+          相信身心的連結與生活平衡。除了跑步,也做徒手調整,所以看的不只是你的步頻與配速,還有你的身體現在容不容得下這個訓練量。<br><br>
+          不說教,講白話。把肌力與動作訓練的成果有效轉移到你的跑步,讓每一次調整,在跑動中被自己清楚感覺到。
         </div>
       </div>
     </div>
@@ -1210,7 +1258,7 @@ img{max-width:100%;height:auto}
 
   <div class="tagline-band">
     <p>
-      把<span class="hl">肌力訓練</span>和<span class="hl">跑步訓練</span>加起來,<br>
+      把<span class="hl">技術訓練</span>和<span class="hl">跑步需要的體能</span>加起來,<br>
       一階一階往上堆。<br><br>
       讓跑步<span class="hl">更輕、更快、更安全</span>。
     </p>
@@ -1345,14 +1393,6 @@ img{max-width:100%;height:auto}
               <div class="price">NT$ 4,860 / 人</div>
             </div>
           </label>
-          <label class="choice">
-            <input type="radio" name="plan" value="G">
-            <div class="choice-body">
-              <div class="title">(G) 個人課表 / 12 週</div>
-              <div class="meta">請私訊預約免費諮詢</div>
-              <div class="price">NT$ 9,000 · 12 週</div>
-            </div>
-          </label>
         </div>
       </div>
 
@@ -1477,7 +1517,6 @@ img{max-width:100%;height:auto}
 
         <div class="contact-row">
           <a class="contact-chip" href="https://www.instagram.com/jesse.coach.26/" target="_blank" rel="noopener"><span class="k">IG</span><span class="v">@jesse.coach.26</span></a>
-          <a class="contact-chip" href="https://www.facebook.com/soulchillstudio/?locale=zh_TW" target="_blank" rel="noopener"><span class="k">FB</span><span class="v">Soul Chill Studio</span></a>
           <a class="contact-chip" href="https://line.me/R/ti/p/@104wzemj" target="_blank" rel="noopener"><span class="k">LINE@</span><span class="v">@104wzemj</span></a>
         </div>
 
@@ -1553,7 +1592,6 @@ img{max-width:100%;height:auto}
   <div class="sub">RUNNING CLUB · SINCE 2022</div>
   <div class="links">
     <a href="https://www.instagram.com/jesse.coach.26/" target="_blank" rel="noopener">Instagram</a>
-    <a href="https://www.facebook.com/soulchillstudio/?locale=zh_TW" target="_blank" rel="noopener">Facebook</a>
     <a href="https://line.me/R/ti/p/@104wzemj" target="_blank" rel="noopener">LINE 官方帳號</a>
   </div>
   <div class="copy">© 2026 SOUL CHILL STUDIO · 用心生活工作室</div>
@@ -1610,9 +1648,9 @@ function switchClass(classKey){
 //   插班(D)僅開課後才開放,招生期先隱藏
 //   未列入此表的班別 = 全方案開放
 const CLASS_ALLOWED_PLANS = {
-  'taichung-tue': ['A','B','C','E','F','G'],
-  'taipei-wed':   ['A','B','C','E','F','G'],
-  'taichung-thu': ['A','B','C','E','F','G']
+  'taichung-tue': ['A','B','C','E','F'],
+  'taipei-wed':   ['A','B','C','E','F'],
+  'taichung-thu': ['A','B','C','E','F']
 };
 const CLASS_PLAN_NOTICE = {};
 
@@ -1675,8 +1713,7 @@ const PLAN_MAP = {
   C: { amt: 'NT$ 450',    label: '/ 單堂體驗',        note: '請先 LINE 或 IG 告知預約日期,確認後再匯款。單堂不含 Premium 線上社群。',  autoAmount: '450',   bankNote: '單堂' },
   D: { amt: '原價 · 依剩餘堂數',  label: '· 插班報名',  note: '插班依原價 × 剩餘堂數計費(整期 12 堂才有舊生優惠),含 Premium 線上社群。請私訊確認剩餘堂數與費用後匯款。',  autoAmount: '',  bankNote: '插班' },
   E: { amt: 'NT$ 5,130',  label: '/ 兩人同行 每人',   note: '新生限定 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · 各含 Premium 線上社群',  autoAmount: '5130',  bankNote: '兩人同行' },
-  F: { amt: 'NT$ 4,860',  label: '/ 三人同行 每人',   note: '新生限定 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · 各含 Premium 線上社群',   autoAmount: '4860',  bankNote: '三人同行' },
-  G: { amt: 'NT$ 9,000',  label: '/ 個人課表 12 週',  note: '請先私訊預約免費諮詢。',                         autoAmount: '9000',  bankNote: '個人課表' }
+  F: { amt: 'NT$ 4,860',  label: '/ 三人同行 每人',   note: '新生限定 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · 各含 Premium 線上社群',   autoAmount: '4860',  bankNote: '三人同行' }
 };
 function applyPlanRequiredRules(planValue){
   // 舊生方案 (B):LINE + 跑步能力 整個欄位隱藏;其他方案:顯示且必填
