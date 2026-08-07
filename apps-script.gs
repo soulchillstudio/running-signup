@@ -42,10 +42,25 @@ function checkTimeZones() {
 }
 
 const CLASS_MAP = {
-  'taichung-tue': { tab: '台中週二班', label: '台中 · 週二班', location: '中興大學田徑場' },
-  'taipei-wed':   { tab: '台北週三班', label: '台北 · 週三班', location: '台北田徑場' },
-  'taichung-thu': { tab: '台中週四班', label: '台中 · 週四班', location: '中興大學田徑場' }
+  'taichung-tue': {
+    tab: '台中週二班', label: '台中 · 週二班', location: '中興大學田徑場',
+    weekly: '每週二 19:30–21:00', start: '9/22（二）',
+    warmups: '9/3、9/10、9/17（週四）'   // 台中場的銜接團練一律在週四
+  },
+  'taipei-wed': {
+    tab: '台北週三班', label: '台北 · 週三班', location: '台北田徑場',
+    weekly: '每週三 19:30–21:00', start: '9/23（三）',
+    warmups: '9/2、9/9、9/16（週三）'
+  },
+  'taichung-thu': {
+    tab: '台中週四班', label: '台中 · 週四班', location: '中興大學田徑場',
+    weekly: '每週四 19:30–21:00', start: '9/24（四）',
+    warmups: '9/3、9/10、9/17（週四）'
+  }
 };
+
+// 整期方案(會拿到 12 堂 + 銜接團練 + Premium)。C 單堂與 T 免費團練不在此列。
+const FULL_TERM_PLANS = ['A', 'B', 'D', 'E', 'F'];
 
 const PLAN_MAP = {
   A: '(A) 新生 · 團課 × 12 堂',
@@ -69,7 +84,11 @@ const TRIAL_SESSION = {
   'taichung-thu': '9/03（四）19:30 · 中興大學田徑場'
 };
 
-const HEADERS = ['報名時間','姓名','LINE','Email','跑步能力','方案','方案說明','匯款金額','匯款後五碼','備註','同意條款','狀態','入群日期','首週出席','教練備註'];
+const HEADERS = ['報名時間','姓名','LINE','Email','跑步能力','方案','方案說明','匯款金額','匯款後五碼','備註','同意條款','狀態','入群日期','首週出席','教練備註','成功信寄出'];
+
+// 欄位位置(1-based),改 HEADERS 時這裡要一起改
+const COL = { EMAIL: 4, PLAN: 6, NAME: 2, STATUS: 12, SUCCESS_MAIL: 16 };
+const STATUS_PAID = '已匯款';   // 狀態改成這個值 → 自動寄出報名成功信
 
 // ====== 執行一次:建立三個分頁 + 表頭 + 狀態下拉 ======
 // ⚠️ 非破壞性:已經有報名資料的分頁不會被清掉,只補表頭與下拉。
@@ -91,11 +110,11 @@ function setup() {
     sheet.setFrozenRows(1);
     sheet.autoResizeColumns(1, HEADERS.length);
 
-    // 狀態欄(L 欄)下拉選單
+    // 狀態欄(L 欄)下拉選單。改成「已匯款」會自動寄出報名成功信(見 onStatusEdit)
     const rule = SpreadsheetApp.newDataValidation()
-      .requireValueInList(['待匯款','已匯款','已入群','正式開課','已退費'], true)
+      .requireValueInList(['待匯款','已匯款','已入群','正式開課','已退費','免費團練'], true)
       .build();
-    sheet.getRange(2, 12, 500, 1).setDataValidation(rule);
+    sheet.getRange(2, COL.STATUS, 500, 1).setDataValidation(rule);
 
     // 首週出席欄(N 欄)下拉
     const attRule = SpreadsheetApp.newDataValidation()
@@ -171,22 +190,134 @@ function doGet() {
   return ContentService.createTextOutput('Soul Chill 跑班報名 API is live.');
 }
 
+// ==========================================================
+// 匯款確認 → 自動寄「報名成功」信
+//
+// 在 Sheet 把「狀態」欄改成「已匯款」就會自動寄出,不用另外做事。
+// ⚠️ 這需要「可安裝觸發器」:簡單的 onEdit(e) 沒有寄信權限。
+//    第一次使用請在編輯器執行一次 installTriggers()。
+// ==========================================================
+
+function installTriggers() {
+  // 先清掉同名的舊觸發器,否則重複安裝會讓一次編輯寄出多封信
+  let removed = 0;
+  ScriptApp.getProjectTriggers().forEach(t => {
+    if (t.getHandlerFunction() === 'onStatusEdit') { ScriptApp.deleteTrigger(t); removed++; }
+  });
+  ScriptApp.newTrigger('onStatusEdit').forSpreadsheet(SHEET_ID).onEdit().create();
+  Logger.log(`✅ 觸發器已安裝(清掉 ${removed} 個舊的)。現在把狀態改成「${STATUS_PAID}」就會自動寄報名成功信。`);
+}
+
+function onStatusEdit(e) {
+  try {
+    if (!e || !e.range) return;
+    const sheet = e.range.getSheet();
+
+    // 防呆 1:只認三個班別分頁,其他分頁一律不動作
+    const known = Object.values(CLASS_MAP).some(c => c.tab === sheet.getName());
+    if (!known) return;
+
+    // 防呆 2:只認狀態欄,且一次只處理單一儲存格(避免整欄貼上時爆寄)
+    if (e.range.getColumn() !== COL.STATUS) return;
+    if (e.range.getNumRows() !== 1 || e.range.getNumColumns() !== 1) return;
+
+    // 防呆 3:只在「改成已匯款」時觸發
+    if (String(e.value || '').trim() !== STATUS_PAID) return;
+
+    const row = e.range.getRow();
+    if (row < 2) return;   // 表頭
+
+    // 防呆 4:已經寄過就不再寄(重點:避免狀態改來改去重複轟炸學員)
+    const sentCell = sheet.getRange(row, COL.SUCCESS_MAIL);
+    if (String(sentCell.getValue() || '').trim() !== '') return;
+
+    const email = String(sheet.getRange(row, COL.EMAIL).getValue() || '').trim();
+    const name  = String(sheet.getRange(row, COL.NAME).getValue() || '').trim();
+    const plan  = String(sheet.getRange(row, COL.PLAN).getValue() || '').trim();
+
+    // 防呆 5:沒有 email 就記一筆,不要靜默失敗
+    if (!email) { sentCell.setValue('⚠️ 無 Email,未寄出'); return; }
+
+    // 防呆 6:免費團練不該走這條(他們的狀態是「免費團練」,理論上進不來,再擋一次)
+    if (FREE_PLANS.indexOf(plan) !== -1) { sentCell.setValue('—(免費團練不寄)'); return; }
+
+    const clsKey = Object.keys(CLASS_MAP).find(k => CLASS_MAP[k].tab === sheet.getName());
+    const cls = CLASS_MAP[clsKey];
+
+    MailApp.sendEmail({
+      to: email,
+      subject: `【傑西跑班】報名成功 | ${cls.label} ${cls.start} 開課`,
+      htmlBody: successEmail({ name: name, plan: plan }, cls)
+    });
+    sentCell.setValue(nowTaipei_());
+
+  } catch (err) {
+    // 出錯不要吞掉:寫回該列,你在 Sheet 上就看得到
+    try {
+      e.range.getSheet().getRange(e.range.getRow(), COL.SUCCESS_MAIL)
+        .setValue('❌ 寄送失敗:' + err.message);
+    } catch (e2) {}
+    Logger.log('onStatusEdit 失敗:' + err.message);
+  }
+}
+
+// 報名成功信(確認匯款後寄)
+function successEmail(d, cls) {
+  const isFullTerm = FULL_TERM_PLANS.indexOf(d.plan) !== -1;
+
+  const fullTermRows = `
+    <tr><td style="padding:6px 12px;color:#4a5d51">開課日</td><td style="padding:6px 12px"><b>${cls.start}</b> · 全期 12 堂</td></tr>
+    <tr><td style="padding:6px 12px;color:#4a5d51">加碼</td><td style="padding:6px 12px">
+      9 月銜接團練 3 場(${cls.warmups})· 免費、不計入 12 堂<br>
+      「慢慢進步」Premium 線上社群 · 4 個月
+    </td></tr>`;
+
+  const fullTermNext = `
+  <h3 style="margin-top:24px">接下來會收到什麼</h3>
+  <ol>
+    <li><b>班級 LINE 群邀請</b>:交通方式、雨天備案、每週課表都在群裡。</li>
+    <li><b>銜接團練通知</b>:9 月開課前有 3 場免費團練(${cls.warmups}),時間地點會另外通知。</li>
+    <li><b>Premium 社群開通</b>:開課當週幫你開通,用到 2027/1/31。</li>
+  </ol>
+  <p style="margin-top:12px">開課前不用做任何準備,穿平常跑步的裝備來就好。</p>`;
+
+  const singleNext = `
+  <h3 style="margin-top:24px">接下來</h3>
+  <p>單堂體驗的上課日期以我們私訊確認的那一天為準。當天穿平常跑步的裝備來就好,記得帶水。</p>`;
+
+  return `
+<div style="font-family:sans-serif;line-height:1.7;color:#1f3a2d;max-width:560px">
+  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},報名成功了 🎉</h2>
+  <p>匯款已經核對完成,<b>位子確定是你的</b>。</p>
+  <table style="border-collapse:collapse;margin:12px 0">
+    <tr><td style="padding:6px 12px;color:#4a5d51">班級</td><td style="padding:6px 12px"><b>${cls.label}</b></td></tr>
+    <tr><td style="padding:6px 12px;color:#4a5d51">地點</td><td style="padding:6px 12px">${cls.location}</td></tr>
+    <tr><td style="padding:6px 12px;color:#4a5d51">時間</td><td style="padding:6px 12px">${cls.weekly}</td></tr>
+    ${isFullTerm ? fullTermRows : ''}
+  </table>
+  ${isFullTerm ? fullTermNext : singleNext}
+  <p style="margin-top:24px;color:#4a5d51;font-size:13px">有任何問題歡迎私訊:<br>
+  IG @jesse.coach.26  ·  LINE @104wzemj</p>
+  <p style="color:#4a5d51;font-size:12px;margin-top:20px">— Soul Chill Running Club · 傑西跑班</p>
+</div>`;
+}
+
 function studentEmail(d, cls, planLabel) {
   return `
 <div style="font-family:sans-serif;line-height:1.7;color:#1f3a2d;max-width:560px">
-  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},感謝你的報名 🙌</h2>
-  <p>我們已經收到你的報名資訊,以下是確認內容:</p>
+  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},已經收到你的報名了 🙌</h2>
+  <p>以下是你填的內容,確認一下有沒有錯:</p>
   <table style="border-collapse:collapse;margin:12px 0">
     <tr><td style="padding:6px 12px;color:#4a5d51">班級</td><td style="padding:6px 12px"><b>${cls.label}</b>(${cls.location})</td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">方案</td><td style="padding:6px 12px">${planLabel}</td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">匯款金額</td><td style="padding:6px 12px">NT$ ${d.amount || '—'}</td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">後五碼</td><td style="padding:6px 12px">${d.last5 || '—'}</td></tr>
   </table>
-  <h3 style="margin-top:24px">下一步</h3>
+  <h3 style="margin-top:24px">接下來</h3>
   <ol>
-    <li>我們會在 <b>2 個工作天內</b> 聯繫你,確認匯款、入班與 LINE 群組邀請。</li>
-    <li>入群後會同步交通方式、雨天備案、上課地點等細節。</li>
-    <li>如匯款尚未完成,請盡快於 3 日內處理,以確保報名有效。</li>
+    <li>我們核對到你的匯款後,會在 <b>3 個工作天內</b> 寄出報名成功通知。<b>收到那封信,才是報名完成。</b></li>
+    <li>報名成功後會再邀請你加入班級 LINE 群,交通方式、雨天備案、上課細節都在群裡同步。</li>
+    <li>如果還沒匯款,記得完成,位子才會保留給你。</li>
   </ol>
   <p style="margin-top:24px;color:#4a5d51;font-size:13px">有任何問題歡迎私訊:<br>
   IG @jesse.coach.26  ·  LINE @104wzemj</p>
