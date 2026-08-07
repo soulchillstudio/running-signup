@@ -228,8 +228,13 @@ body{overflow-x:hidden}
   margin:14px 0 4px;padding-top:14px;border-top:1px dashed var(--forest-30);
 }
 .schedule-bonus .bonus-value .num{font-family:var(--font-hd);font-size:22px;font-weight:700;color:var(--forest);letter-spacing:.02em}
+.schedule-bonus .bonus-value .num.strike{text-decoration:line-through;text-decoration-thickness:2px;color:var(--forest-60);font-size:19px}
 .schedule-bonus .bonus-value .was{font-size:13px;color:var(--forest-60);text-decoration:line-through}
-.schedule-bonus .bonus-value .free{font-size:13px;color:var(--forest);font-weight:700}
+.schedule-bonus .bonus-value .free{font-size:14px;color:var(--forest);font-weight:700}
+.schedule-bonus .warmup-when{
+  font-size:13.5px;color:var(--forest);background:rgba(185,202,116,.16);
+  border-radius:8px;padding:9px 12px;margin:0 0 12px;line-height:1.7;
+}
 @media (max-width:720px){
   .schedule-bonus{padding:20px 18px}
   .bonus-row{grid-template-columns:1fr;gap:16px}
@@ -989,9 +994,9 @@ img{max-width:100%;height:auto}
         <div class="info-row">
           <div class="info-label">銜接團練</div>
           <div class="info-value-strong" style="color:var(--grass)">
-            <span data-class-content="taichung-tue" class="active">9/01 起 3 場免費團練 <em>· 開課前就能開始</em></span>
-            <span data-class-content="taipei-wed">9/02 起 3 場免費團練 <em>· 開課前就能開始</em></span>
-            <span data-class-content="taichung-thu">9/03 起 3 場免費團練 <em>· 開課前就能開始</em></span>
+            <span data-class-content="taichung-tue" class="active">9/03 起 3 場免費團練 <em>· 台中場在週四</em></span>
+            <span data-class-content="taipei-wed">9/02 起 3 場免費團練 <em>· 台北場在週三</em></span>
+            <span data-class-content="taichung-thu">9/03 起 3 場免費團練 <em>· 台中場在週四</em></span>
           </div>
         </div>
         <div class="info-row">
@@ -1167,9 +1172,9 @@ img{max-width:100%;height:auto}
     <div class="warmup-block">
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>01</div><div class="wk">TUE</div><div class="free">傑西親帶 · 對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>08</div><div class="wk">TUE</div><div class="free">教練團 · 限學員</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>15</div><div class="wk">TUE</div><div class="free">教練團 · 限學員</div></div>
+        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">對外開放</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
       </div>
     </div>
     <div class="date-grid">
@@ -1192,7 +1197,7 @@ img{max-width:100%;height:auto}
     <div class="warmup-block">
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>02</div><div class="wk">WED</div><div class="free">傑西親帶 · 對外開放</div></div>
+        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>02</div><div class="wk">WED</div><div class="free">對外開放</div></div>
         <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>09</div><div class="wk">WED</div><div class="free">教練團 · 限學員</div></div>
         <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>16</div><div class="wk">WED</div><div class="free">教練團 · 限學員</div></div>
       </div>
@@ -1217,7 +1222,7 @@ img{max-width:100%;height:auto}
     <div class="warmup-block">
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">傑西親帶 · 對外開放</div></div>
+        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">對外開放</div></div>
         <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
         <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
       </div>
@@ -1243,10 +1248,11 @@ img{max-width:100%;height:auto}
       <div class="bonus-tag">實體加碼 · 免費</div>
       <h3>9 月上半 銜接團練</h3>
       <p>開課前先一起把身體動起來，<b>不計入 12 堂正課</b>。</p>
+      <p class="warmup-when"><b>台中場在週四</b>（9/3、9/10、9/17）　<b>台北場在週三</b>（9/2、9/9、9/16）</p>
       <ul>
-        <li><b>第一場（9/1 到 9/3 那一週）：對外開放</b>。還沒報名整期也可以來，感受一下班上的氛圍，也認識教練。<br>
+        <li><b>第一場（9/2 台北、9/3 台中）：對外開放</b>。還沒報名整期也可以來，感受一下班上的氛圍，也認識教練。<br>
         <b>需要填報名表</b>：在下方選「<b>(T) 9 月銜接團練 · 單場體驗</b>」，免費、不用匯款，填完直接送出。</li>
-        <li><b>9/8 起（含 9/8 當天）的兩場</b>：<b>僅限已報名整期課程的學員</b>參加，由教練團 Trevor 與 Kris 帶。</li>
+        <li><b>9/8 起（含 9/8 當天）的兩場</b>：<b>僅限已報名整期課程的學員</b>參加，由教練團帶。</li>
       </ul>
       <p class="bonus-note">各班場次日期請看上方月曆的綠色格子。</p>
     </div>
@@ -1261,9 +1267,8 @@ img{max-width:100%;height:auto}
         <li>每週日晚間直播（帶練習＋答疑，有回放）</li>
       </ul>
       <div class="bonus-value">
-        <span class="num">NT$ 4,000</span>
-        <span class="was">原價 NT$1,000 / 月 × 4 個月</span>
-        <span class="free">→ 隨報名免費</span>
+        <span class="num strike">原價 NT$ 4,000 / 4 個月</span>
+        <span class="free">隨報名免費附贈</span>
       </div>
       <p class="bonus-note">
         這是跑步班之外的<b>另一個系統</b>，位在 Skool 平台上的
@@ -1454,7 +1459,7 @@ img{max-width:100%;height:auto}
               <div class="title">(T) 9 月銜接團練 · 單場體驗</div>
               <div class="meta">
                 <b>免費</b> · 不需匯款,填完直接送出 · 場次即為你上方選的班別:
-                <span class="trial-date" data-class-content="taichung-tue">9/01（二）19:30 台中</span><span class="trial-date" data-class-content="taipei-wed">9/02（三）19:30 台北</span><span class="trial-date" data-class-content="taichung-thu">9/03（四）19:30 台中</span>
+                <span class="trial-date" data-class-content="taichung-tue">9/03（四）19:30 台中</span><span class="trial-date" data-class-content="taipei-wed">9/02（三）19:30 台北</span><span class="trial-date" data-class-content="taichung-thu">9/03（四）19:30 台中</span>
               </div>
               <div class="price">免費</div>
             </div>
