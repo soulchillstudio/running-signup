@@ -1341,8 +1341,7 @@ img{max-width:100%;height:auto}
 <section class="section sec-voices" id="voices">
   <div class="voices-head">
     <div class="eyebrow">Part 03.5 · Student Voices</div>
-    <h2>學員怎麼說</h2>
-    <p class="lead">不追成績、不比快慢。<br>這裡的人，是被「一起變好」這件事留下來的。</p>
+    <h2>聽聽同學怎麼說</h2>
   </div>
   <div class="voices-grid">
     <div class="voice-card">
@@ -1381,7 +1380,8 @@ img{max-width:100%;height:auto}
         <h2>準備好了<br>就一起練。</h2>
       </div>
       <div class="intro">
-        填寫下方資訊後,我們會在 2 個工作天內與您聯繫。
+        填完表單會先收到一封確認信。<br>
+        完成匯款後,我們會在 <b>3 個工作天內</b> 寄出報名成功通知。
       </div>
     </div>
 
@@ -1559,7 +1559,7 @@ img{max-width:100%;height:auto}
         <div class="form-section-head">
           <span class="idx">04</span>
           <h3>匯款資訊</h3>
-          <span class="hint">填寫完成後三日內完成繳費才算報名完成</span>
+          <span class="hint">匯款後 3 個工作天內,我們會寄出報名成功通知</span>
         </div>
 
         <div class="bank-info">
@@ -1901,7 +1901,7 @@ function handleSubmit(){
   .then(r => r.json())
   .then(res => {
     if (res.ok) {
-      btn.innerHTML = '✓ 已送出 · ' + className + ' · 2 個工作天內聯絡你';
+      btn.innerHTML = '✓ 已送出 · ' + className + ' · 確認信已寄出,請收信';
       btn.style.background = '#1f3a2d';
       btn.style.color = '#f1ede2';
       form.reset();
