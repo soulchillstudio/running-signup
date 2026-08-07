@@ -1,11 +1,25 @@
 // ==========================================================
-// 2026 Q2 跑班報名 — Google Apps Script
+// 傑西跑班報名 — Google Apps Script
 // 首次使用:先執行 setup() 建立分頁 + 表頭 + 下拉選單
 // 部署:Deploy > New deployment > Web app
 //       Execute as: Me  /  Who has access: Anyone
+//
+// 2026-08-07 第 3 期改動:
+//   報名資料改寫進「第 3 期」專用 Sheet(見 SHEET_ID),
+//   第 2 期的舊 Sheet 保持原樣不再寫入。
+//   ⚠️ 改成 openById 之後,這支腳本綁在哪個 Sheet 已經不重要,
+//      要換期只需要改 SHEET_ID 這一行,然後重新 Deploy。
 // ==========================================================
 
 const NOTIFY_EMAIL = 'qazmnbvgamil@gmail.com'; // 報名通知信收件人(你自己)
+
+// 第 3 期報名資料 Sheet(2026-08-07 建立)
+// 第 2 期舊 Sheet = 1DBjW1KegOdqWxonDcoyDNl15SDF5yYiA4vJAvbkipcE(保留備查,不再寫入)
+const SHEET_ID = '1hH5YO54sbGP16kMl6b-9sZDM7rjBjZ9ACIioOTt78Eg';
+
+function ss_() {
+  return SpreadsheetApp.openById(SHEET_ID);
+}
 
 const CLASS_MAP = {
   'taichung-tue': { tab: '台中週二班', label: '台中 · 週二班', location: '中興大學田徑場' },
@@ -38,11 +52,17 @@ const TRIAL_SESSION = {
 const HEADERS = ['報名時間','姓名','LINE','Email','跑步能力','方案','方案說明','匯款金額','匯款後五碼','備註','同意條款','狀態','入群日期','首週出席','教練備註'];
 
 // ====== 執行一次:建立三個分頁 + 表頭 + 狀態下拉 ======
+// ⚠️ 非破壞性:已經有報名資料的分頁不會被清掉,只補表頭與下拉。
+//    (舊版這裡是 sheet.clear(),誤跑一次就會清光整期報名資料)
 function setup() {
-  const ss = SpreadsheetApp.getActive();
+  const ss = ss_();
   Object.values(CLASS_MAP).forEach(c => {
+    const existed = !!ss.getSheetByName(c.tab);
     let sheet = ss.getSheetByName(c.tab) || ss.insertSheet(c.tab);
-    sheet.clear();
+    const hasData = existed && sheet.getLastRow() > 1;
+    if (hasData) {
+      Logger.log(`分頁「${c.tab}」已有 ${sheet.getLastRow() - 1} 筆資料,保留不動。`);
+    }
     sheet.getRange(1, 1, 1, HEADERS.length)
       .setValues([HEADERS])
       .setFontWeight('bold')
@@ -76,7 +96,7 @@ function doPost(e) {
     const cls = CLASS_MAP[data.class];
     if (!cls) throw new Error('未知班別:' + data.class);
 
-    const ss = SpreadsheetApp.getActive();
+    const ss = ss_();
     const sheet = ss.getSheetByName(cls.tab);
     const planLabel = PLAN_MAP[data.plan] || data.plan || '';
     const isFree = FREE_PLANS.indexOf(data.plan) !== -1;
@@ -183,10 +203,11 @@ function trialEmail(d, cls, planLabel) {
 }
 
 function adminEmail(d, cls, planLabel) {
-  const ssId = SpreadsheetApp.getActive().getId();
+  const ssId = SHEET_ID;
+  const isFree = FREE_PLANS.indexOf(d.plan) !== -1;
   return `
 <div style="font-family:sans-serif;line-height:1.7">
-  <h2>🎉 新報名:${cls.label}</h2>
+  <h2>${isFree ? '🌿 免費團練報名' : '🎉 新報名'}:${cls.label}</h2>
   <table style="border-collapse:collapse">
     <tr><td style="padding:4px 10px;color:#666">姓名</td><td style="padding:4px 10px"><b>${d.name}</b></td></tr>
     <tr><td style="padding:4px 10px;color:#666">Email</td><td style="padding:4px 10px">${d.email}</td></tr>
