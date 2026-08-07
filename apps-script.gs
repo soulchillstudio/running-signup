@@ -30,6 +30,16 @@ function nowTaipei_() {
   return Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy/MM/dd HH:mm:ss');
 }
 
+// 強制存成文字,保住前導零。
+// 2026-08-07 踩到的坑:只設 setNumberFormat('@') 沒有用 ——
+// 那是「顯示格式」,但 appendRow 寫入時 Sheets 已經先把 "09961" 判定成數字 9961,
+// 格式只是把數字 9961 用文字方式顯示,零早就沒了。
+// 真正有效的是前綴單引號:Sheets 看到 ' 就不做型別推斷,而且讀回來時不含這個引號。
+function asText_(v) {
+  const s = String(v == null ? '' : v).trim();
+  return s === '' ? '' : "'" + s;
+}
+
 // 診斷用:在編輯器選這個函式執行,看「執行記錄」印出各層時區
 function checkTimeZones() {
   const scriptTz = Session.getScriptTimeZone();
@@ -151,13 +161,13 @@ function doPost(e) {
     sheet.appendRow([
       nowTaipei_(),
       data.name || '',
-      data.line || '',
+      asText_(data.line),          // 09xx 手機號碼:前導零
       data.email || '',
       data.running || '',
       data.plan || '',
       planLabel,
       isFree ? '免費' : (data.amount || ''),
-      isFree ? '—' : (data.last5 || ''),
+      isFree ? '—' : asText_(data.last5),   // 後五碼 09961:前導零
       data.notes || '',
       data.agree ? '是' : '否',
       isFree ? '免費團練' : '待匯款',
@@ -218,55 +228,84 @@ function installTriggers() {
 
 function onStatusEdit(e) {
   try {
-    if (!e || !e.range) return;
+    if (!e || !e.range) { Logger.log('略過:沒有 e.range'); return; }
     const sheet = e.range.getSheet();
+    const row = e.range.getRow();
 
     // 防呆 1:只認三個班別分頁,其他分頁一律不動作
     const known = Object.values(CLASS_MAP).some(c => c.tab === sheet.getName());
-    if (!known) return;
+    if (!known) { Logger.log(`略過:分頁「${sheet.getName()}」不在名單內`); return; }
 
     // 防呆 2:只認狀態欄,且一次只處理單一儲存格(避免整欄貼上時爆寄)
     if (e.range.getColumn() !== COL.STATUS) return;
     if (e.range.getNumRows() !== 1 || e.range.getNumColumns() !== 1) return;
-
-    // 防呆 3:只在「改成已匯款」時觸發
-    if (String(e.value || '').trim() !== STATUS_PAID) return;
-
-    const row = e.range.getRow();
     if (row < 2) return;   // 表頭
 
-    // 防呆 4:已經寄過就不再寄(重點:避免狀態改來改去重複轟炸學員)
-    const sentCell = sheet.getRange(row, COL.SUCCESS_MAIL);
-    if (String(sentCell.getValue() || '').trim() !== '') return;
+    // 防呆 3:只在「改成已匯款」時觸發。
+    // ⚠️ 這裡讀儲存格實際值,不用 e.value ——
+    //    2026-08-07 實測:從下拉選單改狀態時 e.value 拿不到,整條靜默失效。
+    const status = String(e.range.getValue() || '').trim();
+    if (status !== STATUS_PAID) { Logger.log(`略過:狀態是「${status}」不是「${STATUS_PAID}」`); return; }
 
-    const email = String(sheet.getRange(row, COL.EMAIL).getValue() || '').trim();
-    const name  = String(sheet.getRange(row, COL.NAME).getValue() || '').trim();
-    const plan  = String(sheet.getRange(row, COL.PLAN).getValue() || '').trim();
-
-    // 防呆 5:沒有 email 就記一筆,不要靜默失敗
-    if (!email) { sentCell.setValue('⚠️ 無 Email,未寄出'); return; }
-
-    // 防呆 6:免費團練不該走這條(他們的狀態是「免費團練」,理論上進不來,再擋一次)
-    if (FREE_PLANS.indexOf(plan) !== -1) { sentCell.setValue('—(免費團練不寄)'); return; }
-
-    const clsKey = Object.keys(CLASS_MAP).find(k => CLASS_MAP[k].tab === sheet.getName());
-    const cls = CLASS_MAP[clsKey];
-
-    MailApp.sendEmail({
-      to: email,
-      subject: `【傑西跑班】報名成功 | ${cls.label} ${cls.start} 開課`,
-      htmlBody: successEmail({ name: name, plan: plan }, cls)
-    });
-    sentCell.setValue(nowTaipei_());
+    Logger.log(`觸發:${sheet.getName()} 第 ${row} 列 → ${STATUS_PAID}`);
+    sendSuccessMailForRow_(sheet, row);
 
   } catch (err) {
-    // 出錯不要吞掉:寫回該列,你在 Sheet 上就看得到
     try {
       e.range.getSheet().getRange(e.range.getRow(), COL.SUCCESS_MAIL)
         .setValue('❌ 寄送失敗:' + err.message);
     } catch (e2) {}
     Logger.log('onStatusEdit 失敗:' + err.message);
   }
+}
+
+// 單列寄信邏輯。onStatusEdit 與手動補寄共用同一份,行為一定一致。
+function sendSuccessMailForRow_(sheet, row) {
+  const sentCell = sheet.getRange(row, COL.SUCCESS_MAIL);
+
+  // 已經寄過就不再寄(避免狀態改來改去重複轟炸學員)
+  if (String(sentCell.getValue() || '').trim() !== '') {
+    Logger.log(`第 ${row} 列已寄過,跳過`);
+    return false;
+  }
+
+  const email = String(sheet.getRange(row, COL.EMAIL).getValue() || '').trim();
+  const name  = String(sheet.getRange(row, COL.NAME).getValue() || '').trim();
+  const plan  = String(sheet.getRange(row, COL.PLAN).getValue() || '').trim();
+
+  if (!email) { sentCell.setValue('⚠️ 無 Email,未寄出'); return false; }
+  if (FREE_PLANS.indexOf(plan) !== -1) { sentCell.setValue('—(免費團練不寄)'); return false; }
+
+  const clsKey = Object.keys(CLASS_MAP).find(k => CLASS_MAP[k].tab === sheet.getName());
+  const cls = CLASS_MAP[clsKey];
+
+  MailApp.sendEmail({
+    to: email,
+    subject: `【傑西跑班】報名成功 | ${cls.label} ${cls.start} 開課`,
+    htmlBody: successEmail({ name: name, plan: plan }, cls)
+  });
+  sentCell.setValue(nowTaipei_());
+  Logger.log(`✅ 已寄給 ${name} <${email}>`);
+  return true;
+}
+
+// 手動補寄:掃描三個分頁,把「已匯款但成功信欄還空白」的通通補寄。
+// 用途:①觸發器出問題時的保險 ②在編輯器直接執行就能測,不用真的去改 Sheet
+function sendPendingSuccessMails() {
+  const ss = ss_();
+  let sent = 0, scanned = 0;
+  Object.values(CLASS_MAP).forEach(c => {
+    const sheet = ss.getSheetByName(c.tab);
+    if (!sheet) return;
+    const last = sheet.getLastRow();
+    for (let row = 2; row <= last; row++) {
+      const status = String(sheet.getRange(row, COL.STATUS).getValue() || '').trim();
+      if (status !== STATUS_PAID) continue;
+      scanned++;
+      if (sendSuccessMailForRow_(sheet, row)) sent++;
+    }
+  });
+  Logger.log(`掃描完成:${scanned} 筆已匯款,本次補寄 ${sent} 封。`);
 }
 
 // 報名成功信(確認匯款後寄)
