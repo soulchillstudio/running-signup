@@ -269,7 +269,7 @@ function successEmail(d, cls) {
   const fullTermRows = `
     <tr><td style="padding:6px 12px;color:#4a5d51">開課日</td><td style="padding:6px 12px"><b>${cls.start}</b> · 全期 12 堂</td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">加碼</td><td style="padding:6px 12px">
-      9 月銜接團練 3 場(${cls.warmups})· 免費、不計入 12 堂<br>
+      9 月銜接團練 3 場（${cls.warmups}）· 免費、不計入 12 堂<br>
       「慢慢進步」Premium 線上社群 · 4 個月
     </td></tr>`;
 
@@ -277,7 +277,7 @@ function successEmail(d, cls) {
   <h3 style="margin-top:24px">接下來會收到什麼</h3>
   <ol>
     <li><b>班級 LINE 群邀請</b>：交通方式、雨天備案、每週課表都在群裡。</li>
-    <li><b>銜接團練通知</b>:9 月開課前有 3 場免費團練(${cls.warmups}),時間地點會另外通知。</li>
+    <li><b>銜接團練通知</b>：9 月開課前有 3 場免費團練（${cls.warmups}），時間地點會另外通知。</li>
     <li><b>Premium 社群開通</b>：開課當週幫你開通，用到 2027/1/31。</li>
   </ol>
   <p style="margin-top:12px">開課前不用做任何準備，穿平常跑步的裝備來就好。</p>`;
@@ -288,7 +288,7 @@ function successEmail(d, cls) {
 
   return `
 <div style="font-family:sans-serif;line-height:1.7;color:#1f3a2d;max-width:560px">
-  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},報名成功了 🎉</h2>
+  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name}，報名成功了 🎉</h2>
   <p>匯款已經核對完成，<b>位子確定是你的</b>。</p>
   <table style="border-collapse:collapse;margin:12px 0">
     <tr><td style="padding:6px 12px;color:#4a5d51">班級</td><td style="padding:6px 12px"><b>${cls.label}</b></td></tr>
@@ -306,7 +306,7 @@ function successEmail(d, cls) {
 function studentEmail(d, cls, planLabel) {
   return `
 <div style="font-family:sans-serif;line-height:1.7;color:#1f3a2d;max-width:560px">
-  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},已經收到你的報名了 🙌</h2>
+  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name}，已經收到你的報名了 🙌</h2>
   <p>以下是你填的內容，確認一下有沒有錯：</p>
   <table style="border-collapse:collapse;margin:12px 0">
     <tr><td style="padding:6px 12px;color:#4a5d51">班級</td><td style="padding:6px 12px"><b>${cls.label}</b>(${cls.location})</td></tr>
@@ -333,7 +333,7 @@ function trialEmail(d, cls, planLabel) {
   const when = TRIAL_SESSION[d.class] || '9 月上半第一場（實際日期會再通知）';
   return `
 <div style="font-family:sans-serif;line-height:1.7;color:#1f3a2d;max-width:560px">
-  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},報名成功 🌿</h2>
+  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name}，報名成功 🌿</h2>
   <p>你已經成功報名 9 月開課前的<b>銜接團練</b>，免費參加。</p>
   <table style="border-collapse:collapse;margin:12px 0">
     <tr><td style="padding:6px 12px;color:#4a5d51">場次</td><td style="padding:6px 12px"><b>${when}</b></td></tr>
