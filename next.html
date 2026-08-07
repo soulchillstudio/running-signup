@@ -162,8 +162,34 @@ body{overflow-x:hidden}
   background:rgba(185,202,116,.10);border:1px dashed var(--grass);border-top:3px solid var(--grass);
 }
 .warmup-grid .date-cell .free{
-  font-family:var(--font-hd);font-size:8.5px;letter-spacing:.18em;color:var(--forest-60);
-  margin-top:5px;
+  font-family:var(--font-hd);font-size:11px;letter-spacing:.06em;color:var(--forest-60);
+  margin-top:6px;font-weight:600;
+}
+
+/* 每一堂的結構 */
+.lesson-flow{max-width:960px;margin:56px auto 0;padding:0 20px}
+.lesson-flow-label{
+  font-family:var(--font-hd);font-size:10px;letter-spacing:.22em;color:var(--forest-60);
+  font-weight:700;text-align:center;margin-bottom:18px;
+}
+.lesson-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
+.lesson-step{
+  background:var(--white);border:1px solid var(--line);border-radius:12px;
+  padding:20px 18px;position:relative;
+}
+.lesson-step .mins{
+  font-family:var(--font-hd);font-size:11px;letter-spacing:.14em;font-weight:700;
+  color:var(--grass);
+}
+.lesson-step h4{font-size:17px;font-weight:700;color:var(--forest);margin:8px 0 6px;line-height:1.3}
+.lesson-step p{font-size:13.5px;line-height:1.75;color:var(--forest-60);margin:0}
+.lesson-step .step-n{
+  position:absolute;top:14px;right:16px;font-family:var(--font-hd);font-size:26px;
+  font-weight:700;color:var(--line);line-height:1;
+}
+@media (max-width:720px){
+  .lesson-steps{grid-template-columns:1fr;gap:10px}
+  .lesson-flow{margin-top:40px}
 }
 
 @media (max-width:720px){
@@ -191,7 +217,7 @@ body{overflow-x:hidden}
 .schedule-bonus li{margin:4px 0}
 .schedule-bonus .bonus-note{margin-top:10px;font-size:13px;color:var(--forest-60)}
 /* 兩張加碼卡並排 */
-.bonus-row{max-width:900px;margin:0 auto 36px;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.bonus-row{max-width:900px;margin:40px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
 .bonus-row .schedule-bonus{max-width:none;margin:0;height:100%}
 .schedule-bonus.premium{border-left-color:var(--forest);background:var(--linen-deep)}
 .schedule-bonus.premium .bonus-tag{background:var(--forest);color:var(--linen)}
@@ -959,16 +985,20 @@ img{max-width:100%;height:auto}
           </div>
         </div>
         <div class="info-row">
+          <div class="info-label">銜接團練</div>
+          <div class="info-value-strong" style="color:var(--grass)">
+            <span data-class-content="taichung-tue" class="active">9/01 起 3 場免費團練 <em>· 開課前就能開始</em></span>
+            <span data-class-content="taipei-wed">9/02 起 3 場免費團練 <em>· 開課前就能開始</em></span>
+            <span data-class-content="taichung-thu">9/03 起 3 場免費團練 <em>· 開課前就能開始</em></span>
+          </div>
+        </div>
+        <div class="info-row">
           <div class="info-label">報名狀態</div>
           <div class="info-value-strong" style="color:var(--grass)">
             <span data-class-content="taichung-tue" class="active">整期招生中 · 新生／舊生皆可報名</span>
             <span data-class-content="taipei-wed">整期招生中 · 新生／舊生皆可報名</span>
             <span data-class-content="taichung-thu">整期招生中 · 新生／舊生皆可報名</span>
           </div>
-        </div>
-        <div class="info-row">
-          <div class="info-label">報名加碼</div>
-          <div class="info-value-strong">9 月免費銜接團練 <em>· 不計入 12 堂</em></div>
         </div>
         <div class="info-row">
           <div class="info-label">線上加碼</div>
@@ -1010,7 +1040,7 @@ img{max-width:100%;height:auto}
     </div>
 
     <div class="goal-lead">
-      <p class="q1">比賽要跑到這個樣子,需要的不只是耐力。</p>
+      <p class="q1">比賽要跑在這個狀態,需要的不只是耐力。</p>
       <p class="q2"><b>速耐力,是另一個關鍵。</b></p>
     </div>
 
@@ -1092,6 +1122,30 @@ img{max-width:100%;height:auto}
     </div>
     <div class="tl-lbl">W12</div>
   </div>
+
+  <div class="lesson-flow">
+    <div class="lesson-flow-label">INSIDE ONE LESSON · 每一堂怎麼進行</div>
+    <div class="lesson-steps">
+      <div class="lesson-step">
+        <span class="step-n">01</span>
+        <div class="mins">約 20 分鐘</div>
+        <h4>充足的暖身</h4>
+        <p>從靜態到動態,把身體完整打開再開始跑。不是繞兩圈就下場。</p>
+      </div>
+      <div class="lesson-step">
+        <span class="step-n">02</span>
+        <div class="mins">10 到 15 分鐘</div>
+        <h4>技術訓練</h4>
+        <p>當週要練的動作與跑姿重點,在這裡拆開來練。</p>
+      </div>
+      <div class="lesson-step">
+        <span class="step-n">03</span>
+        <div class="mins">當天主課表</div>
+        <h4>間歇訓練</h4>
+        <p>依照當週的階段距離操作,把前面練到的東西直接放進跑動裡。</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ===== SCHEDULE / 上課日期 ===== -->
@@ -1112,8 +1166,8 @@ img{max-width:100%;height:auto}
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
         <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>01</div><div class="wk">TUE</div><div class="free">傑西親帶 · 對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>08</div><div class="wk">TUE</div><div class="free">教練團陪跑</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>15</div><div class="wk">TUE</div><div class="free">教練團陪跑</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>08</div><div class="wk">TUE</div><div class="free">教練團</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>15</div><div class="wk">TUE</div><div class="free">教練團</div></div>
       </div>
     </div>
     <div class="date-grid">
@@ -1137,8 +1191,8 @@ img{max-width:100%;height:auto}
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
         <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>02</div><div class="wk">WED</div><div class="free">傑西親帶 · 對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>09</div><div class="wk">WED</div><div class="free">教練團陪跑</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>16</div><div class="wk">WED</div><div class="free">教練團陪跑</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>09</div><div class="wk">WED</div><div class="free">教練團</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>16</div><div class="wk">WED</div><div class="free">教練團</div></div>
       </div>
     </div>
     <div class="date-grid">
@@ -1162,8 +1216,8 @@ img{max-width:100%;height:auto}
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
         <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">傑西親帶 · 對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團陪跑</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團陪跑</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團</div></div>
       </div>
     </div>
     <div class="date-grid">
@@ -1225,9 +1279,7 @@ img{max-width:100%;height:auto}
       <h2>Hi,<br>我是傑西</h2>
     </div>
     <div class="sum">
-      <em>從課表設計到現場調整,</em><br>
-      <em>都是同一個人。</em><br><br>
-      我想做的不是讓你一直需要教練,<br>是讓你慢慢讀得懂自己的身體,<br>最後成為自己的教練。
+      我想做的不是讓你一直需要教練,<br>是讓你慢慢讀得懂自己的身體,<br>最後成為懂得照顧自己的教練。
     </div>
   </div>
 
@@ -1248,9 +1300,9 @@ img{max-width:100%;height:auto}
           <span>跑步專項轉移</span>
         </div>
         <div class="note">
-          教學合作品牌:XTERRA、The North Face、SUPERACE、New Balance、lululemon、迪卡儂。<br><br>
-          相信身心的連結與生活平衡。除了跑步,也做徒手調整,所以看的不只是你的步頻與配速,還有你的身體現在容不容得下這個訓練量。<br><br>
-          不說教,講白話。把肌力與動作訓練的成果有效轉移到你的跑步,讓每一次調整,在跑動中被自己清楚感覺到。
+          課程合作經驗:XTERRA、The North Face、New Balance、lululemon、迪卡儂。<br><br>
+          要讓自己變得更進步,不只是更多的訓練。顧及身心的連結與生活的動態平衡,才能獲得真正的強韌。<br><br>
+          善於把複雜的理論,轉化成簡單易懂的教學方式。不只要學習跑步,也學習怎麼照顧自己。
         </div>
       </div>
     </div>
@@ -1260,7 +1312,7 @@ img{max-width:100%;height:auto}
     <p>
       把<span class="hl">技術訓練</span>和<span class="hl">跑步需要的體能</span>加起來,<br>
       一階一階往上堆。<br><br>
-      讓跑步<span class="hl">更輕、更快、更安全</span>。
+      讓跑步<span class="hl">更輕、更快、更享受</span>。
     </p>
   </div>
 </section>
