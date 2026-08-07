@@ -21,6 +21,26 @@ function ss_() {
   return SpreadsheetApp.openById(SHEET_ID);
 }
 
+// 報名時間戳:明確指定台北時區產生字串,不依賴任何容器設定。
+// 2026-08-07 踩到的坑:Apps Script 專案時區與 Sheet 時區都設 (GMT+08:00) 台北,
+// 但 appendRow 寫入 new Date() 後,顯示出來仍是 UTC-7(整整差 15 小時、日期跳前一天)。
+// 與其追查是哪一層在換算,直接把時間格式化成字串寫進去 —— 環境怎麼設都不會再錯。
+// 代價:欄位是文字不是日期值,但 yyyy/MM/dd HH:mm:ss 這個格式字串排序 = 時間排序,夠用。
+function nowTaipei_() {
+  return Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy/MM/dd HH:mm:ss');
+}
+
+// 診斷用:在編輯器選這個函式執行,看「執行記錄」印出各層時區
+function checkTimeZones() {
+  const scriptTz = Session.getScriptTimeZone();
+  const sheetTz  = ss_().getSpreadsheetTimeZone();
+  Logger.log('腳本時區      : ' + scriptTz);
+  Logger.log('試算表時區    : ' + sheetTz);
+  Logger.log('new Date()    : ' + new Date());
+  Logger.log('台北格式化    : ' + nowTaipei_());
+  Logger.log('如果「台北格式化」跟你手機上的時間一致,寫入就是對的。');
+}
+
 const CLASS_MAP = {
   'taichung-tue': { tab: '台中週二班', label: '台中 · 週二班', location: '中興大學田徑場' },
   'taipei-wed':   { tab: '台北週三班', label: '台北 · 週三班', location: '台北田徑場' },
@@ -102,7 +122,7 @@ function doPost(e) {
     const isFree = FREE_PLANS.indexOf(data.plan) !== -1;
 
     sheet.appendRow([
-      new Date(),
+      nowTaipei_(),
       data.name || '',
       data.line || '',
       data.email || '',
@@ -174,24 +194,28 @@ function studentEmail(d, cls, planLabel) {
 </div>`;
 }
 
-// 免費銜接團練專用確認信:不提匯款、不提 3 日內繳費
+// 免費銜接團練確認信。
+// 免費場次只寄這一封,收到就算報名成功(不另外寄第二封確認)。
+// 集合細節與注意事項統一在活動當週的星期一另外寄。
 function trialEmail(d, cls, planLabel) {
   const when = TRIAL_SESSION[d.class] || '9 月上半第一場（實際日期會再通知）';
   return `
 <div style="font-family:sans-serif;line-height:1.7;color:#1f3a2d;max-width:560px">
-  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},免費團練的位子留給你了 🌿</h2>
-  <p>這是 9 月開課前的<b>銜接團練</b>,免費參加,不需要匯款,你不用再做任何事。</p>
+  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},報名成功 🌿</h2>
+  <p>你已經成功報名 9 月開課前的<b>銜接團練</b>,免費參加。</p>
   <table style="border-collapse:collapse;margin:12px 0">
     <tr><td style="padding:6px 12px;color:#4a5d51">場次</td><td style="padding:6px 12px"><b>${when}</b></td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">班別</td><td style="padding:6px 12px">${cls.label}</td></tr>
+    <tr><td style="padding:6px 12px;color:#4a5d51">地點</td><td style="padding:6px 12px">${cls.location}</td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">費用</td><td style="padding:6px 12px"><b>免費</b></td></tr>
   </table>
-  <h3 style="margin-top:24px">下一步</h3>
-  <ol>
-    <li>我們會在 <b>2 個工作天內</b> 用 LINE 或 Email 跟你確認,並告知集合地點與當天流程。</li>
-    <li>當天穿一般跑步的裝備來就好,帶水。</li>
-    <li>如果臨時來不了,回覆這封信告訴我們一聲就可以。</li>
-  </ol>
+  <h3 style="margin-top:24px">課前通知</h3>
+  <p>我們會在活動當週的<b>星期一（8/31）</b>再寄一封信給你,內容包含:</p>
+  <ul style="margin:8px 0 0;padding-left:20px">
+    <li>集合的確切位置</li>
+    <li>當天需要攜帶的物品</li>
+  </ul>
+  <p style="margin-top:12px">如果因為天氣或其他因素需要調整時間或地點,也會在那封信裡一併告訴你。</p>
   <p style="margin-top:20px;padding:12px 14px;background:#f1ede2;border-radius:8px;font-size:13.5px">
     <b>提醒:</b>9/8 起的另外兩場團練,是留給已經報名整期課程的學員。<br>
     如果你上完這場想接著跟,再跟我們說,我們會告訴你怎麼報名整期。
