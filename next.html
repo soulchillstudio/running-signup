@@ -107,6 +107,8 @@ body{overflow-x:hidden}
 .info-half [data-class-content].active{display:block}
 .hero-info-list .info-value [data-class-content]{display:none}
 .hero-info-list .info-value [data-class-content].active{display:flex}
+.trial-date{display:none}
+.trial-date.active{display:inline-block;font-weight:700;color:var(--forest)}
 
 @media (max-width:720px){
   .class-tabs{max-width:none;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
@@ -1166,8 +1168,8 @@ img{max-width:100%;height:auto}
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
         <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>01</div><div class="wk">TUE</div><div class="free">傑西親帶 · 對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>08</div><div class="wk">TUE</div><div class="free">教練團</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>15</div><div class="wk">TUE</div><div class="free">教練團</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>08</div><div class="wk">TUE</div><div class="free">教練團 · 限學員</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>15</div><div class="wk">TUE</div><div class="free">教練團 · 限學員</div></div>
       </div>
     </div>
     <div class="date-grid">
@@ -1191,8 +1193,8 @@ img{max-width:100%;height:auto}
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
         <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>02</div><div class="wk">WED</div><div class="free">傑西親帶 · 對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>09</div><div class="wk">WED</div><div class="free">教練團</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>16</div><div class="wk">WED</div><div class="free">教練團</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>09</div><div class="wk">WED</div><div class="free">教練團 · 限學員</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>16</div><div class="wk">WED</div><div class="free">教練團 · 限學員</div></div>
       </div>
     </div>
     <div class="date-grid">
@@ -1216,8 +1218,8 @@ img{max-width:100%;height:auto}
       <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
       <div class="warmup-grid">
         <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">傑西親帶 · 對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團</div></div>
+        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
+        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
       </div>
     </div>
     <div class="date-grid">
@@ -1242,8 +1244,9 @@ img{max-width:100%;height:auto}
       <h3>9 月上半 銜接團練</h3>
       <p>開課前先一起把身體動起來，<b>不計入 12 堂正課</b>。</p>
       <ul>
-        <li><b>9/1 到 9/3 那一週：三場對外開放</b>。還沒報名也可以填報名表來體驗，感受一下班上的氛圍，也認識教練。</li>
-        <li><b>9/8 起的兩場</b>：由教練團 Trevor 與 Kris 陪跑。</li>
+        <li><b>第一場（9/1 到 9/3 那一週）：對外開放</b>。還沒報名整期也可以來，感受一下班上的氛圍，也認識教練。<br>
+        <b>需要填報名表</b>：在下方選「<b>(T) 9 月銜接團練 · 單場體驗</b>」，免費、不用匯款，填完直接送出。</li>
+        <li><b>9/8 起（含 9/8 當天）的兩場</b>：<b>僅限已報名整期課程的學員</b>參加，由教練團 Trevor 與 Kris 帶。</li>
       </ul>
       <p class="bonus-note">各班場次日期請看上方月曆的綠色格子。</p>
     </div>
@@ -1393,7 +1396,7 @@ img{max-width:100%;height:auto}
           <span class="hint">請擇一 · 匯款金額以選項為準</span>
         </div>
         <div class="help" style="margin:-4px 0 14px;padding:10px 14px;background:rgba(185,207,111,.16);border-left:3px solid var(--grass);border-radius:6px;color:var(--forest-ink);font-weight:500">
-          🎁 <b>整期方案（A / B / E / F）與插班（D）皆含「慢慢進步」Premium 線上社群</b>，市價 NT$4,000，開通至 2027/1/31。單堂體驗（C）不含。
+          🎁 <b>整期方案（A / B / E / F）與插班（D）皆含「慢慢進步」Premium 線上社群</b>，市價 NT$4,000，開通至 2027/1/31。單堂體驗（C）與免費團練（T）不含。
         </div>
         <div class="choices" style="gap:12px">
           <label class="choice plan rec">
@@ -1443,6 +1446,17 @@ img{max-width:100%;height:auto}
               <div class="title">(F) 三人同行 · 新生完整 12 堂</div>
               <div class="meta">三人同行 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · <b>各含 Premium 線上社群</b></div>
               <div class="price">NT$ 4,860 / 人</div>
+            </div>
+          </label>
+          <label class="choice">
+            <input type="radio" name="plan" value="T">
+            <div class="choice-body">
+              <div class="title">(T) 9 月銜接團練 · 單場體驗</div>
+              <div class="meta">
+                <b>免費</b> · 不需匯款,填完直接送出 · 場次即為你上方選的班別:
+                <span class="trial-date" data-class-content="taichung-tue">9/01（二）19:30 台中</span><span class="trial-date" data-class-content="taipei-wed">9/02（三）19:30 台北</span><span class="trial-date" data-class-content="taichung-thu">9/03（四）19:30 台中</span>
+              </div>
+              <div class="price">免費</div>
             </div>
           </label>
         </div>
@@ -1534,7 +1548,7 @@ img{max-width:100%;height:auto}
       </div>
 
       <!-- Section 04 — Payment -->
-      <div class="form-section">
+      <div class="form-section" id="paymentSection">
         <div class="form-section-head">
           <span class="idx">04</span>
           <h3>匯款資訊</h3>
@@ -1696,13 +1710,13 @@ function switchClass(classKey){
 }
 
 // 各班開放方案(2026-08-04:第 3 期整期招生,9/22 那週開課)
-//   三班皆開放整期方案 A/B/E/F/G + 單堂體驗(C)
+//   三班皆開放整期方案 A/B/E/F + 單堂體驗(C) + 免費團練(T)
 //   插班(D)僅開課後才開放,招生期先隱藏
 //   未列入此表的班別 = 全方案開放
 const CLASS_ALLOWED_PLANS = {
-  'taichung-tue': ['A','B','C','E','F'],
-  'taipei-wed':   ['A','B','C','E','F'],
-  'taichung-thu': ['A','B','C','E','F']
+  'taichung-tue': ['A','B','C','E','F','T'],
+  'taipei-wed':   ['A','B','C','E','F','T'],
+  'taichung-thu': ['A','B','C','E','F','T']
 };
 const CLASS_PLAN_NOTICE = {};
 
@@ -1765,7 +1779,8 @@ const PLAN_MAP = {
   C: { amt: 'NT$ 450',    label: '/ 單堂體驗',        note: '請先 LINE 或 IG 告知預約日期,確認後再匯款。單堂不含 Premium 線上社群。',  autoAmount: '450',   bankNote: '單堂' },
   D: { amt: '原價 · 依剩餘堂數',  label: '· 插班報名',  note: '插班依原價 × 剩餘堂數計費(整期 12 堂才有舊生優惠),含 Premium 線上社群。請私訊確認剩餘堂數與費用後匯款。',  autoAmount: '',  bankNote: '插班' },
   E: { amt: 'NT$ 5,130',  label: '/ 兩人同行 每人',   note: '新生限定 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · 各含 Premium 線上社群',  autoAmount: '5130',  bankNote: '兩人同行' },
-  F: { amt: 'NT$ 4,860',  label: '/ 三人同行 每人',   note: '新生限定 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · 各含 Premium 線上社群',   autoAmount: '4860',  bankNote: '三人同行' }
+  F: { amt: 'NT$ 4,860',  label: '/ 三人同行 每人',   note: '新生限定 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · 各含 Premium 線上社群',   autoAmount: '4860',  bankNote: '三人同行' },
+  T: { amt: '免費',       label: '/ 9 月銜接團練 單場體驗', note: '免費場次,不需匯款,填完資料直接送出即可。場次就是你上方選的班別。9/8 起的兩場團練僅限已報名整期課程的學員。',  autoAmount: '0',  bankNote: '免費團練', free: true }
 };
 function applyPlanRequiredRules(planValue){
   // 舊生方案 (B):LINE + 跑步能力 整個欄位隱藏;其他方案:顯示且必填
@@ -1789,6 +1804,18 @@ document.querySelectorAll('input[name="plan"]').forEach(el=>{
     const p = PLAN_MAP[el.value]; if(!p) return;
     document.getElementById('summaryAmt').innerHTML = p.amt + ' <small id="summaryLabel">' + p.label + '</small>';
     document.getElementById('summaryNote').textContent = p.note;
+
+    // 免費方案(T 團練體驗):整個匯款區隱藏,後五碼取消必填
+    const paySec = document.getElementById('paymentSection');
+    const last5Input = document.querySelector('input[name="last5"]');
+    const submitBtn = document.querySelector('.submit-btn');
+    if (paySec) paySec.style.display = p.free ? 'none' : '';
+    if (last5Input) {
+      last5Input.required = !p.free;
+      if (p.free) last5Input.value = '';
+    }
+    if (submitBtn) submitBtn.innerHTML = (p.free ? '送出免費團練報名' : '提交報名') + ' <span class="arr">→</span>';
+
     // 匯款金額:有固定金額的方案自動帶入並唯讀;插班(無固定金額)開放學生自填
     const amtInput = document.getElementById('amountInput');
     const amtHint = document.getElementById('amountOptHint');

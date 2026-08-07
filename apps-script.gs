@@ -20,7 +20,18 @@ const PLAN_MAP = {
   D: '(D) 插班報名 × 剩餘堂數',
   E: '(E) 兩人同行 · 新生完整 12 堂',
   F: '(F) 三人同行 · 新生完整 12 堂',
-  G: '(G) 個人課表 / 4 週'
+  G: '(G) 個人課表 / 4 週',
+  T: '(T) 9 月銜接團練 · 單場體驗(免費)'
+};
+
+// 免費方案:不需匯款,狀態不進「待匯款」,確認信也不提匯款
+const FREE_PLANS = ['T'];
+
+// 9 月第一場銜接團練(對外開放的那場)日期,依班別
+const TRIAL_SESSION = {
+  'taichung-tue': '9/01（二）19:30 · 中興大學田徑場',
+  'taipei-wed':   '9/02（三）19:30 · 台北田徑場',
+  'taichung-thu': '9/03（四）19:30 · 中興大學田徑場'
 };
 
 const HEADERS = ['報名時間','姓名','LINE','Email','跑步能力','方案','方案說明','匯款金額','匯款後五碼','備註','同意條款','狀態','入群日期','首週出席','教練備註'];
@@ -67,6 +78,7 @@ function doPost(e) {
     const ss = SpreadsheetApp.getActive();
     const sheet = ss.getSheetByName(cls.tab);
     const planLabel = PLAN_MAP[data.plan] || data.plan || '';
+    const isFree = FREE_PLANS.indexOf(data.plan) !== -1;
 
     sheet.appendRow([
       new Date(),
@@ -76,27 +88,33 @@ function doPost(e) {
       data.running || '',
       data.plan || '',
       planLabel,
-      data.amount || '',
-      data.last5 || '',
+      isFree ? '免費' : (data.amount || ''),
+      isFree ? '—' : (data.last5 || ''),
       data.notes || '',
       data.agree ? '是' : '否',
-      '待匯款',
+      isFree ? '免費團練' : '待匯款',
       '', '', ''
     ]);
 
-    // 學員確認信
+    // 學員確認信(免費團練走不提匯款的版本)
     if (data.email) {
       MailApp.sendEmail({
         to: data.email,
-        subject: `【傑西跑班】${cls.label} | 已收到你的報名`,
-        htmlBody: studentEmail(data, cls, planLabel)
+        subject: isFree
+          ? `【傑西跑班】已收到你的免費團練報名 | ${cls.label}`
+          : `【傑西跑班】${cls.label} | 已收到你的報名`,
+        htmlBody: isFree
+          ? trialEmail(data, cls, planLabel)
+          : studentEmail(data, cls, planLabel)
       });
     }
 
     // 你的通知信
     MailApp.sendEmail({
       to: NOTIFY_EMAIL,
-      subject: `🎉 新報名:${cls.label} | ${data.name}`,
+      subject: isFree
+        ? `🌿 免費團練報名:${cls.label} | ${data.name}`
+        : `🎉 新報名:${cls.label} | ${data.name}`,
       htmlBody: adminEmail(data, cls, planLabel)
     });
 
@@ -129,6 +147,34 @@ function studentEmail(d, cls, planLabel) {
     <li>入群後會同步交通方式、雨天備案、上課地點等細節。</li>
     <li>如匯款尚未完成,請盡快於 3 日內處理,以確保報名有效。</li>
   </ol>
+  <p style="margin-top:24px;color:#4a5d51;font-size:13px">有任何問題歡迎私訊:<br>
+  IG @jesse.coach.26  ·  LINE @104wzemj</p>
+  <p style="color:#4a5d51;font-size:12px;margin-top:20px">— Soul Chill Running Club · 傑西跑班</p>
+</div>`;
+}
+
+// 免費銜接團練專用確認信:不提匯款、不提 3 日內繳費
+function trialEmail(d, cls, planLabel) {
+  const when = TRIAL_SESSION[d.class] || '9 月上半第一場（實際日期會再通知）';
+  return `
+<div style="font-family:sans-serif;line-height:1.7;color:#1f3a2d;max-width:560px">
+  <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name},免費團練的位子留給你了 🌿</h2>
+  <p>這是 9 月開課前的<b>銜接團練</b>,免費參加,不需要匯款,你不用再做任何事。</p>
+  <table style="border-collapse:collapse;margin:12px 0">
+    <tr><td style="padding:6px 12px;color:#4a5d51">場次</td><td style="padding:6px 12px"><b>${when}</b></td></tr>
+    <tr><td style="padding:6px 12px;color:#4a5d51">班別</td><td style="padding:6px 12px">${cls.label}</td></tr>
+    <tr><td style="padding:6px 12px;color:#4a5d51">費用</td><td style="padding:6px 12px"><b>免費</b></td></tr>
+  </table>
+  <h3 style="margin-top:24px">下一步</h3>
+  <ol>
+    <li>我們會在 <b>2 個工作天內</b> 用 LINE 或 Email 跟你確認,並告知集合地點與當天流程。</li>
+    <li>當天穿一般跑步的裝備來就好,帶水。</li>
+    <li>如果臨時來不了,回覆這封信告訴我們一聲就可以。</li>
+  </ol>
+  <p style="margin-top:20px;padding:12px 14px;background:#f1ede2;border-radius:8px;font-size:13.5px">
+    <b>提醒:</b>9/8 起的另外兩場團練,是留給已經報名整期課程的學員。<br>
+    如果你上完這場想接著跟,再跟我們說,我們會告訴你怎麼報名整期。
+  </p>
   <p style="margin-top:24px;color:#4a5d51;font-size:13px">有任何問題歡迎私訊:<br>
   IG @jesse.coach.26  ·  LINE @104wzemj</p>
   <p style="color:#4a5d51;font-size:12px;margin-top:20px">— Soul Chill Running Club · 傑西跑班</p>
