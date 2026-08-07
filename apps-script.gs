@@ -88,7 +88,7 @@ const TRIAL_SESSION = {
 const HEADERS = ['報名時間','姓名','LINE','Email','跑步能力','方案','方案說明','匯款金額','匯款後五碼','備註','同意條款','狀態','入群日期','首週出席','教練備註','成功信寄出'];
 
 // 欄位位置(1-based),改 HEADERS 時這裡要一起改
-const COL = { EMAIL: 4, PLAN: 6, NAME: 2, STATUS: 12, SUCCESS_MAIL: 16 };
+const COL = { NAME: 2, LINE: 3, EMAIL: 4, PLAN: 6, LAST5: 9, STATUS: 12, SUCCESS_MAIL: 16 };
 const STATUS_PAID = '已匯款';   // 狀態改成這個值 → 自動寄出報名成功信
 
 // ====== 執行一次:建立三個分頁 + 表頭 + 狀態下拉 ======
@@ -110,6 +110,13 @@ function setup() {
       .setFontColor('#f1ede2');
     sheet.setFrozenRows(1);
     sheet.autoResizeColumns(1, HEADERS.length);
+
+    // 🔴 匯款後五碼必須存成「純文字」,否則前導零會被 Sheet 當數字吃掉
+    //    （2026-08-07 測到:送 "00000" 進去,存成 0;
+    //      真實案例 09961 會變成 9961,對帳時完全對不上）
+    sheet.getRange(2, COL.LAST5, 500, 1).setNumberFormat('@');
+    // LINE 欄同理:很多人填手機號碼,09xx 開頭一樣會被吃掉前導零
+    sheet.getRange(2, COL.LINE, 500, 1).setNumberFormat('@');
 
     // 狀態欄(L 欄)下拉選單。改成「已匯款」會自動寄出報名成功信(見 onStatusEdit)
     const rule = SpreadsheetApp.newDataValidation()
