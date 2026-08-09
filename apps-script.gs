@@ -29,6 +29,18 @@ function footer_() {
   <p style="color:#4a5d51;font-size:12px;margin-top:20px">— Soul Chill Running Club · 傑西跑班</p>`;
 }
 
+// 錯班回收機制(2026-08-09 立)。
+// 第 3 期 15 筆續報裡有 2 筆班別錯誤 —— 報名頁的班別選擇在頁面最上方、填表在最下方,
+// 中間隔了整份頁面的一半,而且載入時就已經預設好一個班別。
+// 前端已改成「必須親手選一次」,但表單防呆永遠會有漏網的;
+// 這段是唯一能在「傑西人工核對」之前、由學員自己攔下來的機制,所以放進兩封主要的學員信。
+function wrongClassNotice_() {
+  return `
+  <p style="margin:14px 0;padding:12px 14px;background:#fdf1ea;border-left:3px solid #b8542a;border-radius:6px;font-size:14px">
+    <b>班級不對嗎？</b>直接回覆這封信告訴我們正確的班別（台中週二 / 台北週三 / 台中週四），我們會幫您改，不用重填。
+  </p>`;
+}
+
 // 第 3 期報名資料 Sheet(2026-08-07 建立)
 // 第 2 期舊 Sheet = 1DBjW1KegOdqWxonDcoyDNl15SDF5yYiA4vJAvbkipcE(保留備查,不再寫入)
 const SHEET_ID = '1hH5YO54sbGP16kMl6b-9sZDM7rjBjZ9ACIioOTt78Eg';
@@ -363,22 +375,34 @@ function successEmail(d, cls) {
     <tr><td style="padding:6px 12px;color:#4a5d51">時間</td><td style="padding:6px 12px">${cls.weekly}</td></tr>
     ${isFullTerm ? fullTermRows : ''}
   </table>
+  ${wrongClassNotice_()}
   ${isFullTerm ? fullTermNext : singleNext}
   ${footer_()}
 </div>`;
 }
 
+// 報名確認信(表單送出當下就寄)。
+// ⚠️ 這封是學員最快收到、也最會打開的一封 → 「上課時間」與「開課日」一定要覆述,
+//    否則選錯班的人在這裡沒有任何可以自我察覺的線索(2026-08-09:第 3 期 15 筆錯 2 筆)。
 function studentEmail(d, cls, planLabel) {
+  const isFullTerm = FULL_TERM_PLANS.indexOf(d.plan) !== -1;
+  const startRow = isFullTerm
+    ? `<tr><td style="padding:6px 12px;color:#4a5d51">開課日</td><td style="padding:6px 12px"><b>${cls.start}</b> · 全期 12 堂</td></tr>`
+    : '';   // 單堂體驗(C)沒有固定開課日,寫上去反而誤導
+
   return `
 <div style="font-family:sans-serif;line-height:1.7;color:#1f3a2d;max-width:560px">
   <h2 style="color:#1f3a2d;margin-bottom:8px">嗨 ${d.name}，已經收到您的報名了 🙌</h2>
   <p>以下是您填的內容，確認內容是否有誤：</p>
   <table style="border-collapse:collapse;margin:12px 0">
     <tr><td style="padding:6px 12px;color:#4a5d51">班級</td><td style="padding:6px 12px"><b>${cls.label}</b>（${cls.location}）</td></tr>
+    <tr><td style="padding:6px 12px;color:#4a5d51">上課時間</td><td style="padding:6px 12px"><b>${cls.weekly}</b></td></tr>
+    ${startRow}
     <tr><td style="padding:6px 12px;color:#4a5d51">方案</td><td style="padding:6px 12px">${planLabel}</td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">匯款金額</td><td style="padding:6px 12px">NT$ ${d.amount || '—'}</td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">後五碼</td><td style="padding:6px 12px">${d.last5 || '—'}</td></tr>
   </table>
+  ${wrongClassNotice_()}
   <h3 style="margin-top:24px">接下來</h3>
   <ol>
     <li>我們核對到您的匯款後，會在 <b>3 個工作天內</b> 寄出報名成功通知。<b>收到那封信，才是報名完成。</b></li>
