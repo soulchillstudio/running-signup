@@ -2,9 +2,8 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8" />
-<meta name="robots" content="index,follow"><!-- 2026-08-18 對外招生開跑：解除 noindex（Jesse 拍板 A 案） -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>傑西跑步班｜台中・台北｜2026 第 3 期報名</title>
+<title>傑西跑步班｜台中・台北｜2026 第 2 期報名</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Style+Script&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -107,8 +106,6 @@ body{overflow-x:hidden}
 .info-half [data-class-content].active{display:block}
 .hero-info-list .info-value [data-class-content]{display:none}
 .hero-info-list .info-value [data-class-content].active{display:flex}
-.trial-date{display:none}
-.trial-date.active{display:inline-block;font-weight:700;color:var(--forest)}
 
 @media (max-width:720px){
   .class-tabs{max-width:none;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
@@ -152,92 +149,10 @@ body{overflow-x:hidden}
 .date-cell.phase-2{border-top:3px solid var(--grass)}
 .date-cell.phase-3{border-top:3px solid var(--accent-warm)}
 
-/* 9 月銜接團練（免費，不計入 12 堂） */
-.warmup-block{max-width:900px;margin:0 auto 22px}
-.warmup-label{
-  font-family:var(--font-hd);font-size:10px;letter-spacing:.2em;color:var(--forest-60);
-  font-weight:700;text-align:center;margin-bottom:10px;
-}
-.warmup-label b{color:var(--grass-dk,var(--forest))}
-.warmup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.warmup-grid .date-cell{
-  background:rgba(185,202,116,.10);border:1px dashed var(--grass);border-top:3px solid var(--grass);
-}
-.warmup-grid .date-cell .free{
-  font-family:var(--font-hd);font-size:11px;letter-spacing:.06em;color:var(--forest-60);
-  margin-top:6px;font-weight:600;
-}
-
-/* 每一堂的結構 */
-.lesson-flow{max-width:960px;margin:56px auto 0;padding:0 20px}
-.lesson-flow-label{
-  font-family:var(--font-hd);font-size:10px;letter-spacing:.22em;color:var(--forest-60);
-  font-weight:700;text-align:center;margin-bottom:18px;
-}
-.lesson-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
-.lesson-step{
-  background:var(--white);border:1px solid var(--line);border-radius:12px;
-  padding:20px 18px;position:relative;
-}
-.lesson-step .mins{
-  font-family:var(--font-hd);font-size:11px;letter-spacing:.14em;font-weight:700;
-  color:var(--grass);
-}
-.lesson-step h4{font-size:17px;font-weight:700;color:var(--forest);margin:8px 0 6px;line-height:1.3}
-.lesson-step p{font-size:13.5px;line-height:1.75;color:var(--forest-60);margin:0}
-.lesson-step .step-n{
-  position:absolute;top:14px;right:16px;font-family:var(--font-hd);font-size:26px;
-  font-weight:700;color:var(--line);line-height:1;
-}
-@media (max-width:720px){
-  .lesson-steps{grid-template-columns:1fr;gap:10px}
-  .lesson-flow{margin-top:40px}
-}
-
 @media (max-width:720px){
   .date-grid{grid-template-columns:repeat(3,1fr);gap:10px}
   .date-cell{padding:12px 8px}
   .date-cell .md{font-size:17px}
-  .warmup-grid{gap:10px}
-}
-
-/* 報名加碼 — 銜接團練 / Premium 線上社群 */
-.schedule-bonus{
-  max-width:900px;margin:0 auto 36px;
-  padding:24px 28px;background:var(--white);
-  border:1px solid var(--line);border-left:4px solid var(--grass);
-  border-radius:12px;
-}
-.schedule-bonus .bonus-tag{
-  display:inline-block;padding:4px 12px;border-radius:999px;
-  background:var(--grass);color:var(--forest-ink);
-  font-family:var(--font-hd);font-size:10px;letter-spacing:.2em;font-weight:700;
-}
-.schedule-bonus h3{font-size:19px;color:var(--forest);margin:12px 0 8px;font-weight:700}
-.schedule-bonus p{font-size:14px;color:var(--forest-60)}
-.schedule-bonus ul{margin:10px 0;padding-left:20px;font-size:14px;color:var(--forest-ink)}
-.schedule-bonus li{margin:4px 0}
-.schedule-bonus .bonus-note{margin-top:10px;font-size:13px;color:var(--forest-60)}
-/* 兩張加碼卡並排 */
-.bonus-row{max-width:900px;margin:40px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
-.bonus-row .schedule-bonus{max-width:none;margin:0;height:100%}
-.schedule-bonus.premium{border-left-color:var(--forest);background:var(--linen-deep)}
-.schedule-bonus.premium .bonus-tag{background:var(--forest);color:var(--linen)}
-.schedule-bonus .bonus-value{
-  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
-  margin:14px 0 4px;padding-top:14px;border-top:1px dashed var(--forest-30);
-}
-.schedule-bonus .bonus-value .num{font-family:var(--font-hd);font-size:22px;font-weight:700;color:var(--forest);letter-spacing:.02em}
-.schedule-bonus .bonus-value .num.strike{text-decoration:line-through;text-decoration-thickness:2px;color:var(--forest-60);font-size:19px}
-.schedule-bonus .bonus-value .was{font-size:13px;color:var(--forest-60);text-decoration:line-through}
-.schedule-bonus .bonus-value .free{font-size:14px;color:var(--forest);font-weight:700}
-.schedule-bonus .warmup-when{
-  font-size:13.5px;color:var(--forest);background:rgba(185,202,116,.16);
-  border-radius:8px;padding:9px 12px;margin:0 0 12px;line-height:1.7;
-}
-@media (max-width:720px){
-  .schedule-bonus{padding:20px 18px}
-  .bonus-row{grid-template-columns:1fr;gap:16px}
 }
 
 /* Form current-class confirm bar */
@@ -278,7 +193,7 @@ body{overflow-x:hidden}
 .hero-left .eyebrow{color:rgba(241,237,226,.55)}
 .hero-title{
   font-family:var(--font-tc);font-weight:700;
-  font-size:clamp(36px,5vw,72px);line-height:1.12;letter-spacing:-.01em;
+  font-size:clamp(44px,6.2vw,84px);line-height:1.08;letter-spacing:-.01em;
   margin:28px 0 24px;color:var(--linen);
 }
 .hero-title .accent{color:var(--grass);display:inline-block}
@@ -394,7 +309,7 @@ body{overflow-x:hidden}
   50%{transform:translateY(-8px) rotate(2deg)}
 }
 
-/* ---------- SLIDE 2 — GOAL (v3 · The Build) ---------- */
+/* ---------- SLIDE 2 — GOAL (v2 · Subtraction) ---------- */
 .sec-goal{background:var(--linen)}
 .goal-wrap{max-width:760px;margin:0 auto;text-align:center}
 .goal-head .eyebrow{color:var(--forest-60)}
@@ -489,7 +404,7 @@ body{overflow-x:hidden}
 .timeline .tl-track .d2{left:calc(66.66% - 7px)}
 .timeline .tl-track .d3{right:-1px}
 
-/* ---------- SLIDE 4 — 教練 ---------- */
+/* ---------- SLIDE 4 — 雙教練 ---------- */
 .sec-coaches{background:var(--linen)}
 .coaches-head{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:56px}
 .coaches-head h2{font-size:clamp(34px,3.8vw,52px);color:var(--forest);font-weight:700;letter-spacing:-.01em}
@@ -497,7 +412,6 @@ body{overflow-x:hidden}
 .coaches-head .sum em{font-style:normal;color:var(--forest);font-weight:600}
 
 .coaches{display:grid;grid-template-columns:1fr 1fr;gap:28px}
-.coaches.single{grid-template-columns:minmax(0,620px);justify-content:center}
 .coach{
   background:var(--white);border-radius:16px;overflow:hidden;border:1px solid var(--line);
   display:grid;grid-template-rows:auto 1fr;
@@ -520,9 +434,7 @@ body{overflow-x:hidden}
 .coach.c2 .portrait .placeholder{color:rgba(31,58,45,.55);border-color:rgba(31,58,45,.3)}
 .coach .portrait .corner-tag{
   position:absolute;top:16px;left:16px;font-family:var(--font-hd);font-size:9px;letter-spacing:.3em;
-  color:rgba(255,255,255,.92);
-  /* 照片左上角可能是亮天空,純白字會糊掉 → 加暗描邊確保任何底色都讀得到 */
-  text-shadow:0 1px 3px rgba(0,0,0,.75), 0 0 10px rgba(0,0,0,.45);
+  color:rgba(255,255,255,.7);
 }
 .coach.c2 .portrait .corner-tag{color:rgba(31,58,45,.6)}
 
@@ -624,40 +536,6 @@ body{overflow-x:hidden}
   font-family:var(--font-hd);font-size:9px;letter-spacing:.2em;padding:3px 10px;border-radius:0 0 0 8px;font-weight:700;
 }
 .plan.rec{border-color:var(--grass)}
-
-/* Class picker cards — form section 01
-   ⚠️ 這些卡片「絕對不可以」加 data-class-content 屬性:
-      全域規則 [data-class-content]{display:none} 會讓整組卡片消失,
-      而且 switchClass() 會去 toggle 它們,班別選擇器會變成跟著頁首連動。 */
-.class-card .cc-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.class-card .cc-city{
-  font-family:var(--font-hd);font-size:11px;letter-spacing:.22em;color:var(--forest-60);
-  font-weight:700;background:var(--linen-deep);border-radius:999px;padding:3px 10px;
-}
-.class-card .cc-day{font-size:22px;font-weight:700;color:var(--forest);letter-spacing:.02em;line-height:1.2}
-.class-card .cc-rows{display:grid;gap:3px;margin-top:8px;font-size:13px;color:var(--forest-60);line-height:1.6}
-.class-card .cc-rows .k{
-  display:inline-block;min-width:60px;font-family:var(--font-hd);font-size:10px;
-  letter-spacing:.16em;color:var(--forest-30);
-}
-.class-card .cc-rows b{color:var(--forest);font-weight:700}
-.class-warn{
-  margin-top:12px;padding:10px 14px;background:rgba(184,84,42,.08);border-left:3px solid #b8542a;
-  border-radius:6px;color:var(--forest-ink);font-size:12.5px;line-height:1.6;
-}
-.class-warn b{color:#b8542a;font-weight:700}
-
-/* 表單頂橫幅:尚未選擇班別時轉成橘色警告態 */
-.form-class-confirm.unset{background:#b8542a}
-.form-class-confirm.unset .value{color:#fff}
-.form-class-confirm.unset .label,
-.form-class-confirm.unset .switch-hint{color:rgba(255,255,255,.7)}
-.form-class-confirm.unset .switch-hint a{color:#fff;border-bottom-color:rgba(255,255,255,.5)}
-
-/* 送出鈕旁的班別覆述 */
-.price-summary .sum-class{margin-top:10px;font-size:15px;font-weight:700;color:var(--linen);line-height:1.5}
-.price-summary .sum-class small{display:block;font-weight:400;font-size:12.5px;color:rgba(241,237,226,.72);margin-top:3px}
-.price-summary .sum-class.unset{color:#ffb59a}
 
 /* Agreement block */
 .agreement{background:var(--linen-deep);padding:24px 28px;border-radius:12px;margin-top:16px}
@@ -847,7 +725,7 @@ img{max-width:100%;height:auto}
 
   /* HERO */
   .hero-grid{padding:32px 16px 56px;gap:32px}
-  .hero-title{font-size:32px;line-height:1.16;margin:20px 0 16px}
+  .hero-title{font-size:38px;line-height:1.1;margin:20px 0 16px}
   .hero-subtitle{font-size:11px;letter-spacing:.18em}
   .hero-right{min-height:auto}
   .hero-photo{aspect-ratio:3/4;max-height:440px}
@@ -955,14 +833,15 @@ img{max-width:100%;height:auto}
 <section class="hero" id="top">
   <div class="hero-grid">
     <div class="hero-left">
-      <div class="eyebrow">2026 Q4 · SPEED ENDURANCE BUILD · 12 WEEKS</div>
+      <div class="eyebrow">2026 Q2 · OFF-SEASON PROGRAM · 12 WEEKS</div>
       <h1 class="hero-title">
-        耐力與<span class="accent">速耐力</span><span class="break">為你的賽事做準備</span>
+        非賽季<span class="break">才是</span>
+        <span class="accent">升級</span>的時候
       </h1>
       <div class="hero-subtitle">
-        傑西跑步班｜台中、台北｜2026 第 3 期
+        傑西跑步班｜台中、台北｜2026 第 2 期
         <br>
-        Soul Chill Studio <span class="divider">·</span> 12 週，從 400 公尺一階一階往上堆
+        Soul Chill Studio <span class="divider">×</span> SSE 訓練漫談
       </div>
 
       <!-- ===== CLASS TABS ===== -->
@@ -973,7 +852,7 @@ img{max-width:100%;height:auto}
             <span class="tab-city">台中</span><span class="tab-divider">·</span><span class="tab-day">TUE 週二</span>
           </button>
           <button class="class-tab" type="button" role="tab" data-class="taipei-wed" aria-selected="false">
-            <span class="tab-city">台北</span><span class="tab-divider">·</span><span class="tab-day">WED 週三</span>
+            <span class="tab-city">台北</span><span class="tab-divider">·</span><span class="tab-day">WED 週三</span><span class="tab-badge">新生額滿</span>
           </button>
           <button class="class-tab" type="button" role="tab" data-class="taichung-thu" aria-selected="false">
             <span class="tab-city">台中</span><span class="tab-divider">·</span><span class="tab-day">THU 週四</span>
@@ -1017,9 +896,9 @@ img{max-width:100%;height:auto}
           <div class="info-half">
             <div class="info-label">Schedule</div>
             <div class="info-value-strong">
-              <span data-class-content="taichung-tue" class="active">9/22（二）開課 · 全期 12 堂</span>
-              <span data-class-content="taipei-wed">9/23（三）開課 · 全期 12 堂</span>
-              <span data-class-content="taichung-thu">9/24（四）開課 · 全期 12 堂</span>
+              <span data-class-content="taichung-tue" class="active">課程進行中 · 全期 12 堂</span>
+              <span data-class-content="taipei-wed">課程進行中 · 全期 12 堂</span>
+              <span data-class-content="taichung-thu">課程進行中 · 全期 12 堂</span>
             </div>
           </div>
           <div class="info-half">
@@ -1028,33 +907,17 @@ img{max-width:100%;height:auto}
           </div>
         </div>
         <div class="info-row">
-          <div class="info-label">銜接團練</div>
-          <div class="info-value-strong" style="color:var(--grass)">
-            <span data-class-content="taichung-tue" class="active">9/03 起 3 場免費團練 <em>· 台中場在週四</em></span>
-            <span data-class-content="taipei-wed">9/02 起 3 場免費團練 <em>· 台北場在週三</em></span>
-            <span data-class-content="taichung-thu">9/03 起 3 場免費團練 <em>· 台中場在週四</em></span>
-          </div>
-        </div>
-        <div class="info-row">
-          <div class="info-label">報名截止</div>
-          <div class="info-value-strong">2026 年 9 月 4 日（五）23:59 <em>· 逾期不再收件</em></div>
-        </div>
-        <div class="info-row">
           <div class="info-label">報名狀態</div>
           <div class="info-value-strong" style="color:var(--grass)">
-            <span data-class-content="taichung-tue" class="active">整期招生中 · 新生／舊生皆可報名 · <b>9/4 截止</b></span>
-            <span data-class-content="taipei-wed">整期招生中 · 新生／舊生皆可報名 · <b>9/4 截止</b></span>
-            <span data-class-content="taichung-thu">整期招生中 · 新生／舊生皆可報名 · <b>9/4 截止</b></span>
+            <span data-class-content="taichung-tue" class="active">已開課 · 目前仍開放 單堂體驗 ＆ 插班報名</span>
+            <span data-class-content="taipei-wed">新生額滿 · 目前僅開放「舊生插班」</span>
+            <span data-class-content="taichung-thu">已開課 · 目前仍開放 單堂體驗 ＆ 插班報名</span>
           </div>
-        </div>
-        <div class="info-row">
-          <div class="info-label">線上加碼</div>
-          <div class="info-value-strong">「慢慢進步」Premium 線上社群 <em>· 市價 NT$4,000 · 隨報名附贈</em></div>
         </div>
       </div>
 
       <div class="hero-cta-row">
-        <a class="btn btn-primary" href="#signup">開始報名 <span class="arr">→</span></a>
+        <a class="btn btn-primary" href="#signup">預約單堂 / 插班 <span class="arr">→</span></a>
         <a class="btn btn-ghost" href="#schedule">先看上課日期</a>
       </div>
     </div>
@@ -1070,7 +933,7 @@ img{max-width:100%;height:auto}
         </div>
         <div class="hero-photo-quote">
           Slow down<br>to move forward.
-          <small>BUILD FOR YOUR SEASON</small>
+          <small>OFF-SEASON INTENTION</small>
         </div>
       </div>
     </div>
@@ -1081,30 +944,30 @@ img{max-width:100%;height:auto}
 <section class="section sec-goal" id="goal">
   <div class="goal-wrap">
     <div class="goal-head">
-      <div class="eyebrow">Part 01 · The Build</div>
+      <div class="eyebrow">Part 01 · The Subtraction</div>
       <div class="kicker">note to self:</div>
-      <h2 class="goal-h2">跑得順暢、有餘裕,<br><span class="script-underline">甚至挑戰更強大的自己</span></h2>
+      <h2 class="goal-h2">練得更好,<br><span class="script-underline">從「減」開始</span></h2>
     </div>
 
     <div class="goal-lead">
-      <p class="q1">比賽要跑在這個狀態,需要的不只是耐力。</p>
-      <p class="q2"><b>速耐力,是另一個關鍵。</b></p>
+      <p class="q1">多數跑者在非賽季問的是:『要練什麼才能進步?』</p>
+      <p class="q2">但真正該問的是——<b>身體還扛著什麼沒被清掉?</b></p>
     </div>
 
     <div class="goal-points">
       <div class="goal-point">
         <span class="num">01</span>
-        <p>速耐力的建立來自<b>比慢跑更快的訓練</b>,可以透過間歇訓練來提升。一年到頭都用差不多的配速跑,身體會慢慢忘記怎麼加速。</p>
+        <p>賽後疲勞、代償累積、神經僵化——這些沒被處理的東西,會讓你下一個賽季的量堆不起來。</p>
       </div>
       <div class="goal-point solution">
         <span class="num">02</span>
-        <p>這不僅能讓你<b>更有餘裕地完賽</b>,還能建立身體的韌性。<br>訓練或比賽期間面對突發狀況時,能有更高的適應性,更有餘裕地回到自己的狀態。</p>
+        <p><b>這一期,我們做相反的事——減掉身體的雜訊。</b>不追配速、不堆里程;讓一個乾淨、更有效率的身體,在下一個賽季重新回到你身上。</p>
       </div>
     </div>
 
     <div class="goal-measure">
       <span class="tag">HOW WE MEASURE</span>
-      <p>目標是你今年底的整個賽季,不是某一場比賽。<b>同樣的速度,可以撐得越來越長。</b></p>
+      <p>加法讓你累,減法讓你快——<b>同樣的配速,身體卻越跑越輕盈。</b></p>
     </div>
   </div>
 </section>
@@ -1113,46 +976,46 @@ img{max-width:100%;height:auto}
 <section class="section sec-stages" id="stages">
   <div class="stages-head">
     <div class="eyebrow">Part 02 · The Program</div>
-    <h2>400 公尺起跑 / 一階一階加長</h2>
-    <p class="intro">每四週往上加一階。前一階段跑穩了,才把長度往上加。我們不跳級,也不壓縮。</p>
+    <h2>先解構 / 再整合</h2>
+    <p class="intro">每四週一個主題。前一階段的成果是下一階段的地基——我們不跳級,也不壓縮。</p>
   </div>
 
   <div class="stages">
     <div class="stage s1">
       <div class="week">WEEK 01 — 04</div>
-      <div class="num">01<sup>短</sup></div>
-      <h3>速度轉換成速耐力的轉換期</h3>
+      <div class="num">01<sup>解構</sup></div>
+      <h3>解構與覺知</h3>
       <div class="body">
-        開頭一兩週以 <b>400 公尺</b>為主,把動作、呼吸與節奏做對。第一個月走 <b>400 到 800 公尺</b>,同時把該有的肌力與活動度補起來。
+        打開脊椎與關節的活動限制,建立不會在賽季垮掉的局部肌耐力基礎。
       </div>
       <div class="tag-row">
-        <span>400–800m</span><span>動作控制</span><span>肌力打底</span>
+        <span>身體活動度</span><span>動作控制</span><span>局部肌耐力</span>
       </div>
       <div class="bar"></div>
     </div>
 
     <div class="stage s2">
       <div class="week">WEEK 05 — 08</div>
-      <div class="num">02<sup>中</sup></div>
-      <h3>速耐力強化期</h3>
+      <div class="num">02<sup>彈性</sup></div>
+      <h3>彈性與協調</h3>
       <div class="body">
-        第二個月推進到 <b>1200 到 1600 公尺</b>。學會在距離拉長的時候不掉速,把前一階段練到的東西留在身上。
+        訓練全身的彈性反應與動態協調,讓力量可以被身體好好傳遞。
       </div>
       <div class="tag-row">
-        <span>1200–1600m</span><span>配速控制</span><span>彈性反應</span>
+        <span>彈性反應</span><span>身體空間</span><span>力量傳遞</span>
       </div>
       <div class="bar"></div>
     </div>
 
     <div class="stage s3">
       <div class="week">WEEK 09 — 12</div>
-      <div class="num">03<sup>長</sup></div>
-      <h3>賽季前調整</h3>
+      <div class="num">03<sup>整合</sup></div>
+      <h3>整合與釋放</h3>
       <div class="body">
-        接近賽季,拉到 <b>1600 到 2400 公尺</b>的中長距離練習,更接近比賽強度。把速耐力轉成你自己賽季目標需要的比賽節奏。
+        把前兩個月的訓練整合進跑步動作裡,開始跑得更多、更有感。
       </div>
       <div class="tag-row">
-        <span>1600–2400m</span><span>比賽節奏轉換</span><span>賽季轉移</span>
+        <span>動作整合</span><span>跑姿轉移</span><span>里程加載</span>
       </div>
       <div class="bar"></div>
     </div>
@@ -1169,30 +1032,6 @@ img{max-width:100%;height:auto}
     </div>
     <div class="tl-lbl">W12</div>
   </div>
-
-  <div class="lesson-flow">
-    <div class="lesson-flow-label">INSIDE ONE LESSON · 每一堂怎麼進行</div>
-    <div class="lesson-steps">
-      <div class="lesson-step">
-        <span class="step-n">01</span>
-        <div class="mins">約 20 分鐘</div>
-        <h4>充足的暖身</h4>
-        <p>從靜態到動態,把身體完整打開再開始跑。不是繞兩圈就下場。</p>
-      </div>
-      <div class="lesson-step">
-        <span class="step-n">02</span>
-        <div class="mins">10 到 15 分鐘</div>
-        <h4>技術訓練</h4>
-        <p>當週要練的動作與跑姿重點,在這裡拆開來練。</p>
-      </div>
-      <div class="lesson-step">
-        <span class="step-n">03</span>
-        <div class="mins">當天主課表</div>
-        <h4>間歇訓練</h4>
-        <p>依照當週的階段距離操作,把前面練到的東西直接放進跑動裡。</p>
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- ===== SCHEDULE / 上課日期 ===== -->
@@ -1200,7 +1039,7 @@ img{max-width:100%;height:auto}
   <div class="schedule-head">
     <div class="eyebrow">The Schedule · 12 Weeks</div>
     <h2>12 堂上課日期</h2>
-    <p class="lead">每四週一個階段 · 請依選擇的班級查看對應日期。<br>W12 完課落在 12 月上旬，正好接上年底賽季。台北馬（12/20）有抽到的人，剛好進入賽前減量；沒抽到也不影響。<br>這 12 週練的是你整個賽季的底，不是綁定某一場比賽。</p>
+    <p class="lead">每四週一個階段 · 請依選擇的班級查看對應日期。</p>
     <div class="current-class">
       <span class="dot"></span>
       <span>目前顯示:</span>
@@ -1209,112 +1048,53 @@ img{max-width:100%;height:auto}
   </div>
 
   <div data-class-content="taichung-tue" class="active">
-    <div class="warmup-block">
-      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
-      <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
-      </div>
-    </div>
     <div class="date-grid">
-      <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>22</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">9<span class="slash">/</span>29</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-1"><div class="idx">W03</div><div class="md">10<span class="slash">/</span>06</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-1"><div class="idx">W04</div><div class="md">10<span class="slash">/</span>13</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-2"><div class="idx">W05</div><div class="md">10<span class="slash">/</span>20</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-2"><div class="idx">W06</div><div class="md">10<span class="slash">/</span>27</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-2"><div class="idx">W07</div><div class="md">11<span class="slash">/</span>03</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-2"><div class="idx">W08</div><div class="md">11<span class="slash">/</span>10</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-3"><div class="idx">W09</div><div class="md">11<span class="slash">/</span>17</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-3"><div class="idx">W10</div><div class="md">11<span class="slash">/</span>24</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-3"><div class="idx">W11</div><div class="md">12<span class="slash">/</span>01</div><div class="wk">TUE</div></div>
-      <div class="date-cell phase-3"><div class="idx">W12</div><div class="md">12<span class="slash">/</span>08</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">6<span class="slash">/</span>02</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">6<span class="slash">/</span>09</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-1"><div class="idx">W03</div><div class="md">6<span class="slash">/</span>16</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-1"><div class="idx">W04</div><div class="md">6<span class="slash">/</span>23</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-2"><div class="idx">W05</div><div class="md">6<span class="slash">/</span>30</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-2"><div class="idx">W06</div><div class="md">7<span class="slash">/</span>07</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-2"><div class="idx">W07</div><div class="md">7<span class="slash">/</span>14</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-2"><div class="idx">W08</div><div class="md">7<span class="slash">/</span>21</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-3"><div class="idx">W09</div><div class="md">7<span class="slash">/</span>28</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-3"><div class="idx">W10</div><div class="md">8<span class="slash">/</span>04</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-3"><div class="idx">W11</div><div class="md">8<span class="slash">/</span>11</div><div class="wk">TUE</div></div>
+      <div class="date-cell phase-3"><div class="idx">W12</div><div class="md">8<span class="slash">/</span>18</div><div class="wk">TUE</div></div>
     </div>
   </div>
 
   <div data-class-content="taipei-wed">
-    <div class="warmup-block">
-      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
-      <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>02</div><div class="wk">WED</div><div class="free">對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>09</div><div class="wk">WED</div><div class="free">教練團 · 限學員</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>16</div><div class="wk">WED</div><div class="free">教練團 · 限學員</div></div>
-      </div>
-    </div>
     <div class="date-grid">
-      <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>23</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">9<span class="slash">/</span>30</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-1"><div class="idx">W03</div><div class="md">10<span class="slash">/</span>07</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-1"><div class="idx">W04</div><div class="md">10<span class="slash">/</span>14</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-2"><div class="idx">W05</div><div class="md">10<span class="slash">/</span>21</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-2"><div class="idx">W06</div><div class="md">10<span class="slash">/</span>28</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-2"><div class="idx">W07</div><div class="md">11<span class="slash">/</span>04</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-2"><div class="idx">W08</div><div class="md">11<span class="slash">/</span>11</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-3"><div class="idx">W09</div><div class="md">11<span class="slash">/</span>18</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-3"><div class="idx">W10</div><div class="md">11<span class="slash">/</span>25</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-3"><div class="idx">W11</div><div class="md">12<span class="slash">/</span>02</div><div class="wk">WED</div></div>
-      <div class="date-cell phase-3"><div class="idx">W12</div><div class="md">12<span class="slash">/</span>09</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">6<span class="slash">/</span>03</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">6<span class="slash">/</span>10</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-1"><div class="idx">W03</div><div class="md">6<span class="slash">/</span>17</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-1"><div class="idx">W04</div><div class="md">6<span class="slash">/</span>24</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-2"><div class="idx">W05</div><div class="md">7<span class="slash">/</span>01</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-2"><div class="idx">W06</div><div class="md">7<span class="slash">/</span>08</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-2"><div class="idx">W07</div><div class="md">7<span class="slash">/</span>15</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-2"><div class="idx">W08</div><div class="md">7<span class="slash">/</span>22</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-3"><div class="idx">W09</div><div class="md">7<span class="slash">/</span>29</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-3"><div class="idx">W10</div><div class="md">8<span class="slash">/</span>05</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-3"><div class="idx">W11</div><div class="md">8<span class="slash">/</span>12</div><div class="wk">WED</div></div>
+      <div class="date-cell phase-3"><div class="idx">W12</div><div class="md">8<span class="slash">/</span>19</div><div class="wk">WED</div></div>
     </div>
   </div>
 
   <div data-class-content="taichung-thu">
-    <div class="warmup-block">
-      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
-      <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
-      </div>
-    </div>
     <div class="date-grid">
-      <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>24</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">10<span class="slash">/</span>01</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-1"><div class="idx">W03</div><div class="md">10<span class="slash">/</span>08</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-1"><div class="idx">W04</div><div class="md">10<span class="slash">/</span>15</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-2"><div class="idx">W05</div><div class="md">10<span class="slash">/</span>22</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-2"><div class="idx">W06</div><div class="md">10<span class="slash">/</span>29</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-2"><div class="idx">W07</div><div class="md">11<span class="slash">/</span>05</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-2"><div class="idx">W08</div><div class="md">11<span class="slash">/</span>12</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-3"><div class="idx">W09</div><div class="md">11<span class="slash">/</span>19</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-3"><div class="idx">W10</div><div class="md">11<span class="slash">/</span>26</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-3"><div class="idx">W11</div><div class="md">12<span class="slash">/</span>03</div><div class="wk">THU</div></div>
-      <div class="date-cell phase-3"><div class="idx">W12</div><div class="md">12<span class="slash">/</span>10</div><div class="wk">THU</div></div>
-    </div>
-  </div>
-
-  <div class="bonus-row">
-    <div class="schedule-bonus">
-      <div class="bonus-tag">實體加碼 · 免費</div>
-      <h3>9 月上半 銜接團練</h3>
-      <p>開課前先一起把身體動起來，<b>不計入 12 堂正課</b>。</p>
-      <p class="warmup-when"><b>台中場在週四</b>（9/3、9/10、9/17）　<b>台北場在週三</b>（9/2、9/9、9/16）</p>
-      <ul>
-        <li><b>第一場（9/2 台北、9/3 台中）：對外開放</b>。還沒報名整期也可以來，感受一下班上的氛圍，也認識教練。<br>
-        <b>需要填報名表</b>：在下方選「<b>(T) 9 月銜接團練 · 單場體驗</b>」，免費、不用匯款，填完直接送出。</li>
-        <li><b>9/8 起（含 9/8 當天）的兩場</b>：<b>僅限已報名整期課程的學員</b>參加，由教練團帶。</li>
-      </ul>
-      <p class="bonus-note">各班場次日期請看上方月曆的綠色格子。</p>
-    </div>
-
-    <div class="schedule-bonus premium">
-      <div class="bonus-tag">線上加碼 · 免費</div>
-      <h3>「慢慢進步」Premium 線上社群</h3>
-      <p>報名整期或插班，課程開通後<b>自動取得 Premium 會員資格，為期 4 個月</b>（10、11、12 月，預計用到 1 月底）。實體班每週練的東西，回家有一整套線上資源可以接著練。</p>
-      <ul>
-        <li>線上學習資源：練與養六個支柱的完整系統</li>
-        <li>線上社群：問題丟出來傑西會回，同路人一起走</li>
-        <li>每週日晚間直播（帶練習＋答疑，有回放）</li>
-      </ul>
-      <div class="bonus-value">
-        <span class="num strike">原價 NT$ 4,000 / 4 個月</span>
-        <span class="free">隨報名免費附贈</span>
-      </div>
-      <p class="bonus-note">
-        這是跑步班之外的<b>另一個系統</b>，位在 Skool 平台上的
-        <a href="https://www.skool.com/run-grow-together-9533" target="_blank" rel="noopener"><b>「先喜歡跑步 · 再慢慢進步」</b></a>
-        社群。社群本身<b>免費就能加入瀏覽</b>，跑步班附贈的是裡面的 Premium 會員層。單堂體驗課不含此加碼。
-      </p>
+      <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">6<span class="slash">/</span>04</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">6<span class="slash">/</span>11</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-1"><div class="idx">W03</div><div class="md">6<span class="slash">/</span>18</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-1"><div class="idx">W04</div><div class="md">6<span class="slash">/</span>25</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-2"><div class="idx">W05</div><div class="md">7<span class="slash">/</span>02</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-2"><div class="idx">W06</div><div class="md">7<span class="slash">/</span>09</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-2"><div class="idx">W07</div><div class="md">7<span class="slash">/</span>16</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-2"><div class="idx">W08</div><div class="md">7<span class="slash">/</span>23</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-3"><div class="idx">W09</div><div class="md">7<span class="slash">/</span>30</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-3"><div class="idx">W10</div><div class="md">8<span class="slash">/</span>06</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-3"><div class="idx">W11</div><div class="md">8<span class="slash">/</span>13</div><div class="wk">THU</div></div>
+      <div class="date-cell phase-3"><div class="idx">W12</div><div class="md">8<span class="slash">/</span>20</div><div class="wk">THU</div></div>
     </div>
   </div>
 </section>
@@ -1323,34 +1103,53 @@ img{max-width:100%;height:auto}
 <section class="section sec-coaches" id="coaches">
   <div class="coaches-head">
     <div>
-      <div class="eyebrow">Part 03 · The Coach</div>
-      <h2>Hi,<br>我是傑西</h2>
+      <div class="eyebrow">Part 03 · The Coaches</div>
+      <h2>課程設計<br>來自兩位教練</h2>
     </div>
     <div class="sum">
-      我想做的不是讓你一直需要教練,<br>是讓你慢慢讀得懂自己的身體,<br>最後成為懂得照顧自己的教練。
+      <em>一個負責設計身體怎麼被啟動,</em><br>
+      <em>一個負責把動作帶進跑動中。</em><br><br>
+      動作設計 × 結構啟動 × 跑步專項轉移——學員同時拿到「懂訓練」和「懂跑步」兩個視角。
     </div>
   </div>
 
-  <div class="coaches single">
-    <div class="coach c2">
+  <div class="coaches">
+    <div class="coach c1">
       <div class="portrait" style="background:#0f1f17">
-        <img src="assets/coach-jessie-2026.jpg" alt="傑西教練" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%"/>
-        <div class="corner-tag" style="color:#fff;z-index:2">COACH · SOUL CHILL</div>
+        <img src="assets/SSE.jpg" alt="廖歆迪教練" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%"/>
+        <div class="corner-tag" style="color:#fff;z-index:2">COACH 01 · SSE</div>
       </div>
       <div class="body">
-        <div class="role">DESIGN × COACHING</div>
+        <div class="role">STRUCTURE × DESIGN</div>
+        <h3 class="name">廖歆迪教練 <span class="en">Liao Hsin-Ti</span></h3>
+        <div class="org">《減法訓練》作者 · Podcast「SSE 訓練漫談」主持人</div>
+        <div class="skills">
+          <span>減法訓練</span>
+          <span>結構啟動</span>
+          <span>週期化訓練</span>
+        </div>
+        <div class="note">
+          體育大學競技運動與教練科學研究所 碩士｜ACSM 運動生理學家 EP-C｜前國家運動訓練中心體能訓練師(自由車／跆拳道／羽球隊)。從解剖與動作科學出發,把每一個關節該如何被啟動、在什麼時機啟動,變成跑者可以理解的練習。
+        </div>
+      </div>
+    </div>
+
+    <div class="coach c2">
+      <div class="portrait" style="background:#0f1f17">
+        <img src="assets/coach-jessie.jpg" alt="傑西教練" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%"/>
+        <div class="corner-tag" style="color:#fff;z-index:2">COACH 02 · SOUL CHILL</div>
+      </div>
+      <div class="body">
+        <div class="role">TRANSFER × COACHING</div>
         <h3 class="name">傑西教練 <span class="en">Coach Jessie</span></h3>
         <div class="org">Soul Chill Studio 主理人 · 傑西跑步班 台中／台北 教練</div>
         <div class="skills">
           <span>姿勢跑法 L1 教練</span>
           <span>肌筋膜放鬆技術士</span>
-          <span>靈肌學 Level 2</span>
           <span>跑步專項轉移</span>
         </div>
         <div class="note">
-          課程合作經驗:XTERRA、The North Face、New Balance、lululemon、迪卡儂。<br><br>
-          要讓自己變得更進步,不只是更多的訓練。顧及身心的連結與生活的動態平衡,才能獲得真正的強韌。<br><br>
-          善於把複雜的理論,轉化成簡單易懂的教學方式。不只要學習跑步,也學習怎麼照顧自己。
+          教學合作品牌:XTERRA、The North Face、SUPERACE、New Balance、lululemon、迪卡儂。相信身心的連結與生活平衡——把動作訓練的成果有效轉移到你的跑步,讓結構啟動的效益,在跑動中被自己清楚感覺到。
         </div>
       </div>
     </div>
@@ -1358,9 +1157,10 @@ img{max-width:100%;height:auto}
 
   <div class="tagline-band">
     <p>
-      把<span class="hl">技術訓練</span>和<span class="hl">跑步需要的體能</span>加起來,<br>
-      一階一階往上堆。<br><br>
-      讓跑步<span class="hl">更輕、更快、更享受</span>。
+      一個負責設計<span class="hl">身體怎麼被啟動</span>,<br>
+      一個負責把<span class="hl">動作帶進跑動中</span>。<br><br>
+      把力量訓練和跑步訓練加起來,<br>
+      讓跑步<span class="hl">更輕、更快、更安全</span>。
     </p>
   </div>
 </section>
@@ -1379,7 +1179,8 @@ img{max-width:100%;height:auto}
 <section class="section sec-voices" id="voices">
   <div class="voices-head">
     <div class="eyebrow">Part 03.5 · Student Voices</div>
-    <h2>聽聽同學怎麼說</h2>
+    <h2>學員怎麼說</h2>
+    <p class="lead">不追成績、不比快慢——這裡的人，是被「一起變好」這件事留下來的。</p>
   </div>
   <div class="voices-grid">
     <div class="voice-card">
@@ -1418,89 +1219,34 @@ img{max-width:100%;height:auto}
         <h2>準備好了<br>就一起練。</h2>
       </div>
       <div class="intro">
-        填完表單會先收到一封確認信。<br>
-        完成匯款後,我們會在 <b>3 個工作天內</b> 寄出報名成功通知。
+        填寫下方資訊後,我們會在 2 個工作天內與您聯繫。
       </div>
     </div>
 
     <form class="form-card" id="signup-form" onsubmit="event.preventDefault(); handleSubmit();">
 
-      <!-- ===== Class confirmation bar =====
-           兩態:未選 = 橘色警告 / 已選 = 綠底。文字由 updateClassBanner() 依 formClass 寫入,
-           不是由頁首 tab 寫入 —— 頁首 tab 只換「頁面在看哪一班」,不代表「要報哪一班」。 -->
-      <div class="form-class-confirm unset">
+      <!-- ===== Class confirmation bar ===== -->
+      <div class="form-class-confirm">
         <span class="label">YOU ARE SIGNING UP FOR</span>
-        <span class="value">你正在報名:<span class="form-class-name" style="margin-left:6px">尚未選擇</span></span>
-        <span class="switch-hint">請於下方 <a href="#classPick">01 選擇班級 ↓</a></span>
+        <span class="value">你正在報名:<span class="form-class-name" style="margin-left:6px">台中 · 週二班</span></span>
+        <span class="switch-hint">想換班？<a href="#top">回到頁首切換 ↑</a></span>
       </div>
+      <input type="hidden" name="class" id="form-class-input" value="taichung-tue">
 
-      <!-- Section 01 — Class（表單內班別選擇器 = 送出班別的唯一來源）
-           2026-08-09:第 3 期 15 筆續報裡有 2 筆班別錯誤(台北的人落在台中週二 = 頁面預設值)。
-           原本班別只靠頁首 tab + hidden input,距離填表區 427 行,且載入時已預設 taichung-tue。
-           改成表單內 radio group、永不預選、required —— 每個人都必須親手選一次。 -->
-      <div class="form-section" id="classPick">
-        <div class="form-section-head">
-          <span class="idx">01</span>
-          <h3>選擇班級</h3>
-          <span class="hint">必選 · 三班的上課星期與地點不同,請確認到「星期幾」</span>
-        </div>
-        <div class="choices class-choices" id="classChoices">
-          <label class="choice class-card">
-            <input type="radio" name="class" value="taichung-tue" required>
-            <div class="choice-body">
-              <div class="cc-top"><span class="cc-city">台中</span><span class="cc-day">週二班</span></div>
-              <div class="cc-rows">
-                <div><span class="k">時間</span><b>每週二 19:30–21:00</b></div>
-                <div><span class="k">地點</span>中興大學田徑場</div>
-                <div><span class="k">開課</span>9/22（二）· 全期 12 堂</div>
-              </div>
-            </div>
-          </label>
-          <label class="choice class-card">
-            <input type="radio" name="class" value="taipei-wed">
-            <div class="choice-body">
-              <div class="cc-top"><span class="cc-city">台北</span><span class="cc-day">週三班</span></div>
-              <div class="cc-rows">
-                <div><span class="k">時間</span><b>每週三 19:30–21:00</b></div>
-                <div><span class="k">地點</span>台北田徑場</div>
-                <div><span class="k">開課</span>9/23（三）· 全期 12 堂</div>
-              </div>
-            </div>
-          </label>
-          <label class="choice class-card">
-            <input type="radio" name="class" value="taichung-thu">
-            <div class="choice-body">
-              <div class="cc-top"><span class="cc-city">台中</span><span class="cc-day">週四班</span></div>
-              <div class="cc-rows">
-                <div><span class="k">時間</span><b>每週四 19:30–21:00</b></div>
-                <div><span class="k">地點</span>中興大學田徑場</div>
-                <div><span class="k">開課</span>9/24（四）· 全期 12 堂</div>
-              </div>
-            </div>
-          </label>
-        </div>
-        <div class="class-warn">⚠️ 台中有<b>週二</b>與<b>週四</b>兩班,地點相同、只差星期。請確認你選的是自己每週能到的那一天。</div>
-      </div>
-
-      <!-- Section 02 — Plans -->
+      <!-- Section 01 — Plans -->
       <div class="form-section">
         <div class="form-section-head">
-          <span class="idx">02</span>
+          <span class="idx">01</span>
           <h3>課程方案</h3>
           <span class="hint">請擇一 · 匯款金額以選項為準</span>
         </div>
-        <div class="help" style="margin:-4px 0 14px;padding:10px 14px;background:rgba(185,207,111,.16);border-left:3px solid var(--grass);border-radius:6px;color:var(--forest-ink);font-weight:500">
-          🎁 <b>整期方案（A / B / E / F）與插班（D）皆含「慢慢進步」Premium 線上社群</b>，市價 NT$4,000，開通至 2027/1/31。單堂體驗（C）與免費團練（T）不含。
-        </div>
-        <!-- id 是必要的:applyClassPlanLimit() 的班別限定提示橫幅要插在「方案區」上方。
-             原本用 querySelector('.choices') 抓全文件第一個,加了班別卡片區之後會插錯位置。 -->
-        <div class="choices" id="planChoices" style="gap:12px">
+        <div class="choices" style="gap:12px">
           <label class="choice plan rec">
             <span class="ribbon">推薦 · 完整 12 堂</span>
             <input type="radio" name="plan" value="A" required>
             <div class="choice-body">
               <div class="title">(A) 新生 · 團課 × 12 堂</div>
-              <div class="meta">完整的三階段 12 週訓練 · <b>含 Premium 線上社群（市價 NT$4,000）</b></div>
+              <div class="meta">完整的三階段 12 週訓練</div>
               <div class="price">NT$ 5,400</div>
             </div>
           </label>
@@ -1508,7 +1254,7 @@ img{max-width:100%;height:auto}
             <input type="radio" name="plan" value="B">
             <div class="choice-body">
               <div class="title">(B) 舊生 · 團課 × 12 堂</div>
-              <div class="meta">曾上過「傑西跑班」任一期課程 · <b>含 Premium 線上社群（市價 NT$4,000）</b></div>
+              <div class="meta">曾上過「傑西跑班」任一期課程</div>
               <div class="price">NT$ 4,860</div>
             </div>
           </label>
@@ -1516,7 +1262,7 @@ img{max-width:100%;height:auto}
             <input type="radio" name="plan" value="C">
             <div class="choice-body">
               <div class="title">(C) 初次單堂體驗課</div>
-              <div class="meta">請 LINE 或 IG 告知預約日期 · 不含 Premium 線上社群</div>
+              <div class="meta">請 LINE 或 IG 告知預約日期</div>
               <div class="price">NT$ 450 / 堂</div>
             </div>
           </label>
@@ -1524,7 +1270,7 @@ img{max-width:100%;height:auto}
             <input type="radio" name="plan" value="D">
             <div class="choice-body">
               <div class="title">(D) 插班報名 × 剩餘堂數</div>
-              <div class="meta">原價 × 剩餘堂數 · 請私訊確認 · <b>含 Premium 線上社群</b></div>
+              <div class="meta">原價 × 剩餘堂數 · 請私訊確認</div>
               <div class="price">原價計費 · 依剩餘堂數</div>
             </div>
           </label>
@@ -1532,7 +1278,7 @@ img{max-width:100%;height:auto}
             <input type="radio" name="plan" value="E">
             <div class="choice-body">
               <div class="title">(E) 兩人同行 · 新生完整 12 堂</div>
-              <div class="meta">兩人同行 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · <b>各含 Premium 線上社群</b></div>
+              <div class="meta">兩人同行 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名</div>
               <div class="price">NT$ 5,130 / 人</div>
             </div>
           </label>
@@ -1540,19 +1286,16 @@ img{max-width:100%;height:auto}
             <input type="radio" name="plan" value="F">
             <div class="choice-body">
               <div class="title">(F) 三人同行 · 新生完整 12 堂</div>
-              <div class="meta">三人同行 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · <b>各含 Premium 線上社群</b></div>
+              <div class="meta">三人同行 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名</div>
               <div class="price">NT$ 4,860 / 人</div>
             </div>
           </label>
           <label class="choice">
-            <input type="radio" name="plan" value="T">
+            <input type="radio" name="plan" value="G">
             <div class="choice-body">
-              <div class="title">(T) 9 月銜接團練 · 單場體驗</div>
-              <div class="meta">
-                <b>免費</b> · 不需匯款,填完直接送出 · 場次即為你上方選的班別:
-                <span class="trial-date trial-date-unset active">請先於上方「01 選擇班級」選擇</span><span class="trial-date" data-form-class="taichung-tue">9/03（四）19:30 台中</span><span class="trial-date" data-form-class="taipei-wed">9/02（三）19:30 台北</span><span class="trial-date" data-form-class="taichung-thu">9/03（四）19:30 台中</span>
-              </div>
-              <div class="price">免費</div>
+              <div class="title">(G) 個人課表 / 12 週</div>
+              <div class="meta">請私訊預約免費諮詢</div>
+              <div class="price">NT$ 9,000 · 12 週</div>
             </div>
           </label>
         </div>
@@ -1561,7 +1304,7 @@ img{max-width:100%;height:auto}
       <!-- Section 02 — Basic -->
       <div class="form-section">
         <div class="form-section-head">
-          <span class="idx">03</span>
+          <span class="idx">02</span>
           <h3>基本資料</h3>
           <span class="hint">* 為必填(舊生方案僅需姓名 + Email)</span>
         </div>
@@ -1591,7 +1334,7 @@ img{max-width:100%;height:auto}
       <!-- Section 03 — Make-up & Refund -->
       <div class="form-section">
         <div class="form-section-head">
-          <span class="idx">04</span>
+          <span class="idx">03</span>
           <h3>補課方式與退費機制</h3>
           <span class="hint">請詳閱後勾選同意</span>
         </div>
@@ -1602,7 +1345,7 @@ img{max-width:100%;height:auto}
             <p>身為市民跑者的我們,難免事務繁雜。給予一點彈性,鼓勵大家繼續維持運動 💪</p>
             <p>因故請假的堂數,依班別規則如下:</p>
             <ul>
-              <li><b>台中(週二 / 週四)</b>:兩班互補:週二班可到週四班補課,週四班亦可到週二班補課。</li>
+              <li><b>台中(週二 / 週四)</b>:兩班互補——週二班可到週四班補課,週四班亦可到週二班補課。</li>
               <li><b>台北(週三)</b>:單班制,無對應互補班級,請假堂數無法補課。</li>
               <li><b>不限班別</b>:可邀請一位親友使用你的補課堂數來上課 🙌</li>
             </ul>
@@ -1644,11 +1387,11 @@ img{max-width:100%;height:auto}
       </div>
 
       <!-- Section 04 — Payment -->
-      <div class="form-section" id="paymentSection">
+      <div class="form-section">
         <div class="form-section-head">
-          <span class="idx">05</span>
+          <span class="idx">04</span>
           <h3>匯款資訊</h3>
-          <span class="hint">匯款後 3 個工作天內,我們會寄出報名成功通知</span>
+          <span class="hint">填寫完成後三日內完成繳費才算報名完成</span>
         </div>
 
         <div class="bank-info">
@@ -1672,13 +1415,14 @@ img{max-width:100%;height:auto}
       <!-- Section 05 — Contact & Notes -->
       <div class="form-section">
         <div class="form-section-head">
-          <span class="idx">06</span>
+          <span class="idx">05</span>
           <h3>聯繫我們與備註</h3>
           <span class="hint">如果有其他需求,歡迎聯繫!</span>
         </div>
 
         <div class="contact-row">
           <a class="contact-chip" href="https://www.instagram.com/jesse.coach.26/" target="_blank" rel="noopener"><span class="k">IG</span><span class="v">@jesse.coach.26</span></a>
+          <a class="contact-chip" href="https://www.facebook.com/soulchillstudio/?locale=zh_TW" target="_blank" rel="noopener"><span class="k">FB</span><span class="v">Soul Chill Studio</span></a>
           <a class="contact-chip" href="https://line.me/R/ti/p/@104wzemj" target="_blank" rel="noopener"><span class="k">LINE@</span><span class="v">@104wzemj</span></a>
         </div>
 
@@ -1690,10 +1434,9 @@ img{max-width:100%;height:auto}
 
       <div class="price-summary">
         <div>
-          <div class="label">SOUL CHILL RUNNING CLUB · 2026 Q4</div>
+          <div class="label">SOUL CHILL RUNNING CLUB · 2026 Q2</div>
           <div class="amt" id="summaryAmt">請於上方選擇方案 <small id="summaryLabel"></small></div>
           <div class="note" id="summaryNote" style="margin-top:8px">選擇後將自動帶入金額,請於上方欄位填寫實際匯款金額。</div>
-          <div class="sum-class unset" id="summaryClass">⚠️ 尚未選擇班級<small>請回到上方「01 選擇班級」</small></div>
         </div>
         <button class="submit-btn" type="submit">提交報名 <span class="arr">→</span></button>
       </div>
@@ -1710,7 +1453,7 @@ img{max-width:100%;height:auto}
   <div class="faq-list">
     <details class="faq-item" open>
       <summary><span class="q-num">Q1</span>沒有跑步經驗也可以報名嗎?</summary>
-      <div class="a">可以。<b>現在這個時間點加入是最好的時機,因為這堂課就是在打基礎。</b>即使是課程中的跑步訓練,也會依能力分組。許多學員剛加入時,操場一圈都跑不完。<br>若你不太確定自己的程度,可以先報名 (C) 初次單堂體驗課,或私訊傑西教練預約評估。</div>
+      <div class="a">可以。<b>現在這個時間點加入是最好的時機——因為這堂課就是在打基礎。</b>即使是課程中的跑步訓練,也會依能力分組。許多學員剛加入時,操場一圈都跑不完。<br>若你不太確定自己的程度,可以先報名 (C) 初次單堂體驗課,或私訊傑西教練預約評估。</div>
     </details>
     <details class="faq-item">
       <summary><span class="q-num">Q2</span>舊生優惠怎麼定義?</summary>
@@ -1727,20 +1470,10 @@ img{max-width:100%;height:auto}
     </details>
     <details class="faq-item">
       <summary><span class="q-num">Q4</span>請假無法當週補課怎麼辦?</summary>
-      <div class="a"><b>請假堂數在當期內都可以補,不限當週</b>:你可以挑有空的那一天補上,甚至帶一位親友,一起來用你的堂數上課也 OK。不過補課僅限當期內,跨期不保留。<br><br>補課班別規則:台中週二 ↔ 週四班可互補;台北週三班為單班制,無對應互補班級。</div>
+      <div class="a"><b>請假堂數在當期內都可以補,不限當週</b>:你可以挑有空的那一天補上——甚至帶一位親友,一起來用你的堂數上課也 OK。不過補課僅限當期內,跨期不保留。<br><br>補課班別規則:台中週二 ↔ 週四班可互補;台北週三班為單班制,無對應互補班級。</div>
     </details>
     <details class="faq-item">
-      <summary><span class="q-num">Q5</span>附贈的「Premium 線上社群」是什麼?怎麼開通?</summary>
-      <div class="a">
-        「慢慢進步」是我的線上訂閱制社群,原價 <b>NT$1,000 / 月</b>。這一期<b>只要報名實體班(整期或插班),就自動取得會員資格,不用另外付費</b>。<br><br>
-        <b>你會拿到</b>:練與養六個支柱的完整線上學習資源、每週日晚間的線上直播(帶練習＋答疑,有回放)、以及一個可以直接把問題丟給我的社群。實體課練的東西,回家有地方接著練。<br><br>
-        <b>開通期間</b>:開課當週開通,一路用到 <b>2027/1/31</b>,也就是 12 堂上完之後,還可以再免費用一個月。合計約 4 個月,市價 NT$4,000。<br><br>
-        <b>怎麼開通</b>:報名確認後,我們會用你填的 Email 寄邀請連結給你,照著加入即可。<br>
-        <b>不包含</b>:(C) 初次單堂體驗課不含此加碼。
-      </div>
-    </details>
-    <details class="faq-item">
-      <summary><span class="q-num">Q6</span>需要自備什麼裝備?</summary>
+      <summary><span class="q-num">Q5</span>需要自備什麼裝備?</summary>
       <div class="a">
         <b>基本裝備</b>:一雙平常在跑的跑鞋、運動服、水瓶、毛巾。<br><br>
         課程中會用到的常用器材(彈力帶、按摩球、滾筒等)與其他準備事項,會在你入班後,由教練在 LINE 群組提供詳細清單與購買建議。
@@ -1755,6 +1488,7 @@ img{max-width:100%;height:auto}
   <div class="sub">RUNNING CLUB · SINCE 2022</div>
   <div class="links">
     <a href="https://www.instagram.com/jesse.coach.26/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.facebook.com/soulchillstudio/?locale=zh_TW" target="_blank" rel="noopener">Facebook</a>
     <a href="https://line.me/R/ti/p/@104wzemj" target="_blank" rel="noopener">LINE 官方帳號</a>
   </div>
   <div class="copy">© 2026 SOUL CHILL STUDIO · 用心生活工作室</div>
@@ -1762,33 +1496,14 @@ img{max-width:100%;height:auto}
 
 <script>
 // ===== Class tab switching =====
-// ⚠️ 換期時「四個地方」要一起改,少改一處就會出現「頁面說 A、信裡說 B」:
-//    ① 這張表  ② 表單 #classPick 的三張班別卡  ③ 頁首與課表的 [data-class-content] 區塊
-//    ④ apps-script.gs 的 CLASS_MAP(:70-86) ← 那份是權威版本,以它為準
 const CLASS_MAP = {
-  'taichung-tue': { name: '台中 · 週二班',  shortName: '週二跑步班', city: '台中', day: '週二',
-                    weekly: '每週二 19:30–21:00', location: '中興大學田徑場', start: '9/22（二）' },
-  'taipei-wed':   { name: '台北 · 週三班',  shortName: '週三跑步班', city: '台北', day: '週三',
-                    weekly: '每週三 19:30–21:00', location: '台北田徑場',     start: '9/23（三）' },
-  'taichung-thu': { name: '台中 · 週四班',  shortName: '週四跑步班', city: '台中', day: '週四',
-                    weekly: '每週四 19:30–21:00', location: '中興大學田徑場', start: '9/24（四）' },
+  'taichung-tue': { name: '台中 · 週二班',  shortName: '週二跑步班', city: '台中', day: '週二' },
+  'taipei-wed':   { name: '台北 · 週三班',  shortName: '週三跑步班', city: '台北', day: '週三' },
+  'taichung-thu': { name: '台中 · 週四班',  shortName: '週四跑步班', city: '台中', day: '週四' },
 };
 
-// ===== 班別的兩個狀態 — 刻意分開,不要合併 =====
-// displayClass = 頁面正在「展示」哪一班(課表、團練日期、匯款備註)。永遠有值。
-// formClass    = 表單真正要「送出」的班別。null = 使用者還沒親手選 → 送不出去。
-//
-// ⚠️ formClass 只會被「使用者點表單內的班別卡」寫入。
-//    頁首 tab 不寫它、localStorage 也不寫它。
-//    2026-08-09:第 3 期 15 筆有 2 筆班別錯誤,根因就是「班別被預設值/殘留值靜默決定」。
-//    「在頁首點週四只是想看課表」和「我要報名週四班」是兩件事,不可以混為一談。
-let displayClass = 'taichung-tue';
-let formClass = null;
-
-// switchClass() = 只換「頁面在展示哪一班」。它不碰 formClass、不勾表單 radio。
 function switchClass(classKey){
   if(!CLASS_MAP[classKey]) return;
-  displayClass = classKey;
 
   // Update tab active state
   document.querySelectorAll('.class-tab').forEach(tab=>{
@@ -1806,104 +1521,39 @@ function switchClass(classKey){
   const chip = document.querySelector('.current-class-name');
   if(chip) chip.textContent = CLASS_MAP[classKey].name;
 
-  // ⚠️ 這裡刻意「不」更新表單確認橫幅,也「不」寫任何表單欄位。
-  //    橫幅由 updateClassBanner() 依 formClass 決定 —— 否則頁首 tab 會讓橫幅說謊
-  //    (顯示台中週二、實際要送出台中週四)。
+  // Update form confirmation bar
+  const formName = document.querySelector('.form-class-name');
+  if(formName) formName.textContent = CLASS_MAP[classKey].name;
 
-  // ⚠️ 匯款備註與免費團練場次「不」在這裡更新 —— 它們是表單的一部分,
-  //    必須跟著「使用者要報名的班」(formClass),不能跟著「頁面在看哪一班」。
-  //    見 updateFormClassDependents()。
+  // Update hidden form input
+  const hidden = document.getElementById('form-class-input');
+  if(hidden) hidden.value = classKey;
 
-  // 依班別套用開放方案(整期招生:A/B/C/E/F/G,插班 D 開課後才開)
+  // Update bank note hint
+  const bankNote = document.querySelector('.bank-note-class');
+  if(bankNote) bankNote.textContent = CLASS_MAP[classKey].shortName;
+
+  // 台北週三新生額滿,只開放舊生方案 (B)
   applyClassPlanLimit(classKey);
 
-  // Persist —— 語意只有「記住上次在看哪一班的課表」。
-  // ⚠️ 絕對不可以拿它自動勾表單的班別 radio:那只是把靜默預設從 hardcode 換成 localStorage,
-  //    而且這個值會跨期殘留(第 2 期看過的班,第 3 期還在)。
+  // Persist
   try{ localStorage.setItem('soulchill_class', classKey); }catch(e){}
 }
 
-// selectFormClass() = 使用者親手在表單裡選了班別。這是唯一會寫 formClass 的地方。
-//
-// 無窮迴圈分析(改這段前務必看懂):
-//   ① switchClass 從不寫 formClass、從不設 input[name="class"].checked、從不派發 class 的 change
-//      → 「頁首 tab → 表單」這個方向單向且終止。
-//   ② 這裡用 r.checked = true 程式賦值,DOM 規格上「不會」觸發 change/input 事件
-//      → 「表單 → 頁首」方向也不會回彈。
-//   ③ 全檔唯一的合成事件是 applyClassPlanLimit() 對 input[name="plan"] 的 dispatchEvent,
-//      那是另一個 radio group,其 handler 完全不碰 class。
-//   → 結構上不可能成環,不需要 guard flag。
-function selectFormClass(classKey){
-  if(!CLASS_MAP[classKey]) return;
-  formClass = classKey;
-  const r = document.querySelector('input[name="class"][value="' + classKey + '"]');
-  if(r) r.checked = true;
-  switchClass(classKey);   // 同步頁面顯示(課表/團練日期/匯款備註)
-  updateClassBanner();
-  updateSummaryClass();
-  updateFormClassDependents();
-}
-
-document.querySelectorAll('input[name="class"]').forEach(el=>{
-  el.addEventListener('change', ()=> selectFormClass(el.value));
-});
-
-// 表單「內部」跟班別綁定的東西 —— 一律跟著 formClass,不跟著頁面顯示。
-//   ① 匯款備註要寫的班名:跟錯了會讓匯款備註與實際報名的班對不起來,對帳直接混淆
-//   ② (T) 免費團練的場次日期:那是他要出席的那一場
-function updateFormClassDependents(){
-  const c = formClass ? CLASS_MAP[formClass] : null;
-
-  const bankNote = document.querySelector('.bank-note-class');
-  if(bankNote) bankNote.textContent = c ? c.shortName : '（請先選擇班級）';
-
-  document.querySelectorAll('.trial-date[data-form-class]').forEach(el=>{
-    el.classList.toggle('active', !!formClass && el.dataset.formClass === formClass);
-  });
-  const unset = document.querySelector('.trial-date-unset');
-  if(unset) unset.classList.toggle('active', !formClass);
-}
-
-// 表單頂端的確認橫幅 —— 兩態
-function updateClassBanner(){
-  const bar = document.querySelector('.form-class-confirm');
-  const el  = document.querySelector('.form-class-name');
-  if(!bar || !el) return;
-  if(formClass){
-    const c = CLASS_MAP[formClass];
-    bar.classList.remove('unset');
-    el.textContent = c.name + '（' + c.weekly + ' · ' + c.location + '）';
-  }else{
-    bar.classList.add('unset');
-    el.textContent = '尚未選擇 — 請在下方「01 選擇班級」選一個';
-  }
-}
-
-// 送出鈕旁的班別覆述 —— 最後一次讓使用者看到自己選了哪一班
-function updateSummaryClass(){
-  const el = document.getElementById('summaryClass');
-  if(!el) return;
-  if(formClass){
-    const c = CLASS_MAP[formClass];
-    el.classList.remove('unset');
-    el.innerHTML = '報名班別:' + c.name +
-      '<small>' + c.weekly + ' · ' + c.location + ' · ' + c.start + ' 開課</small>';
-  }else{
-    el.classList.add('unset');
-    el.innerHTML = '⚠️ 尚未選擇班級<small>請回到上方「01 選擇班級」</small>';
-  }
-}
-
-// 各班開放方案(2026-08-04:第 3 期整期招生,9/22 那週開課)
-//   三班皆開放整期方案 A/B/E/F + 單堂體驗(C) + 免費團練(T)
-//   插班(D)僅開課後才開放,招生期先隱藏
+// 各班開放方案(2026-06-15:三班皆已開課)
+//   台中週二 / 台中週四 → 課程已開始,只開放單堂體驗(C) + 插班(D)
+//   台北週三 → 維持「新生額滿、只開舊生方案(B)」
 //   未列入此表的班別 = 全方案開放
 const CLASS_ALLOWED_PLANS = {
-  'taichung-tue': ['A','B','C','E','F','T'],
-  'taipei-wed':   ['A','B','C','E','F','T'],
-  'taichung-thu': ['A','B','C','E','F','T']
+  'taichung-tue': ['C','D'],
+  'taipei-wed':   ['D'],
+  'taichung-thu': ['C','D']
 };
-const CLASS_PLAN_NOTICE = {};
+const CLASS_PLAN_NOTICE = {
+  'taichung-tue': '本期已開課,目前僅開放「單堂體驗」與「插班報名」。歡迎先單堂體驗,或私訊確認剩餘堂數插班。',
+  'taipei-wed':   '台北週三班新生名額已滿,目前僅開放「舊生插班」。請私訊確認剩餘堂數與費用。',
+  'taichung-thu': '本期已開課,目前僅開放「單堂體驗」與「插班報名」。歡迎先單堂體驗,或私訊確認剩餘堂數插班。'
+};
 
 function applyClassPlanLimit(classKey){
   const allowed = CLASS_ALLOWED_PLANS[classKey] || null; // null = 全方案開放
@@ -1937,9 +1587,7 @@ function applyClassPlanLimit(classKey){
       notice.id = 'classPlanNotice';
       notice.className = 'help';
       notice.style.cssText = 'margin:-4px 0 12px;padding:10px 14px;background:rgba(184,84,42,.08);border-left:3px solid #b8542a;border-radius:6px;color:var(--forest-ink);font-weight:500;';
-      // 必須指名方案區。用 querySelector('.choices') 會抓到全文件第一個 .choices,
-      // 也就是 01 的班別卡片區,提示橫幅會插到完全錯的地方。
-      const choices = document.getElementById('planChoices');
+      const choices = document.querySelector('.choices');
       if(choices) choices.parentNode.insertBefore(notice, choices);
     }
     notice.textContent = msg;
@@ -1961,13 +1609,13 @@ document.querySelectorAll('.class-tab').forEach(tab=>{
 
 // ===== Plan selection — sync price summary =====
 const PLAN_MAP = {
-  A: { amt: 'NT$ 5,400',  label: '/ 新生 12 堂',     note: '完整 12 週訓練 + Premium 線上社群(市價 NT$4,000)· 將自動帶入匯款金額',  autoAmount: '5400',  bankNote: '新生' },
-  B: { amt: 'NT$ 4,860',  label: '/ 舊生 12 堂',     note: '曾上過任一期「傑西跑班」課程 + Premium 線上社群(市價 NT$4,000)',     autoAmount: '4860',  bankNote: '舊生' },
-  C: { amt: 'NT$ 450',    label: '/ 單堂體驗',        note: '請先 LINE 或 IG 告知預約日期,確認後再匯款。單堂不含 Premium 線上社群。',  autoAmount: '450',   bankNote: '單堂' },
-  D: { amt: '原價 · 依剩餘堂數',  label: '· 插班報名',  note: '插班依原價 × 剩餘堂數計費(整期 12 堂才有舊生優惠),含 Premium 線上社群。請私訊確認剩餘堂數與費用後匯款。',  autoAmount: '',  bankNote: '插班' },
-  E: { amt: 'NT$ 5,130',  label: '/ 兩人同行 每人',   note: '新生限定 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · 各含 Premium 線上社群',  autoAmount: '5130',  bankNote: '兩人同行' },
-  F: { amt: 'NT$ 4,860',  label: '/ 三人同行 每人',   note: '新生限定 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · 各含 Premium 線上社群',   autoAmount: '4860',  bankNote: '三人同行' },
-  T: { amt: '免費',       label: '/ 9 月銜接團練 單場體驗', note: '免費場次,不需匯款,填完資料直接送出即可。場次就是你上方選的班別。9/8 起的兩場團練僅限已報名整期課程的學員。',  autoAmount: '0',  bankNote: '免費團練', free: true }
+  A: { amt: 'NT$ 5,400',  label: '/ 新生 12 堂',     note: '完整 12 週訓練 · 將自動帶入匯款金額',             autoAmount: '5400',  bankNote: '新生' },
+  B: { amt: 'NT$ 4,860',  label: '/ 舊生 12 堂',     note: '曾上過任一期「傑西跑班」課程 · 自動帶入金額',     autoAmount: '4860',  bankNote: '舊生' },
+  C: { amt: 'NT$ 450',    label: '/ 單堂體驗',        note: '請先 LINE 或 IG 告知預約日期,確認後再匯款。',     autoAmount: '450',   bankNote: '單堂' },
+  D: { amt: '原價 · 依剩餘堂數',  label: '· 插班報名',  note: '插班依原價 × 剩餘堂數計費(整期 12 堂才有舊生優惠)。請私訊確認剩餘堂數與費用後匯款。',  autoAmount: '',  bankNote: '插班' },
+  E: { amt: 'NT$ 5,130',  label: '/ 兩人同行 每人',   note: '新生限定 · 每人 95 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名',  autoAmount: '5130',  bankNote: '兩人同行' },
+  F: { amt: 'NT$ 4,860',  label: '/ 三人同行 每人',   note: '新生限定 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名',   autoAmount: '4860',  bankNote: '三人同行' },
+  G: { amt: 'NT$ 9,000',  label: '/ 個人課表 12 週',  note: '請先私訊預約免費諮詢。',                         autoAmount: '9000',  bankNote: '個人課表' }
 };
 function applyPlanRequiredRules(planValue){
   // 舊生方案 (B):LINE + 跑步能力 整個欄位隱藏;其他方案:顯示且必填
@@ -1991,18 +1639,6 @@ document.querySelectorAll('input[name="plan"]').forEach(el=>{
     const p = PLAN_MAP[el.value]; if(!p) return;
     document.getElementById('summaryAmt').innerHTML = p.amt + ' <small id="summaryLabel">' + p.label + '</small>';
     document.getElementById('summaryNote').textContent = p.note;
-
-    // 免費方案(T 團練體驗):整個匯款區隱藏,後五碼取消必填
-    const paySec = document.getElementById('paymentSection');
-    const last5Input = document.querySelector('input[name="last5"]');
-    const submitBtn = document.querySelector('.submit-btn');
-    if (paySec) paySec.style.display = p.free ? 'none' : '';
-    if (last5Input) {
-      last5Input.required = !p.free;
-      if (p.free) last5Input.value = '';
-    }
-    if (submitBtn) submitBtn.innerHTML = (p.free ? '送出免費團練報名' : '提交報名') + ' <span class="arr">→</span>';
-
     // 匯款金額:有固定金額的方案自動帶入並唯讀;插班(無固定金額)開放學生自填
     const amtInput = document.getElementById('amountInput');
     const amtHint = document.getElementById('amountOptHint');
@@ -2031,20 +1667,12 @@ document.querySelectorAll('input[name="plan"]').forEach(el=>{
   });
 });
 
-// Restore persisted selection —— 只還原「頁面在看哪一班」,不碰表單班別。
+// Restore persisted selection(無 saved 時預設台中週二班,確保首次到訪也套用班別方案限制)
 // 放在 change listener 綁定之後,讓初始 switchClass 的 change 事件能更新金額/備註。
-// ⚠️ catch 裡也要呼叫 switchClass:localStorage 被瀏覽器封鎖時會拋錯,
-//    原本的寫法會讓 switchClass 一次都沒被呼叫 → 方案限制沒套用 → 插班(D)會露出來。
 try{
   const saved = localStorage.getItem('soulchill_class');
   switchClass(saved && CLASS_MAP[saved] ? saved : 'taichung-tue');
-}catch(e){
-  switchClass('taichung-tue');
-}
-// 一定是「尚未選擇」的橘色警告態 —— 每個人都必須親手選一次班別。
-updateClassBanner();
-updateSummaryClass();
-updateFormClassDependents();
+}catch(e){}
 
 // ===== Form submit to Google Apps Script =====
 const API_URL = 'https://script.google.com/macros/s/AKfycbzkZABMZKdXO9RoNvAf_-183zhFbwJ_QurjTSBCHNjEhtVeBEDeCr2EGawQ3BZ0VjfouQ/exec';
@@ -2052,15 +1680,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbzkZABMZKdXO9RoNvAf_-18
 function handleSubmit(){
   const btn = document.querySelector('.submit-btn');
   const form = document.getElementById('signup-form');
-  // 班別來自 formClass(使用者親手選的),不是頁面正在展示的那一班。
-  const classKey = formClass;
-  if(!classKey || !CLASS_MAP[classKey]){
-    alert('請先在「01 選擇班級」選擇你要上的班。');
-    const pick = document.getElementById('classPick');
-    if(pick) pick.scrollIntoView({behavior:'smooth', block:'center'});
-    return;
-  }
-  const className = CLASS_MAP[classKey].name;
+  const classKey = document.getElementById('form-class-input').value;
+  const className = (CLASS_MAP[classKey] || {}).name || '';
 
   const planVal = (new FormData(form)).get('plan');
   const allowedPlans = CLASS_ALLOWED_PLANS[classKey];
@@ -2084,21 +1705,6 @@ function handleSubmit(){
     agree:   !!fd.get('agree')
   };
 
-  // 最後一道:讓使用者主動確認班別一次。
-  // ⚠️ 必須在 btn.disabled = true 之前 return,否則按「取消」會把按鈕永久鎖死。
-  const _c = CLASS_MAP[classKey];
-  const _p = PLAN_MAP[planVal] || {};
-  const _ok = confirm(
-    '請再確認一次你報名的班別:\n\n' +
-    '　' + _c.name + '\n' +
-    '　' + _c.weekly + '\n' +
-    '　' + _c.location + '\n' +
-    '　' + _c.start + ' 開課\n\n' +
-    '方案:(' + planVal + ') ' + (_p.amt || '') + ' ' + (_p.label || '') + '\n\n' +
-    '確認無誤 → 按「確定」送出\n選錯了 → 按「取消」回去改'
-  );
-  if(!_ok) return;
-
   btn.innerHTML = '送出中…';
   btn.style.opacity = '.7';
   btn.disabled = true;
@@ -2111,21 +1717,11 @@ function handleSubmit(){
   .then(r => r.json())
   .then(res => {
     if (res.ok) {
-      btn.innerHTML = '✓ 已送出 · ' + className + ' · 確認信已寄出,請收信';
+      btn.innerHTML = '✓ 已送出 · ' + className + ' · 2 個工作天內聯絡你';
       btn.style.background = '#1f3a2d';
       btn.style.color = '#f1ede2';
       form.reset();
-      // form.reset() 會把班別 radio 全部還原成「未選」(markup 裡沒有 checked),
-      // 所以要同步把 formClass 清掉,橫幅與摘要才不會繼續顯示上一筆的班別。
-      formClass = null;
-      updateClassBanner();
-      updateSummaryClass();
-      updateFormClassDependents();
       try { localStorage.removeItem('soulchill_class'); } catch(e){}
-      // ⚠️ 這裡刻意「不」解鎖 btn.disabled。要再報一筆請重新整理。
-      //    原因:金額欄唯讀狀態、匯款區顯示、後五碼必填、LINE/跑步能力欄位顯示
-      //    都是用 JS 命令式設定的,form.reset() 還原不了。解鎖按鈕會把這一整批
-      //    潛伏的狀態殘留變成現行 bug。
     } else {
       throw new Error(res.error || '未知錯誤');
     }
