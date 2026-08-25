@@ -18,6 +18,8 @@
   th, td { padding: 10px 12px; font-size: 17px; }
   th { background:#f9fafb; text-align:left; font-weight:600; color:#4b5563; }
   tbody tr { border-top: 1px solid #f3f4f6; }
+  .perfect-badge { background:#b9ca74; color:#0f3e36; font-size:14px; font-weight:700;
+    padding:2px 9px; border-radius:9999px; white-space:nowrap; line-height:1.5; }
   .edit-btn { padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,.05); }
   .edit-btn:active { background: rgba(0,0,0,.1); }
 </style>
@@ -69,7 +71,7 @@
         <div class="text-3xl font-bold text-yellow-800" id="stat-absent">0</div>
       </div>
       <div class="bg-blue-50 rounded-xl py-2 text-center">
-        <div class="text-base text-blue-700">本期全勤 (<span id="stat-sessions">0</span> 堂)</div>
+        <div class="text-base text-blue-700">全勤 (前 <span id="stat-sessions">0</span> 堂)</div>
         <div class="text-3xl font-bold text-blue-800" id="stat-perfect">0</div>
       </div>
     </div>
@@ -208,45 +210,21 @@ async function loadClass() {
     }
     dashData = j;
     renderCards();
-    await loadAllAttendance();
+    loadAllAttendance();
   } catch (e) {
     $('groups').innerHTML = '<p class="text-red-600">網路錯誤：' + e.message + '</p>';
   }
 }
 
-// 拉本期所有 attendance（為了算全勤、出席次數）
-// 只有 admin 用 dashboard endpoint；助教不用全勤摘要
-async function loadAllAttendance() {
-  if (!isAdmin()) {
-    // 助教看不到全勤摘要
-    $('stat-sessions').textContent = '—';
-    $('stat-perfect').textContent = '—';
-    updateTodayStats();
-    return;
-  }
-  try {
-    const r = await fetch(`${API_BASE}/api/attendance/dashboard?k=${encodeURIComponent(adminKey)}`);
-    const j = await r.json();
-    if (!j.ok) return;
-    const c = j.classes[currentClass];
-    if (!c) return;
-    $('stat-sessions').textContent = c.totalSessions || 0;
-    // 全勤 = present 次數 == totalSessions（且 totalSessions > 0）
-    const perfectCount = c.totalSessions > 0
-      ? c.students.filter(s => s.present === c.totalSessions).length
-      : 0;
-    $('stat-perfect').textContent = perfectCount;
-    // 把每位學員的 present 數寫進卡片
-    const presentMap = {};
-    for (const s of c.students) presentMap[s.id] = s.present;
-    document.querySelectorAll('[data-attend-count]').forEach(el => {
-      const sid = Number(el.dataset.sid);
-      const n = presentMap[sid] || 0;
-      const total = c.totalSessions || 0;
-      el.textContent = total > 0 ? `${n}/${total}` : '';
-      if (total > 0 && n === total) el.classList.add('text-emerald-700', 'font-bold');
-    });
-  } catch (e) { /* ignore */ }
+// 全勤摘要 —— 2026-08-25 改：資料改由 /api/attendance/class 直接帶回
+// （原本走 /api/attendance/dashboard，那支要 ADMIN_KEY，所以助教一律看到「—」）
+// 現在助教與 Jesse 看到的完全一樣，而且少打一支 API。
+function loadAllAttendance() {
+  if (!dashData) return;
+  const n = dashData.prior_sessions || 0;
+  $('stat-sessions').textContent = n;
+  $('stat-perfect').textContent = n > 0 ? (dashData.perfect_count || 0) : '—';
+  updateTodayStats();
 }
 
 function renderCards() {
@@ -308,18 +286,24 @@ function renderCard(s) {
   const stClass = 'st-' + st;
   // 名字顯示：有 nickname → 暱稱 (本名 小灰字)；無 → 本名
   const nameHtml = s.nickname
-    ? `<span class="text-2xl font-bold truncate">${escapeHtml(s.nickname)}</span>
-       <span class="text-base text-gray-500 truncate">(${escapeHtml(s.name)})</span>`
-    : `<span class="text-2xl font-medium truncate">${escapeHtml(s.name)}</span>`;
+    ? `<span class="text-2xl font-bold break-words">${escapeHtml(s.nickname)}</span>
+       <span class="text-base text-gray-500 break-words">(${escapeHtml(s.name)})</span>`
+    : `<span class="text-2xl font-medium break-words">${escapeHtml(s.name)}</span>`;
+  // 🏅 全勤徽章 —— 到「上一堂」為止全勤（分母不含正在點的這一堂）
+  const perfectHtml = s.perfect
+    ? `<span class="perfect-badge shrink-0" title="到上一堂為止全勤 ${s.prior_present}/${s.prior_sessions}">🏅<span class="hidden sm:inline">&nbsp;全勤</span></span>`
+    : '';
+  const cntTxt = s.prior_sessions > 0 ? `${s.prior_present}/${s.prior_sessions}` : '';
   return `
     <div class="stcard border-2 ${stClass} rounded-xl px-4 py-4 flex items-center justify-between gap-2 cursor-pointer"
          data-sid="${s.id}" data-status="${st}">
-      <div class="flex items-center gap-2 min-w-0 flex-1">
+      <div class="flex items-center flex-wrap gap-x-2 gap-y-1 min-w-0 flex-1">
         ${nameHtml}
-        <button class="edit-btn text-base text-gray-500 shrink-0" data-edit-nick="${s.id}" title="編輯暱稱">✎</button>
+        ${perfectHtml}
       </div>
-      <div class="flex items-center gap-3 shrink-0 text-2xl">
-        <span data-attend-count data-sid="${s.id}" class="text-base text-gray-500"></span>
+      <div class="flex items-center gap-2 shrink-0 text-2xl">
+        <button class="edit-btn text-base text-gray-500 shrink-0" data-edit-nick="${s.id}" title="編輯暱稱">✎</button>
+        <span data-attend-count data-sid="${s.id}" class="text-base ${s.perfect ? 'text-emerald-700 font-bold' : 'text-gray-500'}">${cntTxt}</span>
         <span data-status-label class="font-bold">${LABEL[st]}</span>
       </div>
     </div>`;
