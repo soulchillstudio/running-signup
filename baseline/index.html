@@ -51,11 +51,15 @@
 
   <!-- 學員清單畫面 -->
   <div id="list-view" class="hidden">
-    <h1 class="text-2xl font-bold mb-1">跑班成績紀錄（400m ＋ 100m）</h1>
+    <h1 class="text-2xl font-bold mb-1">跑班 400m 成績紀錄</h1>
     <p class="text-base text-gray-500 mb-3" id="class-title"></p>
 
     <!-- 助教/Jesse 切班 tab -->
     <div id="tabs" class="flex gap-2 mb-3 flex-wrap"></div>
+
+    <!-- 前測 / 後測 分頁 -->
+    <div id="phase-tabs" class="grid grid-cols-2 gap-2 mb-3"></div>
+    <p id="phase-hint" class="text-base mb-3 px-4 py-2 rounded-xl"></p>
 
     <div class="flex items-center gap-2 mb-3">
       <div class="flex-1 text-base text-gray-600">
@@ -68,7 +72,7 @@
       <button id="logout-btn" class="hidden text-base text-gray-500 underline">登出</button>
     </div>
 
-    <p class="text-base text-gray-500 mb-2">點下方自己的名字，填 400m 成績與體感。</p>
+    <p class="text-base text-gray-500 mb-2" id="list-hint">點下方自己的名字，填 400m 成績、體感與影片編碼。</p>
 
     <div id="student-list"></div>
 
@@ -83,6 +87,8 @@
       <p class="text-base text-gray-500">填寫對象</p>
       <h2 id="entry-name" class="text-3xl font-bold mb-1"></h2>
       <p class="text-base text-gray-500" id="entry-vdot"></p>
+      <div id="entry-phase-banner" class="mt-3 rounded-xl px-4 py-3 text-lg font-semibold"></div>
+      <div id="entry-pre-ref" class="hidden mt-2 rounded-xl px-4 py-3 bg-stone-100 text-base text-gray-700"></div>
     </div>
 
     <!-- 400m 成績 -->
@@ -97,18 +103,19 @@
           class="w-28 text-3xl text-center border rounded-xl py-3" placeholder="秒">
       </div>
       <p id="entry-time-hint" class="text-base text-gray-400 mt-2"></p>
+      <div id="entry-delta" class="hidden mt-3 rounded-xl px-4 py-3 text-lg font-bold"></div>
     </div>
 
-    <!-- 100m 成績（W07 起） -->
-    <div class="bg-white rounded-2xl shadow p-5 mb-4">
-      <h3 class="text-xl font-semibold mb-2">100m 秒數 <span class="text-gray-400 text-base">選填 · W07 起</span></h3>
-      <p class="text-base text-gray-500 mb-3">100m 計時秒數（例如 <b>15.3</b>），可帶一位小數。末幾週依此分組跑 200m 間歇。</p>
-      <div class="flex items-center gap-2">
+    <!-- 100m 成績（W07 起）—— 課程中間分組用，留紀錄即可，刻意縮小 -->
+    <div class="bg-white/70 rounded-xl border border-gray-200 px-4 py-3 mb-4">
+      <div class="flex items-center gap-3 flex-wrap">
+        <span class="text-base text-gray-500 shrink-0">100m 秒數 <span class="text-gray-400">選填</span></span>
         <input id="entry-100m" type="number" min="0" max="120" step="0.1" inputmode="decimal"
-          class="w-28 text-3xl text-center border rounded-xl py-3" placeholder="秒">
-        <span class="text-2xl text-gray-400">秒</span>
+          class="w-24 text-xl text-center border rounded-lg py-1.5" placeholder="秒">
+        <span class="text-base text-gray-400">秒</span>
+        <span id="entry-100m-hint" class="text-sm text-gray-400"></span>
       </div>
-      <p id="entry-100m-hint" class="text-base text-gray-400 mt-2"></p>
+      <p class="text-sm text-gray-400 mt-1">課程中間分組 200m 間歇用的紀錄，不用特別在意。</p>
     </div>
 
     <!-- 體感 RPE 1-10 -->
@@ -164,9 +171,11 @@ const CLASS_PINS = {
   'tp-wed': '9343',
   'tc-thu': '9649',
 };
-function studentShareURL(code) {
+function studentShareURL(code, phase) {
   const base = location.origin + location.pathname;
-  return `${base}?c=${code}&p=${CLASS_PINS[code]}`;
+  // 帶上 phase：結業堂分享時學員一點進來就在「後測」分頁，不會誤填到前測把 W01 蓋掉
+  const ph = (phase || currentPhase) === 'post' ? '&phase=post' : '';
+  return `${base}?c=${code}&p=${CLASS_PINS[code]}${ph}`;
 }
 const RPE_DESC = {
   1:  '非常輕鬆 — 像走路、完全不喘',
@@ -190,9 +199,23 @@ let pinValue = q.get('p') || (pinClass ? localStorage.getItem('att_pin_' + pinCl
 const isAdmin = () => !!adminKey;
 
 let currentClass = pinClass && CLASS_LABELS[pinClass] ? pinClass : 'tc-tue';
-let students = [];               // 該班學員 + baseline
+// 前測 / 後測（2026-08-25 加）。可用 ?phase=post 直接開在後測分頁 —— 結業堂分享連結時用這個，
+// 學員一進來就在對的分頁，不會誤填到前測把 W01 成績蓋掉。
+const PHASES = { pre: '前測', post: '後測' };
+let currentPhase = (q.get('phase') === 'post') ? 'post' : 'pre';
+let students = [];               // 該班學員 + pre/post 兩組 baseline
 let editingStudent = null;
 let selectedRPE = null;
+
+// 取某位學員在目前分頁的那組資料（相容舊格式：沒有 pre/post 就退回扁平欄位＝前測）
+function pdata(s, phase) {
+  phase = phase || currentPhase;
+  if (s && s[phase]) return s[phase];
+  return phase === 'pre'
+    ? { time_400m_sec: s.time_400m_sec, time_100m_sec: s.time_100m_sec,
+        body_feel: s.body_feel, video_code: s.video_code, note: s.note }
+    : { time_400m_sec: null, time_100m_sec: null, body_feel: null, video_code: null, note: null };
+}
 
 function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -277,10 +300,44 @@ async function loadList() {
   }
 }
 
+function renderPhaseTabs() {
+  $('phase-tabs').innerHTML = Object.entries(PHASES).map(([ph, label]) => {
+    const on = ph === currentPhase;
+    const sub = ph === 'pre' ? '第一堂 W01' : '結業堂 W12';
+    return `<button data-phase="${ph}"
+      class="rounded-xl py-3 px-3 text-center border-2 ${on
+        ? (ph === 'pre' ? 'bg-emerald-700 border-emerald-700 text-white' : 'bg-[#0f3e36] border-[#0f3e36] text-white')
+        : 'bg-white border-gray-200 text-gray-500'}">
+      <span class="block text-xl font-bold">${label}</span>
+      <span class="block text-sm ${on ? 'text-white/70' : 'text-gray-400'}">${sub}</span>
+    </button>`;
+  }).join('');
+  document.querySelectorAll('[data-phase]').forEach(el => {
+    el.onclick = () => { currentPhase = el.dataset.phase; renderPhaseTabs(); renderList(); updateShareBtn(); };
+  });
+  const hint = $('phase-hint');
+  if (currentPhase === 'pre') {
+    hint.className = 'text-base mb-3 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-900';
+    hint.textContent = '前測 = 第一堂（W01）跑的那次 400m。已經填過的不用再填。';
+  } else {
+    hint.className = 'text-base mb-3 px-4 py-2 rounded-xl bg-[#eef4f0] text-[#0f3e36]';
+    hint.textContent = '後測 = 結業堂（W12）跑的那次 400m。跟第一堂同樣距離、同樣計時方式。';
+  }
+}
+
+function updateShareBtn() {
+  const b = $('share-btn');
+  if (b && !b.classList.contains('hidden')) b.textContent = `🔗 複製${PHASES[currentPhase]}學員連結`;
+}
+
 function renderList() {
-  const filled = students.filter(s => s.time_100m_sec != null).length;
+  renderPhaseTabs();
+  updateShareBtn();
+  // 「已填」以該分頁的 400m 為準（400m 是必填欄，最能代表這一測填了沒）
+  const filled = students.filter(s => pdata(s).time_400m_sec != null).length;
   $('stat-filled').textContent = filled;
   $('stat-total').textContent = students.length;
+  $('list-hint').textContent = `點下方自己的名字，填${PHASES[currentPhase]}的 400m 成績、體感與影片編碼。`;
 
   // 分組：VDOT
   const groups = {};
@@ -315,27 +372,42 @@ function renderList() {
 }
 
 function renderCard(s) {
-  const has = s.time_400m_sec != null || s.time_100m_sec != null || s.body_feel != null || s.video_code;
-  const has100m = s.time_100m_sec != null;
-  const stClass = has100m ? 'st-filled' : 'st-empty';
+  const d = pdata(s);
+  const has = d.time_400m_sec != null || d.time_100m_sec != null || d.body_feel != null || d.video_code;
+  const done = d.time_400m_sec != null;          // 以 400m（必填欄）判定這一測填了沒
+  const stClass = done ? 'st-filled' : 'st-empty';
   const nameHtml = s.nickname
     ? `<span class="text-2xl font-bold">${escapeHtml(s.nickname)}</span>
        <span class="text-base text-gray-500">(${escapeHtml(s.name)})</span>`
     : `<span class="text-2xl font-medium">${escapeHtml(s.name)}</span>`;
-  const detail = has
+  // 後測分頁時，順手把前測秒數與進步幅度也列出來
+  const pre = pdata(s, 'pre');
+  let cmp = '';
+  if (currentPhase === 'post' && pre.time_400m_sec != null) {
+    if (d.time_400m_sec != null) {
+      const diff = pre.time_400m_sec - d.time_400m_sec;
+      const tag = diff > 0 ? `<span class="text-emerald-700 font-bold">快 ${diff.toFixed(1).replace(/\.0$/,'')}s</span>`
+                : diff < 0 ? `<span class="text-gray-500">慢 ${Math.abs(diff).toFixed(1).replace(/\.0$/,'')}s</span>`
+                           : `<span class="text-gray-500">持平</span>`;
+      cmp = `<div class="text-base text-gray-500 mt-1">前測 ${fmtMMSS(pre.time_400m_sec)} → ${tag}</div>`;
+    } else {
+      cmp = `<div class="text-base text-gray-400 mt-1">前測 ${fmtMMSS(pre.time_400m_sec)}</div>`;
+    }
+  }
+  const detail = (has
     ? `<div class="text-base text-gray-700 mt-1">
-         ${s.video_code ? `🎬 <b>${escapeHtml(s.video_code)}</b> · ` : ''}
-         ${s.time_400m_sec != null ? `400m <b>${fmtMMSS(s.time_400m_sec)}</b>` : '<span class="text-gray-400">無 400m</span>'}
-         ${s.time_100m_sec != null ? ` · 100m <b>${s.time_100m_sec}s</b>` : ''}
-         · 體感 ${s.body_feel != null ? `<b>${s.body_feel}</b>` : '<span class="text-gray-400">—</span>'}
+         ${d.video_code ? `🎬 <b>${escapeHtml(d.video_code)}</b> · ` : ''}
+         ${d.time_400m_sec != null ? `400m <b>${fmtMMSS(d.time_400m_sec)}</b>` : '<span class="text-gray-400">無 400m</span>'}
+         ${d.time_100m_sec != null ? ` · <span class="text-gray-400">100m ${d.time_100m_sec}s</span>` : ''}
+         · 體感 ${d.body_feel != null ? `<b>${d.body_feel}</b>` : '<span class="text-gray-400">—</span>'}
        </div>`
-    : `<div class="text-base text-gray-400 mt-1">尚未填寫</div>`;
+    : `<div class="text-base text-gray-400 mt-1">尚未填寫</div>`) + cmp;
   return `
     <div class="stcard border-2 ${stClass} rounded-xl px-4 py-3 cursor-pointer"
          data-sid="${s.id}">
       <div class="flex items-center gap-2">
         ${nameHtml}
-        ${has100m ? '<span class="ml-auto text-emerald-700 text-xl">✓</span>' : '<span class="ml-auto text-gray-300 text-xl">›</span>'}
+        ${done ? '<span class="ml-auto text-emerald-700 text-xl">✓</span>' : '<span class="ml-auto text-gray-300 text-xl">›</span>'}
       </div>
       ${detail}
     </div>`;
@@ -351,9 +423,32 @@ function openEntry(sid) {
     : editingStudent.name;
   $('entry-vdot').textContent = editingStudent.vdot ? `VDOT ${editingStudent.vdot}` : '';
 
-  // 預填既有資料
-  if (editingStudent.time_400m_sec != null) {
-    const t = Number(editingStudent.time_400m_sec);
+  // 你正在填哪一測 —— 講白，避免誤填到另一測
+  const banner = $('entry-phase-banner');
+  if (currentPhase === 'pre') {
+    banner.className = 'mt-3 rounded-xl px-4 py-3 text-lg font-semibold bg-emerald-50 text-emerald-900';
+    banner.textContent = '你正在填：前測（第一堂 W01）';
+  } else {
+    banner.className = 'mt-3 rounded-xl px-4 py-3 text-lg font-semibold bg-[#0f3e36] text-white';
+    banner.textContent = '你正在填：後測（結業堂 W12）';
+  }
+
+  const d = pdata(editingStudent);
+  const pre = pdata(editingStudent, 'pre');
+
+  // 後測時把前測秒數放在眼前 —— 學員自己看到「我上次 1:25」比教練講一百次有用
+  const ref = $('entry-pre-ref');
+  if (currentPhase === 'post' && pre.time_400m_sec != null) {
+    ref.innerHTML = `📌 你的<b>前測</b>成績：<b class="text-xl">${fmtMMSS(pre.time_400m_sec)}</b>`
+      + (pre.video_code ? `　·　影片編碼 <b>${escapeHtml(pre.video_code)}</b>` : '');
+    ref.classList.remove('hidden');
+  } else {
+    ref.classList.add('hidden');
+  }
+
+  // 預填這一測既有的資料（前測與後測各自獨立，不互相帶值）
+  if (d.time_400m_sec != null) {
+    const t = Number(d.time_400m_sec);
     const m = Math.floor(t / 60);
     const r = t - m * 60;
     $('entry-min').value = m;
@@ -362,14 +457,16 @@ function openEntry(sid) {
     $('entry-min').value = '';
     $('entry-sec').value = '';
   }
-  $('entry-vcode').value = editingStudent.video_code || '';
-  $('entry-100m').value = editingStudent.time_100m_sec != null ? editingStudent.time_100m_sec : '';
-  $('entry-note').value = editingStudent.note || '';
-  selectedRPE = editingStudent.body_feel != null ? Number(editingStudent.body_feel) : null;
+  $('entry-vcode').value = d.video_code || '';
+  $('entry-100m').value = d.time_100m_sec != null ? d.time_100m_sec : '';
+  // 備註：兩測各自獨立，不從另一測帶過來（Jesse 2026-08-25 定）
+  $('entry-note').value = d.note || '';
+  selectedRPE = d.body_feel != null ? Number(d.body_feel) : null;
 
   buildRPE();
   updateTimeHint();
   update100Hint();
+  updateDelta();
   $('entry-error').classList.add('hidden');
   $('list-view').classList.add('hidden');
   $('entry-view').classList.remove('hidden');
@@ -394,6 +491,28 @@ function buildRPE() {
   }
 }
 
+// 後測即時算進步 —— 也讓學員自己抓到打錯字（差 30 秒通常是輸入錯）
+function updateDelta() {
+  const box = $('entry-delta');
+  if (!editingStudent || currentPhase !== 'post') { box.classList.add('hidden'); return; }
+  const pre = pdata(editingStudent, 'pre').time_400m_sec;
+  const now = readTimeSec();
+  if (pre == null || now == null || Number.isNaN(now)) { box.classList.add('hidden'); return; }
+  const diff = pre - now;
+  const abs = Math.abs(diff).toFixed(1).replace(/\.0$/, '');
+  if (diff > 0) {
+    box.className = 'mt-3 rounded-xl px-4 py-3 text-lg font-bold bg-emerald-50 text-emerald-800';
+    box.textContent = `🎉 比前測快了 ${abs} 秒`;
+  } else if (diff < 0) {
+    box.className = 'mt-3 rounded-xl px-4 py-3 text-lg font-bold bg-stone-100 text-gray-700';
+    box.textContent = `比前測慢了 ${abs} 秒`;
+  } else {
+    box.className = 'mt-3 rounded-xl px-4 py-3 text-lg font-bold bg-stone-100 text-gray-700';
+    box.textContent = '跟前測一樣';
+  }
+  box.classList.remove('hidden');
+}
+
 function readTimeSec() {
   const m = Number($('entry-min').value || 0);
   const s = Number($('entry-sec').value || 0);
@@ -408,8 +527,8 @@ function updateTimeHint() {
   if (Number.isNaN(t)) { $('entry-time-hint').textContent = '⚠️ 格式不對，秒要 < 60'; return; }
   $('entry-time-hint').textContent = `= ${t} 秒`;
 }
-$('entry-min')?.addEventListener?.('input', updateTimeHint);
-$('entry-sec')?.addEventListener?.('input', updateTimeHint);
+$('entry-min')?.addEventListener?.('input', () => { updateTimeHint(); updateDelta(); });
+$('entry-sec')?.addEventListener?.('input', () => { updateTimeHint(); updateDelta(); });
 
 function read100Sec() {
   const v = $('entry-100m').value;
@@ -449,6 +568,15 @@ async function submitEntry() {
   }
   const vcode = $('entry-vcode').value.trim();
 
+  // 🔴 已經有值就要確認才覆寫 —— 舊版是靜默蓋掉，那正是「後測洗掉前測」的成因
+  const existing = pdata(editingStudent).time_400m_sec;
+  if (existing != null && existing !== t) {
+    const okOverwrite = confirm(
+      `${PHASES[currentPhase]}你已經填過 ${fmtMMSS(existing)}。\n要改成 ${fmtMMSS(t)} 嗎？`
+    );
+    if (!okOverwrite) return;
+  }
+
   $('entry-error').classList.add('hidden');
   $('entry-submit').textContent = '送出中…';
   $('entry-submit').disabled = true;
@@ -456,6 +584,7 @@ async function submitEntry() {
   const body = {
     c: currentClass,
     student_id: editingStudent.id,
+    phase: currentPhase,
     time_400m_sec: t,
     time_100m_sec: t100,
     body_feel: selectedRPE,
@@ -475,12 +604,18 @@ async function submitEntry() {
     const j = await r.json();
     if (!j.ok) throw new Error(j.error);
     toast('已儲存 ✓');
-    // optimistic 更新本地
-    if (t != null) editingStudent.time_400m_sec = t;
-    if (t100 != null) editingStudent.time_100m_sec = t100;
-    if (selectedRPE != null) editingStudent.body_feel = selectedRPE;
-    if (vcode) editingStudent.video_code = vcode;
-    if (body.note) editingStudent.note = body.note;
+    // optimistic 更新本地 —— 只寫進目前這一測，不要碰另一測
+    if (!editingStudent[currentPhase]) editingStudent[currentPhase] = {};
+    const slot = editingStudent[currentPhase];
+    if (t != null) slot.time_400m_sec = t;
+    if (t100 != null) slot.time_100m_sec = t100;
+    if (selectedRPE != null) slot.body_feel = selectedRPE;
+    if (vcode) slot.video_code = vcode;
+    slot.note = body.note || null;
+    if (currentPhase === 'pre') {   // 扁平欄位是前測的鏡像，一起維持
+      if (t != null) editingStudent.time_400m_sec = t;
+      if (t100 != null) editingStudent.time_100m_sec = t100;
+    }
     setTimeout(() => {
       $('entry-view').classList.add('hidden');
       $('list-view').classList.remove('hidden');
@@ -547,11 +682,11 @@ function enterMain() {
 }
 
 async function copyShareURL() {
-  const url = studentShareURL(currentClass);
+  const url = studentShareURL(currentClass, currentPhase);
   const label = CLASS_LABELS[currentClass] || currentClass;
   try {
     await navigator.clipboard.writeText(url);
-    toast(`已複製 ${label} 學員連結 ✓`, 2000);
+    toast(`已複製 ${label}「${PHASES[currentPhase]}」學員連結 ✓`, 2200);
   } catch (e) {
     window.prompt(`複製失敗，請手動複製 ${label} 學員連結：`, url);
   }
