@@ -73,7 +73,7 @@
       <button id="logout-btn" class="hidden text-base text-gray-500 underline">登出</button>
     </div>
 
-    <!-- 結業回饋入口：只在「後測」分頁出現（前測＝W01，那時候還沒結業）。
+    <!-- 結業回饋入口：前測／後測兩個分頁都出現。
          學員填完 400m 會彈回這個名單，這條 bar 就在他眼前。 -->
     <a id="survey-bar" href="#" class="hidden items-center gap-3 mb-3 bg-[#0f3e36] text-white rounded-xl px-4 py-3">
       <span class="text-2xl">📝</span>
@@ -347,15 +347,14 @@ function updateShareBtn() {
   if (b && !b.classList.contains('hidden')) b.textContent = `🔗 複製${PHASES[currentPhase]}學員連結`;
 }
 
-// 結業回饋入口：只在「後測」分頁顯示。
+// 結業回饋入口：前測／後測兩個分頁都顯示（2026-08-26 Jesse 指示，原本只掛後測）。
 // Jesse（admin）＝複製連結去 LINE 貼；學員／助教（PIN）＝直接點進去填。
 function updateSurveyUI() {
-  const on = currentPhase === 'post';
   const btn = $('survey-btn');
   const bar = $('survey-bar');
-  if (btn) btn.classList.toggle('hidden', !(on && isAdmin()));
+  if (btn) btn.classList.toggle('hidden', !isAdmin());
   if (bar) {
-    const showBar = on && !isAdmin();
+    const showBar = !isAdmin();
     bar.classList.toggle('hidden', !showBar);
     bar.classList.toggle('flex', showBar);
     if (showBar) bar.href = surveyURL(currentClass);
