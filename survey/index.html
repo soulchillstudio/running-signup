@@ -313,9 +313,9 @@ async function loadAdmin() {
   $('admin-updated').textContent = '更新於 ' + d.updated;
   $('admin-body').innerHTML = Object.entries(d.classes).map(([code, c]) => `
     <div class="bg-white rounded-2xl shadow p-4">
-      <div class="flex items-baseline justify-between mb-3">
-        <h2 class="text-xl font-bold">${c.label}</h2>
-        <div class="text-lg text-gray-600">${c.done}/${c.total} 填完
+      <div class="flex items-baseline justify-between gap-3 mb-3">
+        <h2 class="text-xl font-bold whitespace-nowrap">${c.label}</h2>
+        <div class="text-lg text-gray-600 text-right">${c.done}/${c.total} 填完
           ${c.nps_avg != null ? ` · NPS ${c.nps_avg}` : ''}
           ${c.quotable ? ` · ${c.quotable} 則可公開` : ''}</div>
       </div>
