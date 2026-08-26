@@ -68,9 +68,21 @@
         <span id="stat-total">0</span>
       </div>
       <button id="share-btn" class="hidden text-base bg-emerald-700 text-white rounded-lg px-3 py-2">🔗 複製學員連結</button>
+      <button id="survey-btn" class="hidden text-base bg-[#0f3e36] text-white rounded-lg px-3 py-2">📝 複製回饋問卷連結</button>
       <button id="reload-btn" class="text-lg bg-white border rounded-lg px-3 py-2">↻</button>
       <button id="logout-btn" class="hidden text-base text-gray-500 underline">登出</button>
     </div>
+
+    <!-- 結業回饋入口：只在「後測」分頁出現（前測＝W01，那時候還沒結業）。
+         學員填完 400m 會彈回這個名單，這條 bar 就在他眼前。 -->
+    <a id="survey-bar" href="#" class="hidden items-center gap-3 mb-3 bg-[#0f3e36] text-white rounded-xl px-4 py-3">
+      <span class="text-2xl">📝</span>
+      <span class="flex-1">
+        <span class="block text-lg font-semibold">填結業回饋</span>
+        <span class="block text-base opacity-80">五題，三分鐘。第 3 題最有用</span>
+      </span>
+      <span class="text-xl">→</span>
+    </a>
 
     <p class="text-base text-gray-500 mb-2" id="list-hint">點下方自己的名字，填 400m 成績、體感與影片編碼。</p>
 
@@ -177,6 +189,11 @@ function studentShareURL(code, phase) {
   const ph = (phase || currentPhase) === 'post' ? '&phase=post' : '';
   return `${base}?c=${code}&p=${CLASS_PINS[code]}${ph}`;
 }
+function surveyURL(code) {
+  // 結業回饋問卷頁，跟本頁同一個 repo（../survey/），PIN 沿用同一組
+  return new URL('../survey/', location.href).href + `?c=${code}&p=${CLASS_PINS[code]}`;
+}
+
 const RPE_DESC = {
   1:  '非常輕鬆 — 像走路、完全不喘',
   2:  '很輕鬆 — 慢跑暖身那種',
@@ -330,9 +347,25 @@ function updateShareBtn() {
   if (b && !b.classList.contains('hidden')) b.textContent = `🔗 複製${PHASES[currentPhase]}學員連結`;
 }
 
+// 結業回饋入口：只在「後測」分頁顯示。
+// Jesse（admin）＝複製連結去 LINE 貼；學員／助教（PIN）＝直接點進去填。
+function updateSurveyUI() {
+  const on = currentPhase === 'post';
+  const btn = $('survey-btn');
+  const bar = $('survey-bar');
+  if (btn) btn.classList.toggle('hidden', !(on && isAdmin()));
+  if (bar) {
+    const showBar = on && !isAdmin();
+    bar.classList.toggle('hidden', !showBar);
+    bar.classList.toggle('flex', showBar);
+    if (showBar) bar.href = surveyURL(currentClass);
+  }
+}
+
 function renderList() {
   renderPhaseTabs();
   updateShareBtn();
+  updateSurveyUI();
   // 「已填」以該分頁的 400m 為準（400m 是必填欄，最能代表這一測填了沒）
   const filled = students.filter(s => pdata(s).time_400m_sec != null).length;
   $('stat-filled').textContent = filled;
@@ -692,6 +725,17 @@ async function copyShareURL() {
   }
 }
 
+async function copySurveyURL() {
+  const url = surveyURL(currentClass);
+  const label = CLASS_LABELS[currentClass] || currentClass;
+  try {
+    await navigator.clipboard.writeText(url);
+    toast(`已複製 ${label} 結業回饋問卷連結 ✓`, 2200);
+  } catch (e) {
+    window.prompt(`複製失敗，請手動複製 ${label} 回饋問卷連結：`, url);
+  }
+}
+
 function init() {
   if (pinClass && CLASS_LABELS[pinClass] && !adminKey) {
     if (!pinValue) showPinForm();
@@ -732,6 +776,7 @@ function init() {
   };
   $('reload-btn').onclick = loadList;
   $('share-btn').onclick = copyShareURL;
+  $('survey-btn').onclick = copySurveyURL;
   $('back-btn').onclick = () => {
     $('entry-view').classList.add('hidden');
     $('list-view').classList.remove('hidden');
