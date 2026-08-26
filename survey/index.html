@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>先喜歡跑步 — 結業回饋</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif; font-size: 18px; }
+  textarea { font-size: 18px; line-height: 1.6; }
+  .stcard { -webkit-tap-highlight-color: transparent; user-select: none; transition: background-color .15s, border-color .15s; }
+  .stcard:active { transform: scale(0.99); }
+  .nps-btn {
+    border: 2px solid #e5e7eb; background: #fff;
+    padding: 12px 0; border-radius: 10px; font-size: 20px; font-weight: 600;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nps-btn:active { transform: scale(0.95); }
+  .nps-btn.selected { background: #0f3e36; color: #fff; border-color: #0f3e36; }
+  .pub-btn {
+    border: 2px solid #e5e7eb; background: #fff;
+    padding: 14px 10px; border-radius: 12px; text-align: left;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pub-btn.selected { background: #f2efe5; border-color: #0f3e36; }
+</style>
+</head>
+<body class="bg-stone-50 text-gray-900">
+
+<div class="max-w-2xl mx-auto px-3 py-4 pb-32">
+
+  <!-- PIN -->
+  <div id="pin-form" class="hidden bg-white rounded-2xl shadow p-6 mt-12">
+    <h2 class="text-2xl font-semibold mb-1">輸入班級 PIN</h2>
+    <p class="text-lg text-gray-500 mb-4">班別：<span id="pin-class-label" class="font-medium text-gray-800"></span></p>
+    <input id="pin-input" type="text" inputmode="numeric" autocomplete="off"
+      class="w-full text-4xl tracking-widest text-center border rounded-xl py-3 mb-3" placeholder="••••">
+    <button id="pin-submit" class="w-full bg-emerald-800 text-white rounded-xl py-3 font-medium">進入</button>
+    <p id="pin-error" class="text-amber-700 text-lg mt-3 hidden"></p>
+  </div>
+
+  <!-- Jesse 管理密碼 -->
+  <div id="k-form" class="hidden max-w-sm mx-auto bg-white rounded-2xl shadow p-6 mt-12">
+    <h2 class="text-2xl font-semibold mb-1">Jesse 管理密碼</h2>
+    <input id="k-input" type="password" class="w-full text-2xl border rounded-xl py-3 px-3 mb-3" placeholder="ADMIN_KEY">
+    <button id="k-submit" class="w-full bg-emerald-800 text-white rounded-xl py-3 font-medium">進入</button>
+    <p id="k-error" class="text-amber-700 text-lg mt-3 hidden"></p>
+  </div>
+
+  <!-- 選名字 -->
+  <div id="pick-view" class="hidden">
+    <h1 class="text-2xl font-bold mb-1">第 2 期 結業回饋</h1>
+    <p class="text-base text-gray-500 mb-1" id="class-title"></p>
+    <p class="text-base text-gray-500 mb-4">先找到自己的名字，點一下。<span id="done-note" class="text-emerald-800 font-medium"></span></p>
+    <div id="student-list" class="grid grid-cols-2 gap-2"></div>
+    <p id="pick-error" class="text-amber-700 text-lg mt-4 hidden"></p>
+  </div>
+
+  <!-- 問卷 -->
+  <div id="form-view" class="hidden">
+    <div class="flex items-center gap-3 mb-4">
+      <button id="back-btn" class="text-gray-500 text-lg">← 換人</button>
+      <h1 class="text-2xl font-bold" id="who"></h1>
+    </div>
+
+    <div id="already" class="hidden bg-stone-100 border-2 border-stone-300 rounded-xl p-4 mb-4">
+      <p class="text-lg">你已經填過了。下面是你上次寫的，可以直接改，送出後會蓋掉舊的那份。</p>
+    </div>
+
+    <p class="text-lg text-gray-600 mb-5 leading-relaxed">
+      這份只有 Jesse 看得到。<span class="font-medium text-gray-900">想到什麼寫什麼，寫短的也完全沒關係</span>；
+      沒話想說的題目就留白。
+    </p>
+
+    <div class="space-y-5">
+      <div class="bg-white rounded-2xl shadow p-4">
+        <label class="block font-semibold mb-1">1. 這 12 週，你身上最明顯的改變是什麼？</label>
+        <p class="text-base text-gray-500 mb-2">成績、身體感覺、或對跑步的想法都算</p>
+        <textarea id="q_change" rows="3" class="w-full border rounded-xl p-3" placeholder=""></textarea>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-4">
+        <label class="block font-semibold mb-1">2. 哪一堂課、或哪一個練習，最讓你有感？</label>
+        <textarea id="q_moment" rows="3" class="w-full border rounded-xl p-3" placeholder=""></textarea>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-4">
+        <label class="block font-semibold mb-1">3. 哪裡讓你卡住，或希望教練調整？</label>
+        <p class="text-base text-gray-500 mb-2">這題對我最有用，請放心寫</p>
+        <textarea id="q_stuck" rows="3" class="w-full border rounded-xl p-3" placeholder=""></textarea>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-4">
+        <label class="block font-semibold mb-1">4. 如果朋友問你「這個課值得嗎」，你會怎麼跟他說？</label>
+        <textarea id="q_recommend" rows="3" class="w-full border rounded-xl p-3" placeholder=""></textarea>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-4">
+        <label class="block font-semibold mb-1">5. 有多願意把這個跑班推薦給朋友？</label>
+        <p class="text-base text-gray-500 mb-3">0 = 完全不會　10 = 一定會</p>
+        <div class="grid grid-cols-6 gap-2" id="nps-row"></div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-4">
+        <label class="block font-semibold mb-1">6. 上面寫的可以公開分享嗎？</label>
+        <p class="text-base text-gray-500 mb-3">用在課程介紹或社群。不選就是不公開。</p>
+        <div class="space-y-2" id="pub-row"></div>
+      </div>
+    </div>
+
+    <button id="submit-btn" class="w-full bg-emerald-800 text-white rounded-xl py-4 mt-6 text-xl font-semibold">
+      送出
+    </button>
+    <p id="form-error" class="text-amber-700 text-lg mt-3 hidden"></p>
+  </div>
+
+  <!-- 成功畫面 -->
+  <!-- 🔴 這一整段是刻意做大的：第 2 期報名表有 4 個人重複送出，
+       根因是送出後沒有明確的成功畫面（不是填錯）。這裡不能只跳一個小綠字。 -->
+  <div id="done-view" class="hidden text-center mt-16">
+    <div class="text-7xl mb-4">🎉</div>
+    <h1 class="text-3xl font-bold mb-3">收到了，謝謝你</h1>
+    <p class="text-xl text-gray-600 mb-1" id="done-who"></p>
+    <p class="text-lg text-gray-500 mb-8">送出時間 <span id="done-time"></span></p>
+    <div class="bg-white rounded-2xl shadow p-5 text-left mb-6">
+      <p class="text-lg leading-relaxed">
+        你的回饋已經存起來了，<span class="font-semibold">不用再送一次</span>。<br>
+        想改的話點下面回去改，送出會蓋掉這一份、不會變成兩份。
+      </p>
+    </div>
+    <button id="edit-btn" class="w-full border-2 border-emerald-800 text-emerald-800 rounded-xl py-3 text-lg font-medium mb-3">
+      回去修改我的回答
+    </button>
+    <button id="another-btn" class="w-full text-gray-500 py-3 text-lg">換下一個人填</button>
+  </div>
+
+  <!-- Jesse 總覽 -->
+  <div id="admin-view" class="hidden">
+    <h1 class="text-2xl font-bold mb-1">結業回饋 · 總覽</h1>
+    <p class="text-base text-gray-500 mb-4" id="admin-updated"></p>
+    <div id="admin-body" class="space-y-6"></div>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = 'https://soulchill-forms.qazmnbvgamil.workers.dev';
+const CLASS_LABELS = { 'tc-tue': '台中週二班', 'tp-wed': '台北週三班', 'tc-thu': '台中週四班' };
+const CLASS_PINS   = { 'tc-tue': '1603',      'tp-wed': '9343',      'tc-thu': '9649' };
+const PUBLISH_OPTS = [
+  { v: 'named', t: '可以，用我的名字',   d: '最有力量的那種 — 有名有姓的真人' },
+  { v: 'anon',  t: '可以，但不要寫名字', d: '寫成「第 2 期學員」' },
+  { v: 'no',    t: '不要公開',           d: '只給 Jesse 看' },
+];
+
+const $ = (id) => document.getElementById(id);
+const q = new URLSearchParams(location.search);
+let pinClass = q.get('c') || '';
+// 與 baseline 頁同一條規矩：URL 帶 ?c= 一律走學員模式，忽略 localStorage 殘留的 adminKey
+let adminKey = pinClass ? '' : (q.get('k') || localStorage.getItem('att_admin_key') || '');
+let pinValue = q.get('p') || (pinClass ? localStorage.getItem('sv_pin_' + pinClass) || '' : '');
+const isAdmin = () => !!adminKey;
+
+let students = [];
+let current = null;      // 目前選到的學員
+let nps = null;
+let publish = null;
+
+function show(id) {
+  ['pin-form','k-form','pick-view','form-view','done-view','admin-view']
+    .forEach(v => $(v).classList.add('hidden'));
+  $(id).classList.remove('hidden');
+}
+function err(id, msg) {
+  const e = $(id);
+  if (!msg) { e.classList.add('hidden'); return; }
+  e.textContent = msg; e.classList.remove('hidden');
+}
+function auth() {
+  return isAdmin() ? { k: adminKey } : { p: pinValue };
+}
+function authQS() {
+  return isAdmin() ? `k=${encodeURIComponent(adminKey)}` : `p=${encodeURIComponent(pinValue)}`;
+}
+
+// ---------- 載入名單 ----------
+async function loadClass() {
+  try {
+    const r = await fetch(`${API_BASE}/api/survey/class?c=${pinClass}&${authQS()}`);
+    const d = await r.json();
+    if (!d.ok) {
+      if (d.error === 'unauthorized') {
+        err('pin-error', 'PIN 不對，再確認一次');
+        $('pin-class-label').textContent = CLASS_LABELS[pinClass] || pinClass;
+        show('pin-form');
+        return;
+      }
+      err('pick-error', '載入失敗：' + d.error);
+      show('pick-view');
+      return;
+    }
+    students = d.students;
+    localStorage.setItem('sv_pin_' + pinClass, pinValue);
+    $('class-title').textContent = d.class.label + ' · 2026 第 2 期';
+    $('done-note').textContent = d.done_count ? `（已有 ${d.done_count} 人填完）` : '';
+    renderList();
+    show('pick-view');
+  } catch (e) {
+    err('pick-error', '連不上伺服器，檢查一下網路：' + e.message);
+    show('pick-view');
+  }
+}
+
+function renderList() {
+  $('student-list').innerHTML = students.map(s => `
+    <button class="stcard border-2 rounded-xl py-4 px-3 text-left ${s.done ? 'bg-stone-100 border-stone-300' : 'bg-white border-gray-200'}"
+            data-id="${s.id}">
+      <div class="text-xl font-medium">${s.nickname || s.name}</div>
+      <div class="text-base ${s.done ? 'text-emerald-800' : 'text-gray-400'}">${s.done ? '✅ 已填' : '尚未填'}</div>
+    </button>
+  `).join('');
+  $('student-list').querySelectorAll('button').forEach(b => {
+    b.onclick = () => openForm(Number(b.dataset.id));
+  });
+}
+
+// ---------- 問卷 ----------
+function renderNps() {
+  $('nps-row').innerHTML = Array.from({ length: 11 }, (_, i) =>
+    `<button class="nps-btn ${nps === i ? 'selected' : ''}" data-n="${i}">${i}</button>`).join('');
+  $('nps-row').querySelectorAll('button').forEach(b => {
+    b.onclick = () => { nps = Number(b.dataset.n); renderNps(); };
+  });
+}
+function renderPub() {
+  $('pub-row').innerHTML = PUBLISH_OPTS.map(o => `
+    <button class="pub-btn w-full ${publish === o.v ? 'selected' : ''}" data-v="${o.v}">
+      <div class="text-lg font-medium">${o.t}</div>
+      <div class="text-base text-gray-500">${o.d}</div>
+    </button>`).join('');
+  $('pub-row').querySelectorAll('button').forEach(b => {
+    b.onclick = () => { publish = b.dataset.v; renderPub(); };
+  });
+}
+
+function openForm(id) {
+  current = students.find(s => s.id === id);
+  if (!current) return;
+  $('who').textContent = current.nickname || current.name;
+  ['q_change','q_moment','q_stuck','q_recommend'].forEach(k => { $(k).value = ''; });
+  nps = null; publish = null;
+  $('already').classList.toggle('hidden', !current.done);
+  renderNps(); renderPub();
+  err('form-error', '');
+  show('form-view');
+  window.scrollTo(0, 0);
+}
+
+$('back-btn').onclick = () => { show('pick-view'); window.scrollTo(0, 0); };
+
+let submitting = false;
+$('submit-btn').onclick = async () => {
+  if (submitting) return;                       // 連點兩下不會變兩筆
+  const body = {
+    c: pinClass,
+    student_id: current.id,
+    q_change:    $('q_change').value,
+    q_moment:    $('q_moment').value,
+    q_stuck:     $('q_stuck').value,
+    q_recommend: $('q_recommend').value,
+    nps, publish,
+    ...auth(),
+  };
+  const anything = [body.q_change, body.q_moment, body.q_stuck, body.q_recommend]
+    .some(v => (v || '').trim()) || nps != null;
+  if (!anything) { err('form-error', '至少寫一題再送出'); return; }
+
+  submitting = true;
+  $('submit-btn').disabled = true;
+  $('submit-btn').textContent = '送出中…';
+  err('form-error', '');
+  try {
+    const r = await fetch(`${API_BASE}/api/survey/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || 'unknown');
+    current.done = true;
+    $('done-who').textContent = (current.nickname || current.name) + ' 的回饋';
+    $('done-time').textContent = new Date().toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+    show('done-view');
+    window.scrollTo(0, 0);
+  } catch (e) {
+    err('form-error', '送出失敗（' + e.message + '）— 你寫的字還在，直接再按一次送出就好');
+  } finally {
+    submitting = false;
+    $('submit-btn').disabled = false;
+    $('submit-btn').textContent = '送出';
+  }
+};
+
+$('edit-btn').onclick  = () => { show('form-view'); window.scrollTo(0, 0); };
+$('another-btn').onclick = () => { loadClass(); window.scrollTo(0, 0); };
+
+// ---------- Jesse 總覽 ----------
+async function loadAdmin() {
+  const r = await fetch(`${API_BASE}/api/survey/all?k=${encodeURIComponent(adminKey)}`);
+  const d = await r.json();
+  if (!d.ok) { err('k-error', '密碼不對'); show('k-form'); return; }
+  localStorage.setItem('att_admin_key', adminKey);
+  $('admin-updated').textContent = '更新於 ' + d.updated;
+  $('admin-body').innerHTML = Object.entries(d.classes).map(([code, c]) => `
+    <div class="bg-white rounded-2xl shadow p-4">
+      <div class="flex items-baseline justify-between mb-3">
+        <h2 class="text-xl font-bold">${c.label}</h2>
+        <div class="text-lg text-gray-600">${c.done}/${c.total} 填完
+          ${c.nps_avg != null ? ` · NPS ${c.nps_avg}` : ''}
+          ${c.quotable ? ` · ${c.quotable} 則可公開` : ''}</div>
+      </div>
+      ${c.students.filter(s => s.submitted_at).map(s => `
+        <div class="border-t pt-3 mt-3">
+          <div class="font-semibold text-lg">${s.nickname || s.name}
+            <span class="text-base font-normal text-gray-500">
+              ${s.nps != null ? `NPS ${s.nps}` : ''} ·
+              ${s.publish === 'named' ? '可具名公開' : s.publish === 'anon' ? '可匿名公開' : '不可公開'}
+            </span></div>
+          ${s.q_change    ? `<p class="mt-2 text-base"><span class="text-gray-400">改變 </span>${s.q_change}</p>` : ''}
+          ${s.q_moment    ? `<p class="mt-1 text-base"><span class="text-gray-400">有感 </span>${s.q_moment}</p>` : ''}
+          ${s.q_stuck     ? `<p class="mt-1 text-base"><span class="text-gray-400">卡住 </span>${s.q_stuck}</p>` : ''}
+          ${s.q_recommend ? `<p class="mt-1 text-base"><span class="text-gray-400">值得嗎 </span>${s.q_recommend}</p>` : ''}
+        </div>`).join('')}
+      ${c.done === 0 ? '<p class="text-gray-400 text-lg">還沒有人填</p>' : ''}
+      ${c.done < c.total ? `<p class="text-base text-gray-500 mt-3 pt-3 border-t">未填 ${c.total - c.done} 人：
+        ${c.students.filter(s => !s.submitted_at).map(s => s.nickname || s.name).join('、')}</p>` : ''}
+    </div>`).join('');
+  show('admin-view');
+}
+
+// ---------- 進場 ----------
+$('pin-submit').onclick = () => {
+  pinValue = $('pin-input').value.trim();
+  if (!pinValue) { err('pin-error', '請輸入 PIN'); return; }
+  loadClass();
+};
+$('pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('pin-submit').click(); });
+$('k-submit').onclick = () => {
+  adminKey = $('k-input').value.trim();
+  if (!adminKey) { err('k-error', '請輸入密碼'); return; }
+  loadAdmin();
+};
+$('k-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('k-submit').click(); });
+
+if (pinClass && CLASS_LABELS[pinClass]) {
+  if (pinValue) loadClass();
+  else { $('pin-class-label').textContent = CLASS_LABELS[pinClass]; show('pin-form'); }
+} else if (adminKey) {
+  loadAdmin();
+} else {
+  show('k-form');
+}
+</script>
+</body>
+</html>
