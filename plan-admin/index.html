@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>課表檢查點 · 教練後台</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",sans-serif;font-size:17px}
+  .flag{display:inline-block;background:#fdf6e3;color:#7a5c14;border:1px solid #c2703d;
+        border-radius:999px;padding:1px 9px;font-size:12px;margin:2px 3px 2px 0}
+  .zone{display:inline-block;border-radius:6px;padding:1px 7px;font-size:13px;margin-right:4px}
+  .z-ok{background:#dcfce7;color:#14532d}
+  .z-part{background:#f2efe5;color:#5a6b63}
+  .z-no{background:#fdf6e3;color:#7a5c14;font-weight:600}
+  .z-na{background:#f3f4f6;color:#9ca3af}
+</style>
+</head>
+<body class="bg-stone-50 text-gray-900">
+<div class="max-w-3xl mx-auto px-3 py-5 pb-24">
+
+  <div id="kform" class="hidden bg-white rounded-2xl shadow p-6 mt-12 max-w-sm mx-auto">
+    <h2 class="text-2xl font-semibold mb-3">教練後台</h2>
+    <input id="kin" type="password" class="w-full text-xl border rounded-xl py-3 px-3 mb-3" placeholder="ADMIN_KEY">
+    <button id="kgo" class="w-full bg-emerald-800 text-white rounded-xl py-3 font-medium">進入</button>
+    <p id="kerr" class="text-amber-700 mt-3 hidden"></p>
+  </div>
+
+  <div id="main" class="hidden">
+    <h1 class="text-2xl font-bold">課表檢查點</h1>
+    <p class="text-base text-gray-500 mb-1" id="upd"></p>
+    <!-- 這一頁的目的：讓「每月看 19 個人」是 30 分鐘不是 3 小時。
+         所以預設只把需要看的人攤開，其餘摺成一行。 -->
+    <p class="text-base mb-4" id="summary"></p>
+    <div id="needs" class="space-y-3"></div>
+    <h2 class="text-lg font-bold mt-8 mb-2" id="restTitle"></h2>
+    <div id="rest" class="space-y-2"></div>
+    <p id="empty" class="text-gray-400 text-lg hidden">還沒有人存過檢查點。</p>
+  </div>
+</div>
+
+<script>
+const API='https://soulchill-forms.qazmnbvgamil.workers.dev';
+const $=id=>document.getElementById(id);
+let key=new URLSearchParams(location.search).get('k')||localStorage.getItem('att_admin_key')||'';
+// k(SHA-256) → 姓名 對照。由本機腳本 tools/plan_roster.py 產出後貼進來，
+// 或留空 —— 留空時就顯示學員自填的 Skool 名字。這份對照永遠不上傳伺服器。
+const ROSTER={};
+
+const ZC={'全吃完':'z-ok','部分完成':'z-part','吃不完':'z-no','這個月沒排到':'z-na'};
+function zone(label,v){ return v?`<span class="zone ${ZC[v]||'z-na'}">${label} ${v}</span>`:''; }
+function who(r){ return ROSTER[r.k] || r.skool_name || ('代碼 '+r.k.slice(0,8)+'…'); }
+
+function card(r,open){
+  const l=r.latest;
+  const cps=r.checkpoints||[];
+  const hist=cps.length>1
+    ? `<div class="text-sm text-gray-500 mt-2">歷次漂移：${cps.slice().reverse().map(c=>'第'+c.cp_no+'次 '+(c.drift==null?'—':c.drift+'%')).join('　')}</div>`
+    : '';
+  return `<div class="bg-white rounded-2xl shadow p-4">
+    <div class="flex items-baseline justify-between gap-3">
+      <div class="text-xl font-semibold">${who(r)}</div>
+      <div class="text-sm text-gray-500 text-right">${r.label||''}</div>
+    </div>
+    ${r.flags.length?`<div class="mt-1">${r.flags.map(f=>`<span class="flag">${f}</span>`).join('')}</div>`:''}
+    ${l?`<div class="mt-2 text-base">
+        第 ${l.cp_no} 次檢查點${l.week_no?`（W${l.week_no}）`:''}　
+        ${l.hr_start&&l.hr_end?`${l.hr_start} → ${l.hr_end} bpm　<b>${l.drift>0?'+':''}${l.drift}%</b>`:'<span class="text-gray-400">沒填心率</span>'}
+      </div>
+      <div class="mt-2">${zone('E',l.q_e)}${zone('T',l.q_t)}${zone('I/R',l.q_ir)}${zone('L',l.q_l)}</div>
+      ${l.stuck?`<div class="mt-2 text-base"><span class="text-gray-400">最卡 </span>${l.stuck}</div>`:''}
+      ${hist}
+      <button class="mt-3 text-sm border rounded-lg px-3 py-1" data-copy="${r.k}|${r.plan_id}">複製這個人的摘要</button>`
+     :'<div class="mt-2 text-gray-400">課表建了，但還沒交過檢查點</div>'}
+  </div>`;
+}
+
+let DATA=null;
+async function load(){
+  const res=await fetch(`${API}/api/planlog/all?k=${encodeURIComponent(key)}`);
+  const d=await res.json();
+  if(!d.ok){ $('kerr').textContent='密碼不對'; $('kerr').classList.remove('hidden'); $('kform').classList.remove('hidden'); $('main').classList.add('hidden'); return; }
+  localStorage.setItem('att_admin_key',key);
+  DATA=d;
+  $('upd').textContent='更新於 '+d.updated;
+  $('summary').innerHTML=`共 <b>${d.total}</b> 份課表　·　<b class="text-amber-700">${d.need_attention}</b> 個需要你看一眼`;
+  const need=d.rows.filter(r=>r.score>0), rest=d.rows.filter(r=>r.score===0);
+  $('needs').innerHTML=need.map(r=>card(r,true)).join('');
+  $('restTitle').textContent=rest.length?`其餘 ${rest.length} 位（看起來都在軌道上）`:'';
+  $('rest').innerHTML=rest.map(r=>card(r,false)).join('');
+  $('empty').classList.toggle('hidden',d.total>0);
+  $('main').classList.remove('hidden'); $('kform').classList.add('hidden');
+
+  document.querySelectorAll('[data-copy]').forEach(b=>{
+    b.onclick=()=>{
+      const [k,pid]=b.dataset.copy.split('|');
+      const r=DATA.rows.find(x=>x.k===k&&x.plan_id===pid), l=r.latest;
+      const t=[`${who(r)}　${r.label||''}`,
+        l?`第 ${l.cp_no} 次檢查點：${l.hr_start||'—'} → ${l.hr_end||'—'} bpm（漂移 ${l.drift==null?'—':l.drift+'%'}）`:'尚未交檢查點',
+        l?`E ${l.q_e||'—'}／T ${l.q_t||'—'}／I·R ${l.q_ir||'—'}／L ${l.q_l||'—'}`:'',
+        l&&l.stuck?`最卡：${l.stuck}`:''].filter(Boolean).join('\n');
+      navigator.clipboard.writeText(t).then(()=>{b.textContent='已複製 ✓';setTimeout(()=>b.textContent='複製這個人的摘要',1500)})
+        .catch(()=>window.prompt('複製：',t));
+    };
+  });
+}
+
+$('kgo').onclick=()=>{ key=$('kin').value.trim(); if(key) load(); };
+$('kin').addEventListener('keydown',e=>{ if(e.key==='Enter') $('kgo').click(); });
+if(key) load(); else $('kform').classList.remove('hidden');
+</script>
+</body>
+</html>
