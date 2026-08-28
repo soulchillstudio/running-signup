@@ -1036,15 +1036,11 @@ img{max-width:100%;height:auto}
           </div>
         </div>
         <div class="info-row">
-          <div class="info-label">報名截止</div>
-          <div class="info-value-strong">2026 年 9 月 4 日（五）23:59 <em>· 逾期不再收件</em></div>
-        </div>
-        <div class="info-row">
           <div class="info-label">報名狀態</div>
           <div class="info-value-strong" style="color:var(--grass)">
-            <span data-class-content="taichung-tue" class="active">整期招生中 · 新生／舊生皆可報名 · <b>9/4 截止</b></span>
-            <span data-class-content="taipei-wed">整期招生中 · 新生／舊生皆可報名 · <b>9/4 截止</b></span>
-            <span data-class-content="taichung-thu">整期招生中 · 新生／舊生皆可報名 · <b>9/4 截止</b></span>
+            <span data-class-content="taichung-tue" class="active">整期招生中 · 新生／舊生皆可報名</span>
+            <span data-class-content="taipei-wed">整期招生中 · 新生／舊生皆可報名</span>
+            <span data-class-content="taichung-thu">整期招生中 · 新生／舊生皆可報名</span>
           </div>
         </div>
         <div class="info-row">
@@ -1898,6 +1894,15 @@ function updateSummaryClass(){
 //   三班皆開放整期方案 A/B/E/F + 單堂體驗(C) + 免費團練(T)
 //   插班(D)僅開課後才開放,招生期先隱藏
 //   未列入此表的班別 = 全方案開放
+//
+// 🔴 2026-09-21 要手動改這張表(Jesse 2026-08-28 定的報名模型)
+//   整期報名到 9/21 為止,之後只留插班與單堂 —— 頁面沒有任何日期判斷,
+//   時間到了不會自己關,一定要有人來改這三行。
+//   改成: ['C','D']
+//     收掉 A(新生整期) B(舊生整期) E(兩人同行) F(三人同行) —— 整期價格下架
+//     收掉 T(9 月銜接團練) —— 三場打到 9/17 就結束
+//     打開 D(插班 × 剩餘堂數)
+//   頁面刻意不寫報名截止日:只寫開課日期,開課前都可以報,開課後走插班。
 const CLASS_ALLOWED_PLANS = {
   'taichung-tue': ['A','B','C','E','F','T'],
   'taipei-wed':   ['A','B','C','E','F','T'],
