@@ -83,7 +83,9 @@ const CLASS_MAP = {
   'taichung-tue': {
     tab: '台中週二班', label: '台中 · 週二班', location: '中興大學田徑場',
     weekly: '每週二 19:30–21:00', start: '9/22（二）',
-    warmups: '9/3、9/10、9/17 · 週四'   // 台中場的銜接團練一律在週四
+    // 2026-09-03 起 warmups 不再出現在任何寄出去的信裡（9 月銜接團練已結束，
+    // Jesse 9/5-9/18 教召期間無法收發信）。欄位保留只為相容，改到的話沒有人會看到。
+    warmups: '9/3、9/10、9/17 · 週四'
   },
   'taipei-wed': {
     tab: '台北週三班', label: '台北 · 週三班', location: '台北田徑場',
@@ -348,7 +350,6 @@ function successEmail(d, cls) {
   const fullTermRows = `
     <tr><td style="padding:6px 12px;color:#4a5d51">開課日</td><td style="padding:6px 12px"><b>${cls.start}</b> · 全期 12 堂</td></tr>
     <tr><td style="padding:6px 12px;color:#4a5d51">加碼</td><td style="padding:6px 12px">
-      9 月銜接團練 3 場（${cls.warmups}）· 免費、不計入 12 堂<br>
       「慢慢進步」Premium 線上社群 · 4 個月
     </td></tr>`;
 
@@ -356,7 +357,6 @@ function successEmail(d, cls) {
   <h3 style="margin-top:24px">接下來會收到什麼</h3>
   <ol>
     <li><b>班級 LINE 群邀請</b>：交通方式、雨天備案、每週課表都在群裡。</li>
-    <li><b>銜接團練通知</b>：9 月開課前有 3 場免費團練（${cls.warmups}），時間地點會在 LINE 群組內通知。</li>
     <li><b>Premium 社群開通</b>：開課當週幫您開通，用到 2027/1/31。</li>
   </ol>
 `;
@@ -414,6 +414,10 @@ function studentEmail(d, cls, planLabel) {
 }
 
 // 免費銜接團練確認信。
+// 🔴 2026-09-03 起這條路徑是死的：報名頁已把 (T) 方案整張卡片移除、
+//    CLASS_ALLOWED_PLANS 也拿掉 'T'，一般使用者送不出 plan=T。
+//    程式碼保留不刪（只有手動構造 POST 才可能走到），但它會寄出寫死「9/03 場次」的信 ——
+//    如果之後真的要重開免費團練，先改 FIRST_WARMUP 的日期再開放 T。
 // 免費場次只寄這一封,收到就算報名成功(不另外寄第二封確認)。
 // 集合細節與注意事項統一在活動當週的星期一另外寄。
 function trialEmail(d, cls, planLabel) {

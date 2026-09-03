@@ -219,7 +219,9 @@ body{overflow-x:hidden}
 .schedule-bonus li{margin:4px 0}
 .schedule-bonus .bonus-note{margin-top:10px;font-size:13px;color:var(--forest-60)}
 /* 兩張加碼卡並排 */
-.bonus-row{max-width:900px;margin:40px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+/* 2026-09-03：銜接團練那張卡拿掉之後只剩 Premium 一張。改 auto-fit —— 一張就佔滿、
+   之後要是再放回兩張也會自己變回兩欄，不用再改這行。 */
+.bonus-row{max-width:900px;margin:40px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;align-items:start}
 .bonus-row .schedule-bonus{max-width:none;margin:0;height:100%}
 .schedule-bonus.premium{border-left-color:var(--forest);background:var(--linen-deep)}
 .schedule-bonus.premium .bonus-tag{background:var(--forest);color:var(--linen)}
@@ -1028,14 +1030,6 @@ img{max-width:100%;height:auto}
           </div>
         </div>
         <div class="info-row">
-          <div class="info-label">銜接團練</div>
-          <div class="info-value-strong" style="color:var(--grass)">
-            <span data-class-content="taichung-tue" class="active">9/03 起 3 場免費團練 <em>· 台中場在週四</em></span>
-            <span data-class-content="taipei-wed">9/02 起 3 場免費團練 <em>· 台北場在週三</em></span>
-            <span data-class-content="taichung-thu">9/03 起 3 場免費團練 <em>· 台中場在週四</em></span>
-          </div>
-        </div>
-        <div class="info-row">
           <div class="info-label">報名狀態</div>
           <div class="info-value-strong" style="color:var(--grass)">
             <span data-class-content="taichung-tue" class="active">整期招生中 · 新生／舊生皆可報名</span>
@@ -1111,6 +1105,7 @@ img{max-width:100%;height:auto}
     <div class="eyebrow">Part 02 · The Program</div>
     <h2>400 公尺起跑 / 一階一階加長</h2>
     <p class="intro">每四週往上加一階。前一階段跑穩了,才把長度往上加。我們不跳級,也不壓縮。</p>
+    <p class="intro"><b>每 3 週安排一次減量週</b>,把量降下來、只留刺激。我們不讓疲勞一路疊到賽季。</p>
   </div>
 
   <div class="stages">
@@ -1205,14 +1200,6 @@ img{max-width:100%;height:auto}
   </div>
 
   <div data-class-content="taichung-tue" class="active">
-    <div class="warmup-block">
-      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
-      <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
-      </div>
-    </div>
     <div class="date-grid">
       <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>22</div><div class="wk">TUE</div></div>
       <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">9<span class="slash">/</span>29</div><div class="wk">TUE</div></div>
@@ -1230,14 +1217,6 @@ img{max-width:100%;height:auto}
   </div>
 
   <div data-class-content="taipei-wed">
-    <div class="warmup-block">
-      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
-      <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>02</div><div class="wk">WED</div><div class="free">對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>09</div><div class="wk">WED</div><div class="free">教練團 · 限學員</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>16</div><div class="wk">WED</div><div class="free">教練團 · 限學員</div></div>
-      </div>
-    </div>
     <div class="date-grid">
       <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>23</div><div class="wk">WED</div></div>
       <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">9<span class="slash">/</span>30</div><div class="wk">WED</div></div>
@@ -1255,14 +1234,6 @@ img{max-width:100%;height:auto}
   </div>
 
   <div data-class-content="taichung-thu">
-    <div class="warmup-block">
-      <div class="warmup-label">9 月銜接團練 · <b>免費</b> · 不計入 12 堂</div>
-      <div class="warmup-grid">
-        <div class="date-cell"><div class="idx">團練 01</div><div class="md">9<span class="slash">/</span>03</div><div class="wk">THU</div><div class="free">對外開放</div></div>
-        <div class="date-cell"><div class="idx">團練 02</div><div class="md">9<span class="slash">/</span>10</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
-        <div class="date-cell"><div class="idx">團練 03</div><div class="md">9<span class="slash">/</span>17</div><div class="wk">THU</div><div class="free">教練團 · 限學員</div></div>
-      </div>
-    </div>
     <div class="date-grid">
       <div class="date-cell phase-1"><div class="idx">W01</div><div class="md">9<span class="slash">/</span>24</div><div class="wk">THU</div></div>
       <div class="date-cell phase-1"><div class="idx">W02</div><div class="md">10<span class="slash">/</span>01</div><div class="wk">THU</div></div>
@@ -1280,19 +1251,6 @@ img{max-width:100%;height:auto}
   </div>
 
   <div class="bonus-row">
-    <div class="schedule-bonus">
-      <div class="bonus-tag">實體加碼 · 免費</div>
-      <h3>9 月上半 銜接團練</h3>
-      <p>開課前先一起把身體動起來，<b>不計入 12 堂正課</b>。</p>
-      <p class="warmup-when"><b>台中場在週四</b>（9/3、9/10、9/17）　<b>台北場在週三</b>（9/2、9/9、9/16）</p>
-      <ul>
-        <li><b>第一場（9/2 台北、9/3 台中）：對外開放</b>。還沒報名整期也可以來，感受一下班上的氛圍，也認識教練。<br>
-        <b>需要填報名表</b>：在下方選「<b>(T) 9 月銜接團練 · 單場體驗</b>」，免費、不用匯款，填完直接送出。</li>
-        <li><b>9/8 起（含 9/8 當天）的兩場</b>：<b>僅限已報名整期課程的學員</b>參加，由教練團帶。</li>
-      </ul>
-      <p class="bonus-note">各班場次日期請看上方月曆的綠色格子。</p>
-    </div>
-
     <div class="schedule-bonus premium">
       <div class="bonus-tag">線上加碼 · 免費</div>
       <h3>「慢慢進步」Premium 線上社群</h3>
@@ -1486,7 +1444,7 @@ img{max-width:100%;height:auto}
           <span class="hint">請擇一 · 匯款金額以選項為準</span>
         </div>
         <div class="help" style="margin:-4px 0 14px;padding:10px 14px;background:rgba(185,207,111,.16);border-left:3px solid var(--grass);border-radius:6px;color:var(--forest-ink);font-weight:500">
-          🎁 <b>整期方案（A / B / E / F）與插班（D）皆含「慢慢進步」Premium 線上社群</b>，市價 NT$4,000，開通至 2027/1/31。單堂體驗（C）與免費團練（T）不含。
+          🎁 <b>整期方案（A / B / E / F）與插班（D）皆含「慢慢進步」Premium 線上社群</b>，市價 NT$4,000，開通至 2027/1/31。單堂體驗（C）不含。
         </div>
         <!-- id 是必要的:applyClassPlanLimit() 的班別限定提示橫幅要插在「方案區」上方。
              原本用 querySelector('.choices') 抓全文件第一個,加了班別卡片區之後會插錯位置。 -->
@@ -1538,17 +1496,6 @@ img{max-width:100%;height:auto}
               <div class="title">(F) 三人同行 · 新生完整 12 堂</div>
               <div class="meta">三人同行 · 每人 9 折 · 個別填表 / 個別匯款 · 請在備註欄寫同行夥伴姓名 · <b>各含 Premium 線上社群</b></div>
               <div class="price">NT$ 4,860 / 人</div>
-            </div>
-          </label>
-          <label class="choice">
-            <input type="radio" name="plan" value="T">
-            <div class="choice-body">
-              <div class="title">(T) 9 月銜接團練 · 單場體驗</div>
-              <div class="meta">
-                <b>免費</b> · 不需匯款,填完直接送出 · 場次即為你上方選的班別:
-                <span class="trial-date trial-date-unset active">請先於上方「01 選擇班級」選擇</span><span class="trial-date" data-form-class="taichung-tue">9/03（四）19:30 台中</span><span class="trial-date" data-form-class="taipei-wed">9/02（三）19:30 台北</span><span class="trial-date" data-form-class="taichung-thu">9/03（四）19:30 台中</span>
-              </div>
-              <div class="price">免費</div>
             </div>
           </label>
         </div>
@@ -1895,18 +1842,25 @@ function updateSummaryClass(){
 //   插班(D)僅開課後才開放,招生期先隱藏
 //   未列入此表的班別 = 全方案開放
 //
-// 🔴 2026-09-21 要手動改這張表(Jesse 2026-08-28 定的報名模型)
+// ✅ 2026-09-03 已收掉 T(9 月銜接團練 單場體驗)
+//   原因:T 的場次日期是寫死的(本檔 trial-date 那三個 span + apps-script.gs 的
+//   FIRST_WARMUP),台北寫死 9/02、台中寫死 9/03。9/02 已過、9/03 已取消,
+//   但表單還開著,任何人報名都會收到一封指向那場的自動確認信。
+//   9/2 18:36 就真的有一位(陶若昀/Tina)這樣報進來。
+//   9/8 起的兩場團練本來就只限已報名整期者 ⇒ T 已經沒有任何有效場次,直接收掉。
+//   Jesse 9/5-9/18 教召期間聯絡不到,不能讓它繼續自動回信。
+//
+// 🔴 2026-09-21 還要再改一次這張表(Jesse 2026-08-28 定的報名模型)
 //   整期報名到 9/21 為止,之後只留插班與單堂 —— 頁面沒有任何日期判斷,
 //   時間到了不會自己關,一定要有人來改這三行。
 //   改成: ['C','D']
 //     收掉 A(新生整期) B(舊生整期) E(兩人同行) F(三人同行) —— 整期價格下架
-//     收掉 T(9 月銜接團練) —— 三場打到 9/17 就結束
 //     打開 D(插班 × 剩餘堂數)
 //   頁面刻意不寫報名截止日:只寫開課日期,開課前都可以報,開課後走插班。
 const CLASS_ALLOWED_PLANS = {
-  'taichung-tue': ['A','B','C','E','F','T'],
-  'taipei-wed':   ['A','B','C','E','F','T'],
-  'taichung-thu': ['A','B','C','E','F','T']
+  'taichung-tue': ['A','B','C','E','F'],
+  'taipei-wed':   ['A','B','C','E','F'],
+  'taichung-thu': ['A','B','C','E','F']
 };
 const CLASS_PLAN_NOTICE = {};
 
