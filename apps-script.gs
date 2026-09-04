@@ -199,22 +199,35 @@ function doPost(e) {
     const isFree = FREE_PLANS.indexOf(data.plan) !== -1;
     const ts = nowTaipei_();   // 同一個時間戳:Sheet 與通知信共用,兩邊不會差幾秒
 
-    sheet.appendRow([
-      ts,
-      data.name || '',
-      asText_(data.line),          // 09xx 手機號碼:前導零
-      data.email || '',
-      data.running || '',
-      data.plan || '',
-      planLabel,
-      isFree ? '免費' : (data.amount || ''),
-      isFree ? '—' : asText_(data.last5),   // 後五碼 09961:前導零
-      data.notes || '',
-      data.agree ? '是' : '否',
-      isFree ? '免費團練' : '待匯款',
-      '', '', '',
-      data.referrer || ''
-    ]);
+    // 🔴 這個陣列的長度必須等於 HEADERS.length，順序也必須完全對齊。
+    //    2026-09-04 踩過一次：加「推薦人」時以為原本的 '', '', '' 是填到第 16 欄，
+    //    其實只填到 15（第 16 欄「成功信寄出」原本是 appendRow 不寫、留空的），
+    //    結果推薦人掉進「成功信寄出」。那一欄是寄信的防重複鎖 ——
+    //    非空就跳過不寄 ⇒ 任何填了推薦人的人，報名成功信永遠不會寄出，而且不會報錯。
+    //    下面的長度檢查就是為了讓同型錯誤「大聲失敗」，不要再靜默流失一次。
+    const row = [
+      ts,                                   // 1  報名時間
+      data.name || '',                      // 2  姓名
+      asText_(data.line),                   // 3  LINE（09xx 手機號碼:前導零）
+      data.email || '',                     // 4  Email
+      data.running || '',                   // 5  跑步能力
+      data.plan || '',                      // 6  方案
+      planLabel,                            // 7  方案說明
+      isFree ? '免費' : (data.amount || ''),// 8  匯款金額
+      isFree ? '—' : asText_(data.last5),   // 9  匯款後五碼（09961:前導零）
+      data.notes || '',                     // 10 備註
+      data.agree ? '是' : '否',             // 11 同意條款
+      isFree ? '免費團練' : '待匯款',        // 12 狀態
+      '',                                   // 13 入群日期
+      '',                                   // 14 首週出席
+      '',                                   // 15 教練備註
+      '',                                   // 16 成功信寄出（寄出後才由程式填時間戳）
+      data.referrer || ''                   // 17 推薦人
+    ];
+    if (row.length !== HEADERS.length) {
+      throw new Error(`欄位數不符:appendRow 有 ${row.length} 欄、HEADERS 有 ${HEADERS.length} 欄。改欄位時兩邊要一起改。`);
+    }
+    sheet.appendRow(row);
 
     // 學員確認信(免費團練走不提匯款的版本)
     if (data.email) {
