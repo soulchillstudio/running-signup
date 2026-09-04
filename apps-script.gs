@@ -132,10 +132,13 @@ const TRIAL_SESSION = {
   'taichung-thu': '9/03（四）19:30'
 };
 
-const HEADERS = ['報名時間','姓名','LINE','Email','跑步能力','方案','方案說明','匯款金額','匯款後五碼','備註','同意條款','狀態','入群日期','首週出席','教練備註','成功信寄出'];
+// 🔴 2026-09-04 新增「推薦人」——**刻意加在最後一欄(第 17 欄)，不是插在備註旁邊**。
+//    插中間會讓後面每一欄的索引往後移一格，COL 裡的 STATUS(12)、SUCCESS_MAIL(16) 全部要改，
+//    而且線上已經有資料的那幾列會整排錯位。加在尾巴，既有資料一格都不動。
+const HEADERS = ['報名時間','姓名','LINE','Email','跑步能力','方案','方案說明','匯款金額','匯款後五碼','備註','同意條款','狀態','入群日期','首週出席','教練備註','成功信寄出','推薦人'];
 
 // 欄位位置(1-based),改 HEADERS 時這裡要一起改
-const COL = { NAME: 2, LINE: 3, EMAIL: 4, PLAN: 6, LAST5: 9, STATUS: 12, SUCCESS_MAIL: 16 };
+const COL = { NAME: 2, LINE: 3, EMAIL: 4, PLAN: 6, LAST5: 9, STATUS: 12, SUCCESS_MAIL: 16, REFERRER: 17 };
 const STATUS_PAID = '已匯款';   // 狀態改成這個值 → 自動寄出報名成功信
 
 // ====== 執行一次:建立三個分頁 + 表頭 + 狀態下拉 ======
@@ -209,7 +212,8 @@ function doPost(e) {
       data.notes || '',
       data.agree ? '是' : '否',
       isFree ? '免費團練' : '待匯款',
-      '', '', ''
+      '', '', '',
+      data.referrer || ''
     ]);
 
     // 學員確認信(免費團練走不提匯款的版本)
@@ -468,6 +472,7 @@ function adminEmail(d, cls, planLabel, ts) {
     <tr><td style="padding:4px 10px;color:#666">方案</td><td style="padding:4px 10px">${planLabel}</td></tr>
     <tr><td style="padding:4px 10px;color:#666">金額 / 後五碼</td><td style="padding:4px 10px">NT$ ${d.amount || '—'} / ${d.last5 || '—'}</td></tr>
     <tr><td style="padding:4px 10px;color:#666">跑步能力</td><td style="padding:4px 10px">${d.running || '—'}</td></tr>
+    <tr><td style="padding:4px 10px;color:#666">推薦人</td><td style="padding:4px 10px">${d.referrer ? '<b>' + d.referrer + '</b>' : '—'}</td></tr>
     <tr><td style="padding:4px 10px;color:#666">備註</td><td style="padding:4px 10px">${d.notes || '—'}</td></tr>
   </table>
   <p style="margin-top:16px"><a href="https://docs.google.com/spreadsheets/d/${ssId}/edit">→ 打開 Sheet 查看</a></p>

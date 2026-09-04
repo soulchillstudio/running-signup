@@ -1586,6 +1586,11 @@ img{max-width:100%;height:auto}
         </div>
 
         <div class="field full" style="margin-top:24px">
+          <label>推薦人<span class="opt">選填</span></label>
+          <input type="text" name="referrer" placeholder="是哪位朋友推薦你來的?寫他的名字或 LINE 暱稱就好">
+        </div>
+
+        <div class="field full" style="margin-top:16px">
           <label>備註 or 想說的話 &lt;3<span class="opt">選填</span></label>
           <textarea name="notes" placeholder="有什麼特別的狀況、想法、期待,都可以在這裡說。"></textarea>
         </div>
@@ -1999,6 +2004,7 @@ function handleSubmit(){
     plan:    fd.get('plan') || '',
     amount:  fd.get('amount') || '',
     last5:   fd.get('last5') || '',
+    referrer: fd.get('referrer') || '',
     notes:   fd.get('notes') || '',
     agree:   !!fd.get('agree')
   };
