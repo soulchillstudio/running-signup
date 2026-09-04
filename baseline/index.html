@@ -253,17 +253,22 @@ function toast(msg, ms=1500) {
   toast._t = setTimeout(() => t.classList.add('hidden'), ms);
 }
 
-// ---- 跑姿影片雲端連結（依班別）----
+// ---- 跑姿影片雲端連結（依班別，可依前測/後測分開資料夾）----
 // 週四班（tc-thu）上課後上傳再補；沒連結 → 隱藏按鈕
+// 值可以是單一字串（前後測共用）或 {pre, post} 物件（已分資料夾）
 const VIDEO_FOLDERS = {
-  'tc-tue': 'https://drive.google.com/drive/folders/1gYcEChUMWx3vqOPwOQf9sVX9fzKabf4z',
+  'tc-tue': {
+    pre: 'https://drive.google.com/drive/folders/1lRrhU-ow5BIOyehEH01T3NOJVqaffpb5',
+    post: 'https://drive.google.com/drive/folders/1zrdNS3IRhdz24n9TpajVYTEWQIIKkkBo',
+  },
   'tp-wed': 'https://drive.google.com/drive/folders/1sYh2rmEwhlfU-3UlyoiTFGjyqcXx0VxT',
   'tc-thu': 'https://drive.google.com/drive/folders/1sUWm0nRLdX2rR1Jlcsrsc4MA-5XVTdA_',
 };
 function updateVideoLink() {
   const el = $('vcode-link');
   if (!el) return;
-  const url = VIDEO_FOLDERS[currentClass] || '';
+  const entry = VIDEO_FOLDERS[currentClass];
+  const url = (entry && typeof entry === 'object') ? (entry[currentPhase] || '') : (entry || '');
   if (url) {
     el.href = url;
     el.classList.remove('hidden');
@@ -330,7 +335,7 @@ function renderPhaseTabs() {
     </button>`;
   }).join('');
   document.querySelectorAll('[data-phase]').forEach(el => {
-    el.onclick = () => { currentPhase = el.dataset.phase; renderPhaseTabs(); renderList(); updateShareBtn(); };
+    el.onclick = () => { currentPhase = el.dataset.phase; renderPhaseTabs(); renderList(); updateShareBtn(); updateVideoLink(); };
   });
   const hint = $('phase-hint');
   if (currentPhase === 'pre') {
