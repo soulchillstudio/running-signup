@@ -244,14 +244,17 @@ function renderCards() {
     const m = String(k).match(/^(\d+)/);
     return m ? parseInt(m[1]) : -500;
   };
-  const sortedKeys = Object.keys(groups).sort((a, b) => orderKey(b) - orderKey(a));
+  // 第 3 期起 vdot 欄放的是「N組」（1 組最快）→ 組號小的排前面；舊期的 VDOT 數字照舊大的排前面
+  const isGroupLabel = (k) => /^\d+組$/.test(k);
+  const sortedKeys = Object.keys(groups).sort((a, b) =>
+    isGroupLabel(a) && isGroupLabel(b) ? orderKey(a) - orderKey(b) : orderKey(b) - orderKey(a));
 
   let html = '';
   for (const k of sortedKeys) {
     const list = groups[k];
     html += `
       <div class="mb-4">
-        <h3 class="text-lg font-semibold text-gray-600 mb-2">VDOT ${k} <span class="text-gray-400 font-normal">(${list.length})</span></h3>
+        <h3 class="text-lg font-semibold text-gray-600 mb-2">${isGroupLabel(k) ? `第 ${k.replace('組','')} 組` : `VDOT ${k}`} <span class="text-gray-400 font-normal">(${list.length})</span></h3>
         <div class="grid grid-cols-1 gap-2">
           ${list.map(renderCard).join('')}
         </div>
