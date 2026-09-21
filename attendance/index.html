@@ -99,14 +99,14 @@ const CLASS_LABELS = {
   'tc-thu': '台中週四班',
 };
 const CLASS_DOW = { 'tc-tue': 2, 'tp-wed': 3, 'tc-thu': 4 };  // 0=日 1=一 2=二 ...
-const SEASON_START = '2026-06-02';      // W01 = 6/2 (週二) 開始
+const SEASON_START = '2026-09-22';      // 第 3 期 W01 = 9/22 (週二) 開始（台北週三 9/23）
 const TOTAL_WEEKS = 12;
 // 停課日期（該班該日沒上課；日期照排但不佔 W 編號，末端自動補回）
-// 真相來源：students/跑班行事曆_S2.md
+// 第 2 期的停課日見 git 歷史；第 3 期目前沒有停課
 const CLASS_SKIP = {
-  'tc-tue': ['2026-06-09', '2026-06-16', '2026-07-21'],
-  'tp-wed': ['2026-06-17'],
-  'tc-thu': ['2026-06-04'],
+  'tc-tue': [],
+  'tp-wed': [],
+  'tc-thu': [],
 };
 const $ = (id) => document.getElementById(id);
 
