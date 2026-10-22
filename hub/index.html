@@ -77,7 +77,7 @@
 
   /* QR 分享區 */
   .qr-grid{display:grid;grid-template-columns:1fr;gap:14px;}
-  @media(min-width:640px){.qr-grid{grid-template-columns:repeat(3,1fr);}}
+  @media(min-width:640px){.qr-grid{grid-template-columns:repeat(2,1fr);}}
   .qr-card{
     background:var(--cream);
     border:1px solid var(--line);
@@ -159,12 +159,12 @@
   <!-- 3. 報名表 -->
   <section class="section">
     <div class="section-head"><span class="emoji">📝</span><h2>報名表（對外）</h2></div>
-    <p class="section-note">對外招生頁，可直接分享給潛在學員。第 3 期（9/22 開課）· <b>整期報名到 9/21，之後走插班</b>。2026-08-18 起主網址已自動轉址到這頁，第 2 期封存於 s2.html。</p>
+    <p class="section-note">對外招生頁，可直接分享給潛在學員。第 3 期（9/22 開課）· <b>整期報名到 9/21，之後走插班</b>。2026-10-22 起改用官網約課系統的跑步班頁（LINE 登入後報名）；舊的 GitHub 報名頁留著備查。</p>
     <div class="grid">
-      <a class="btn wide" href="https://soulchillstudio.github.io/running-signup/next.html" target="_blank" rel="noopener">
-        <span class="label">開啟報名頁 · 第 3 期</span><span class="meta">9/22 開課 · 台北馬備賽 12 週</span></a>
-      <a class="btn wide" href="https://soulchillstudio.github.io/running-signup/" target="_blank" rel="noopener">
-        <span class="label">開啟報名頁 · 第 2 期（現行）</span><span class="meta">soulchillstudio.github.io/running-signup</span></a>
+      <a class="btn wide" href="https://booking.soulchilllife.com/#/running" target="_blank" rel="noopener">
+        <span class="label">開啟報名頁 · 第 3 期</span><span class="meta">booking.soulchilllife.com/#/running</span></a>
+      <a class="btn admin wide" href="https://soulchillstudio.github.io/running-signup/next.html" target="_blank" rel="noopener">
+        <span class="label">舊報名頁 · 第 3 期（GitHub）</span><span class="meta">soulchillstudio.github.io/running-signup/next.html</span></a>
     </div>
   </section>
 
@@ -187,13 +187,23 @@
     <div class="qr-grid">
 
       <div class="qr-card">
-        <h3>Skool 社群</h3>
+        <h3>跑班報名</h3>
         <span class="qrbox">
-          <img alt="Skool QR" loading="lazy"
-            src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https%3A%2F%2Fwww.skool.com%2Frun-grow-together-9533%2Fabout">
+          <img alt="跑班報名 QR" loading="lazy"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https%3A%2F%2Fbooking.soulchilllife.com%2F%23%2Frunning">
         </span>
         <br>
-        <a class="open" href="https://www.skool.com/run-grow-together-9533/about" target="_blank" rel="noopener">開啟</a>
+        <a class="open" href="https://booking.soulchilllife.com/#/running" target="_blank" rel="noopener">開啟</a>
+      </div>
+
+      <div class="qr-card">
+        <h3>Soul Chill 官網</h3>
+        <span class="qrbox">
+          <img alt="官網 QR" loading="lazy"
+            src="https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=0&data=https%3A%2F%2Fsoulchilllife.com%2F">
+        </span>
+        <br>
+        <a class="open" href="https://soulchilllife.com/" target="_blank" rel="noopener">開啟</a>
       </div>
 
       <div class="qr-card">
